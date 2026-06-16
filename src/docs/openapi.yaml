@@ -1,0 +1,438 @@
+openapi: 3.0.3
+info:
+  title: API de Gerenciamento de Posts
+  description: API para gerenciamento de posts e usuários.
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:3000/api
+
+tags:
+  - name: Posts
+  - name: Usuários
+  - name: Autenticação
+
+paths:
+
+  /posts:
+    get:
+      tags:
+        - Posts
+      summary: Listar todos os posts
+      description: Retorna uma lista de todos os posts disponíveis.
+      responses:
+        '200':
+          description: Lista de posts retornada com sucesso.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Post'
+              example:
+                - postId: 78e6d80d-b03a-48a6-881d-a695979e8a69
+                  userId: 33d5256f-5199-4a3d-b06d-e3d7cd0f64f0
+                  titulo: Aula inicial
+                  descricao: Primeira aula de ciências do curso
+                  conteudo: Lorem Ipsum dolor sit amet...
+                  dataCriacao: "2026-01-29"
+                  dataModificacao: "2026-05-04"
+
+                - postId: 78e6d80d-b03a-48a6-881d-a695979e8a69
+                  userId: 33d5256f-5199-4a3d-b06d-e3d7cd0f64f0
+                  titulo: Aula de Biologia
+                  descricao: Introdução à célula animal
+                  conteudo: Lorem Ipsum dolor sit amet...
+                  dataCriacao: "2026-02-10"
+                  dataModificacao: "2026-05-15"
+
+    post:
+      tags:
+        - Posts
+      summary: Criar um novo post
+      description: Permite que docentes criem novas postagens.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - userId
+                - titulo
+                - descricao
+                - conteudo
+              properties:
+                userId:
+                  type: string
+                  example: 1
+                titulo:
+                  type: string
+                  example: Introdução à Programação
+                descricao:
+                  type: string
+                  example: Conceitos básicos de programação.
+                conteudo:
+                  type: string
+                  example: Lorem Ipsum dolor sit amet...
+      responses:
+        '201':
+          description: Post criado com sucesso.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              example:
+                message: 'Post criado com sucesso!'
+        '400':
+          description: Dados inválidos.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              example:
+                message: 'Dados inválidos'
+
+  /posts/{id}:
+    get:
+      tags:
+        - Posts
+      summary: Obter um post pelo ID
+      description: Retorna o conteúdo completo de um post específico.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID do post
+      responses:
+        '200':
+          description: Post encontrado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+              example:
+                postId: 33d5256f-5199-4a3d-b06d-e3d7cd0f64f0
+                userId: 78e6d80d-b03a-48a6-881d-a695979e8a69
+                titulo: Aula inicial
+                descricao: Primeira aula de ciências do curso
+                conteudo: Lorem Ipsum dolor sit amet...
+                dataCriacao: "2026-01-29"
+                dataModificacao: "2026-05-04"
+        '404':
+          description: Post não encontrado.
+
+    put:
+      tags:
+        - Posts
+      summary: Atualizar um post
+      description: Permite editar uma postagem existente.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID do post
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - userId
+                - titulo
+                - descricao
+                - conteudo
+              properties:
+                userId:
+                  type: string
+                  example: 33d5256f-5199-4a3d-b06d-e3d7cd0f64f0
+                titulo:
+                  type: string
+                  example: Novo título
+                descricao:
+                  type: string
+                  example: Nova descrição
+                conteudo:
+                  type: string
+                  example: Conteúdo atualizado da postagem.
+      responses:
+        '200':
+          description: Post atualizado com sucesso.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              example:
+                message: Post atualizado com sucesso!
+        '404':
+          description: Post não encontrado.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              example:
+                message: Post não encontrado
+
+    delete:
+      tags:
+        - Posts
+      summary: Excluir um post
+      description: Remove uma postagem específica.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID do post
+      responses:
+        '200':
+          description: Post removido com sucesso.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              example:
+                message: Post removido com sucesso!
+        '404':
+          description: Post não encontrado.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              example:
+                message: Post não encontrado com sucesso!
+
+  /posts/search:
+    get:
+      tags:
+        - Posts
+      summary: Buscar posts
+      description: Busca posts por palavras-chave presentes no título, descrição ou conteúdo.
+      parameters:
+        - name: termo
+          in: query
+          required: true
+          schema:
+            type: string
+          example: matemática
+      responses:
+        '200':
+          description: Lista de posts encontrados.
+          content:
+            application/json:
+             schema:
+               type: array
+               items:
+                 $ref: '#/components/schemas/Post'
+             example:
+               - postId: 33d5256f-5199-4a3d-b06d-e3d7cd0f64f0
+                 userId: 78e6d80d-b03a-48a6-881d-a695979e8a69
+                 titulo: Aula inicial
+                 descricao: Primeira aula de matemática do curso
+                 conteudo: Lorem Ipsum dolor sit amet...
+                 dataCriacao: "2026-01-29"
+                 dataModificacao: "2026-05-04"
+
+               - postId: 33d5256f-5199-4a3d-b06d-e3d7cd0f64f0
+                 userId: 78e6d80d-b03a-48a6-881d-a695979e8a69
+                 titulo: Aula de Matemática
+                 descricao: Aula de função do 2º grau
+                 conteudo: Lorem Ipsum dolor sit amet...
+                 dataCriacao: "2026-03-10"
+                 dataModificacao: "2026-05-04"
+        '400':
+          description: Termo de busca inválido.
+
+  /post-visto/{postId}/{userId}:
+    post:
+      tags:
+        - Posts
+      summary: Marcar post como visto
+      description: Registra que um usuário visualizou determinado post.
+      parameters:
+        - name: postId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '201':
+          description: Visualização registrada com sucesso.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: boolean
+              example:
+                result: true
+        '404':
+          description: Usuário ou post não encontrado.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: boolean
+              example:
+                result: false
+
+  /user:
+    post:
+      tags:
+        - Usuários
+      summary: Criar usuário
+      description: Cria um novo usuário no sistema.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - roleId
+                - matricula
+                - senha
+                - nome
+              properties:
+                roleId:
+                  type: string
+                  example: 78e6d80d-b03a-48a6-881d-a695979e8a69
+                matricula:
+                  type: string
+                  example: 303030
+                senha:
+                  type: string
+                  example: senha123
+                nome:
+                  type: string
+                  example: João Silva
+      responses:
+        '201':
+          description: Usuário criado com sucesso.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              example:
+                message: Usuário criado com sucesso!
+        '400':
+          description: Dados inválidos.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              example:
+                message: Dados inválidos
+
+  /login:
+    post:
+      tags:
+        - Autenticação
+      summary: Realizar login
+      description: Autentica um usuário utilizando matrícula e senha.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - matricula
+                - senha
+              properties:
+                matricula:
+                  type: string
+                  example: 303030
+                senha:
+                  type: string
+                  example: senha123
+      responses:
+        '200':
+          description: Login realizado com sucesso.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              example:
+                message: Login realizado com sucesso!
+        '401':
+          description: Credenciais inválidas.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              example:
+                message: Matrícula ou senha incorreta
+
+components:
+  schemas:
+
+    Post:
+      type: object
+      properties:
+        id:
+          type: string
+        userId:
+          type: string
+        titulo:
+          type: string
+        descricao:
+          type: string
+        conteudo:
+          type: string
+
+    Usuario:
+      type: object
+      properties:
+        userId:
+          type: string
+        roleId:
+          type: string
+        matricula:
+          type: string
+        nome:
+          type: string
