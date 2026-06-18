@@ -6,8 +6,11 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
+  OneToMany
 } from 'typeorm';
+
 import { User } from './User';
+import { PostView } from './PostView';
 
 @Entity('posts')
 export class Post {
@@ -32,4 +35,7 @@ export class Post {
   @ManyToOne(() => User, user => user.posts, { nullable: false })
   @JoinColumn({ name: 'user_id' })
   user!: User;
+
+  @OneToMany(() => PostView, postView => postView.post)
+  visualizacoes!: PostView[];
 }
