@@ -13,7 +13,6 @@ tags:
   - name: Autenticação
 
 paths:
-
   /posts:
     get:
       tags:
@@ -35,16 +34,16 @@ paths:
                   titulo: Aula inicial
                   descricao: Primeira aula de ciências do curso
                   conteudo: Lorem Ipsum dolor sit amet...
-                  dataCriacao: "2026-01-29"
-                  dataModificacao: "2026-05-04"
+                  dataCriacao: '2026-01-29'
+                  dataModificacao: '2026-05-04'
 
                 - postId: 78e6d80d-b03a-48a6-881d-a695979e8a69
                   userId: 33d5256f-5199-4a3d-b06d-e3d7cd0f64f0
                   titulo: Aula de Biologia
                   descricao: Introdução à célula animal
                   conteudo: Lorem Ipsum dolor sit amet...
-                  dataCriacao: "2026-02-10"
-                  dataModificacao: "2026-05-15"
+                  dataCriacao: '2026-02-10'
+                  dataModificacao: '2026-05-15'
 
     post:
       tags:
@@ -125,8 +124,8 @@ paths:
                 titulo: Aula inicial
                 descricao: Primeira aula de ciências do curso
                 conteudo: Lorem Ipsum dolor sit amet...
-                dataCriacao: "2026-01-29"
-                dataModificacao: "2026-05-04"
+                dataCriacao: '2026-01-29'
+                dataModificacao: '2026-05-04'
         '404':
           description: Post não encontrado.
 
@@ -244,26 +243,26 @@ paths:
           description: Lista de posts encontrados.
           content:
             application/json:
-             schema:
-               type: array
-               items:
-                 $ref: '#/components/schemas/Post'
-             example:
-               - postId: 33d5256f-5199-4a3d-b06d-e3d7cd0f64f0
-                 userId: 78e6d80d-b03a-48a6-881d-a695979e8a69
-                 titulo: Aula inicial
-                 descricao: Primeira aula de matemática do curso
-                 conteudo: Lorem Ipsum dolor sit amet...
-                 dataCriacao: "2026-01-29"
-                 dataModificacao: "2026-05-04"
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Post'
+              example:
+                - postId: 33d5256f-5199-4a3d-b06d-e3d7cd0f64f0
+                  userId: 78e6d80d-b03a-48a6-881d-a695979e8a69
+                  titulo: Aula inicial
+                  descricao: Primeira aula de matemática do curso
+                  conteudo: Lorem Ipsum dolor sit amet...
+                  dataCriacao: '2026-01-29'
+                  dataModificacao: '2026-05-04'
 
-               - postId: 33d5256f-5199-4a3d-b06d-e3d7cd0f64f0
-                 userId: 78e6d80d-b03a-48a6-881d-a695979e8a69
-                 titulo: Aula de Matemática
-                 descricao: Aula de função do 2º grau
-                 conteudo: Lorem Ipsum dolor sit amet...
-                 dataCriacao: "2026-03-10"
-                 dataModificacao: "2026-05-04"
+                - postId: 33d5256f-5199-4a3d-b06d-e3d7cd0f64f0
+                  userId: 78e6d80d-b03a-48a6-881d-a695979e8a69
+                  titulo: Aula de Matemática
+                  descricao: Aula de função do 2º grau
+                  conteudo: Lorem Ipsum dolor sit amet...
+                  dataCriacao: '2026-03-10'
+                  dataModificacao: '2026-05-04'
         '400':
           description: Termo de busca inválido.
 
@@ -410,7 +409,6 @@ paths:
 
 components:
   schemas:
-
     Post:
       type: object
       properties:
