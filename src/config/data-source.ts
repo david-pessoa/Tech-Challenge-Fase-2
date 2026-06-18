@@ -2,6 +2,9 @@ import 'reflect-metadata';
 import { DataSource } from 'typeorm';
 
 import { env } from './env';
+import { User } from '../entities/User';
+import { Role } from '../entities/Role';
+import { InitialSchema1781745332530 } from '../migrations/1781745332530-InitialSchema';
 
 export const AppDataSource = new DataSource({
   type: 'postgres',
@@ -12,6 +15,6 @@ export const AppDataSource = new DataSource({
   database: env.database.name,
   synchronize: false,
   logging: false,
-  entities: [],
-  migrations: [],
+  entities: [Role, User],
+  migrations: [InitialSchema1781745332530],
 });
