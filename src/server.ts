@@ -12,6 +12,6 @@ async function start(): Promise<void> {
 }
 
 start().catch(error => {
-    console.error("Nao foi possivel iniciar a aplicacao", error);
+    console.error("Não foi possível iniciar a aplição", error);
     process.exit(1);
 });
