@@ -1,5 +1,6 @@
 import { User } from '../entities/User';
 
+// Teste unitário da Entity User
 describe('User Entity', () => {
   it('Deve criar um usuário corretamente', () => {
     const user = new User();
