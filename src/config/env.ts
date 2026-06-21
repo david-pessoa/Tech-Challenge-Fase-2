@@ -13,7 +13,7 @@ function required(name: string, fallback?: string): string {
 export const env = {
   port: Number(process.env.PORT ?? 3000),
   database: {
-    host: required('DB_HOST', 'localhost'),
+    host: required('DB_HOST', 'postgres'),
     port: Number(process.env.DB_PORT ?? 5432),
     username: required('DB_USERNAME', 'postgres'),
     password: required('DB_PASSWORD', 'postgres'),

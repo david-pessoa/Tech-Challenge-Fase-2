@@ -7,6 +7,7 @@
     "check": "tsc --noEmit",
     "dev": "ts-node src/server.ts",
     "start": "node dist/server.js",
+    "migration:run": "typeorm migration:run -d ./dist/config/data-source.js",
     "typeorm": "typeorm-ts-node-commonjs",
     "test": "jest"
   },
