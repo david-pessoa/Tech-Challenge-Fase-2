@@ -11,6 +11,7 @@ npm run build
 npm migration:run
 ```
 
+# Executando a aplicação com Docker
 ## Executar containers docker
 ```bash
 docker compose up -d --build
