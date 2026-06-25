@@ -1,5 +1,5 @@
 import { CreatePostDTO } from "../../dto/CreatePostDTO";
-import { postRepository } from "../../repositories/PostRepositor";
+import { postRepository } from "../../repositories/PostRepository";
 import { userRepository } from "../../repositories/UserRepository";
 
 export class CreatePostService {
