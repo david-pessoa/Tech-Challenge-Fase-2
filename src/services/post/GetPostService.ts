@@ -1,4 +1,4 @@
-import { postRepository } from "../../repositories/PostRepository";
+import { postRepository } from '../../repositories/PostRepository';
 
 export class GetPostService {
   async execute(id: string) {
@@ -10,7 +10,7 @@ export class GetPostService {
     });
 
     if (!post) {
-      throw new Error("Post não encontrado");
+      throw new Error('Post não encontrado');
     }
 
     return {

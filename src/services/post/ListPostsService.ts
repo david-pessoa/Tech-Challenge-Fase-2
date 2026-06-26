@@ -1,4 +1,4 @@
-import { postRepository } from "../../repositories/PostRepository";
+import { postRepository } from '../../repositories/PostRepository';
 
 export class ListPostsService {
   async execute() {
@@ -7,7 +7,7 @@ export class ListPostsService {
         user: true,
       },
       order: {
-        dataCriacao: "DESC",
+        dataCriacao: 'DESC',
       },
     });
 
