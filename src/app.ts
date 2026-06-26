@@ -12,4 +12,4 @@ const swaggerDocument = YAML.load('./src/docs/openapi.yaml');
 app.use(express.json());
 
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-app.use("/posts", postRoutes);
+app.use("/api/posts", postRoutes);
