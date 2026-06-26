@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { createPostService } from "../services/post/CreatePostService";
 import { getPostService } from "../services/post/GetPostService";
+import { listPostsService } from "../services/post/ListPostsService";
 
 export class PostController {
   async create(request: Request, response: Response) {
@@ -30,6 +31,11 @@ export class PostController {
       });
     }
   }
+
+  async list(_request: Request, response: Response) {
+    const posts = await listPostsService.execute();
+    return response.status(200).json(posts);
+  } 
 }
 
 export const postController = new PostController();
