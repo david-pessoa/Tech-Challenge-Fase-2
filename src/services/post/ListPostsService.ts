@@ -1,19 +1,17 @@
 import { postRepository } from '../../repositories/PostRepository';
 
-export class GetPostService {
-  async execute(id: string) {
-    const post = await postRepository.findOne({
-      where: { id },
+export class ListPostsService {
+  async execute() {
+    const posts = await postRepository.find({
       relations: {
         user: true,
       },
+      order: {
+        dataCriacao: 'DESC',
+      },
     });
 
-    if (!post) {
-      throw new Error('Post não encontrado');
-    }
-
-    return {
+    return posts.map(post => ({
       postId: post.id,
       userId: post.user.id,
       titulo: post.titulo,
@@ -21,8 +19,8 @@ export class GetPostService {
       conteudo: post.conteudo,
       dataCriacao: post.dataCriacao,
       dataModificacao: post.dataModificacao,
-    };
+    }));
   }
 }
 
-export const getPostService = new GetPostService();
+export const listPostsService = new ListPostsService();

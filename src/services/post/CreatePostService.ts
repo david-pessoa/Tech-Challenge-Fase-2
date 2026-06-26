@@ -1,6 +1,6 @@
-import { CreatePostDTO } from "../../dto/CreatePostDTO";
-import { postRepository } from "../../repositories/PostRepository";
-import { userRepository } from "../../repositories/UserRepository";
+import { CreatePostDTO } from '../../dto/CreatePostDTO';
+import { postRepository } from '../../repositories/PostRepository';
+import { userRepository } from '../../repositories/UserRepository';
 
 export class CreatePostService {
   async execute(post: CreatePostDTO) {
@@ -13,9 +13,9 @@ export class CreatePostService {
     });
 
     if (!user) {
-      throw new Error("Usuário não encontrado");
+      throw new Error('Usuário não encontrado');
     }
-    
+
     const newPost = postRepository.create({
       titulo: post.titulo,
       descricao: post.descricao,
