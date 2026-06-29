@@ -4,6 +4,7 @@ import { getPostService } from '../services/post/GetPostService';
 import { listPostsService } from '../services/post/ListPostsService';
 import { updatePostService } from '../services/post/UpdatePostService';
 import { deletePostService } from '../services/post/DeletePostService';
+import { searchPostsService } from '../services/post/SearchPostsService';
 
 export class PostController {
   async create(request: Request, response: Response) {
@@ -63,6 +64,17 @@ export class PostController {
       return response.status(404).json({
         message: 'Post não encontrado',
       });
+    }
+  }
+
+  async search(request: Request, response: Response, next: NextFunction) {
+    try {
+      const termo = String(request.query.termo ?? '');
+      const posts = await searchPostsService.execute(termo);
+
+      return response.status(200).json(posts);
+    } catch (error) {
+      return next(error);
     }
   }
 }

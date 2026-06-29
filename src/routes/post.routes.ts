@@ -7,6 +7,7 @@ const router = Router();
 router.use(authMiddleware);
 
 router.get('/', postController.list);
+router.get('/search', postController.search);
 router.get('/:id', postController.findById);
 
 router.post('/', authorizeRoles('PROFESSOR', 'ADMIN'), postController.create);
