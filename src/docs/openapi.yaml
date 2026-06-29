@@ -407,8 +407,11 @@ paths:
                 properties:
                   message:
                     type: string
+                  token:
+                    type: string
               example:
                 message: Login realizado com sucesso!
+                token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjMmI1OGE0ZS1jNGNmLTRlMjAtOTc4Yy1jMWYyNzkzZWUxOGMiLCJyb2xlIjoiQURNSU4iLCJpYXQiOjE3ODI2OTYyNzUsImV4cCI6MTc4Mjc4MjY3NX0.GlTIaBuM4hpLlgBSoPduxG2A_SvEE7Xnzf4szdjw_ZE
         '401':
           description: Credenciais inválidas.
           content:
