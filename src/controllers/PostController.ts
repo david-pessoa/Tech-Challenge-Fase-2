@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { createPostService } from '../services/post/CreatePostService';
 import { getPostService } from '../services/post/GetPostService';
 import { listPostsService } from '../services/post/ListPostsService';
@@ -40,15 +40,17 @@ export class PostController {
     return response.status(200).json(posts);
   }
 
-  async update(request: Request, response: Response) {
+  async update(request: Request, response: Response, next: NextFunction) {
     try {
       const id = String(request.params.id);
-      const post = await updatePostService.execute(id, request.body);
-      return response.status(200).json(post);
-    } catch (error) {
-      return response.status(400).json({
-        message: 'Erro ao atualizar post',
+
+      await updatePostService.execute(id, request.user!.id, request.body);
+
+      return response.status(200).json({
+        message: 'Post atualizado com sucesso!',
       });
+    } catch (error) {
+      return next(error);
     }
   }
 
