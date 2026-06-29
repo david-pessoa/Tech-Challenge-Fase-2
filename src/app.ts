@@ -18,8 +18,8 @@ app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // Rotas da aplicação
 app.use('/api/posts', postRoutes);
-app.use('/api/users', userRouter);   // cadastro de usuários
-app.use('/api/auth', authRouter);    // login
+app.use('/api/users', userRouter); // cadastro de usuários
+app.use('/api/auth', authRouter); // login
 
-// Middleware de erros 
+// Middleware de erros
 app.use(errorHandler);
