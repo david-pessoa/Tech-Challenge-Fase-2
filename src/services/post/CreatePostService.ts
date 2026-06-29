@@ -5,7 +5,7 @@ import { userRepository } from '../../repositories/UserRepository';
 export class CreatePostService {
   async execute(post: CreatePostDTO) {
     if (!post.userId) {
-      throw new Error("Usuário é obrigatório");
+      throw new Error('Usuário é obrigatório');
     }
 
     const user = await userRepository.findOne({
