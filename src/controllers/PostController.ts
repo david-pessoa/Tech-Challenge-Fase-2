@@ -30,6 +30,11 @@ export class PostController {
     try {
       const id = String(request.params.id);
       const post = await getPostService.execute(id);
+
+      if (request.user!.role.nome === 'ALUNO') {
+        await markPostAsViewedService.execute(id, request.user!.id);
+      }
+
       return response.status(200).json(post);
     } catch (error) {
       return response.status(404).json({
@@ -79,7 +84,7 @@ export class PostController {
       return next(error);
     }
   }
-  
+
   async markAsViewed(request: Request, response: Response, next: NextFunction) {
     try {
       const postId = String(request.params.postId);
