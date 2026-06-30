@@ -21,6 +21,17 @@ export class MarkPostAsViewedService {
       throw new AppError(404, 'Usuário não encontrado');
     }
 
+    const viewExists = await postViewRepository.findOne({
+      where: {
+        post: { id: postId },
+        user: { id: userId },
+      },
+    });
+
+    if (viewExists) {
+      return { result: true };
+    }
+
     const view = postViewRepository.create({
       post,
       user,
