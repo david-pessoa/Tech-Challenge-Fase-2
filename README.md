@@ -3,12 +3,35 @@ API backend para cadastro de usuários, autenticação via JWT e gerenciamento d
 O sistema permite criar, listar, buscar, atualizar, excluir e marcar posts como visualizados.
 
 ## Problema
-Em cenários acadêmicos ou de comunicação interna, é comum precisar publicar conteúdos, controlar quem pode criar materiais e registrar quem já visualizou cada postagem.
+Em escolas da rede pública, os professores não têm uma plataforma em que possam postar suas aulas e transmitir conhecimento para alunos de forma prática, centralizada e tecnológica. Além disso, é preciso controlar quem pode criar, atualizar e deletar materiais e registrar quem já visualizou cada postagem.
 Sem uma API centralizada, esse fluxo fica disperso e difícil de auditar.
 
 ## Solução
 Foi construída uma API REST em Node.js para gerenciar usuários, roles, autenticação, posts e visualizações.
 A solução organiza o fluxo com Express, TypeORM, PostgreSQL e JWT, além de documentação Swagger disponível em `/docs`.
+
+### Níveis de acesso dentro do sistema
+Há 3 diferentes níveis de acesso (roles) para a API. Eles são: `ALUNO`, `PROFESSOR` e `ADMIN`.
+
+#### `ALUNO`
+É o nível mais baixo, deve ser usado para os alunos da escola. Nesse nível, o usuário pode:
+- Acessar a lista completa de posts
+- Acessar um post específico por um termo
+- Registrar que já visualizou determinado post
+
+#### `PROFESSOR`
+Essa role representa os professores da escola. Nesse nível o usuário:
+- Tem todas as permissões do `ALUNO`
+- Pode criar novos posts
+- Pode atualizar apenas os posts que criou
+- Pode deletar apenas os posts que criou
+- Pode cadastrar um novo usuário `ALUNO`
+
+#### `ADMIN`
+Esse é o nível mais alto de acesso. Representa os administradores do sistema, que realizam o desenvolvimento e manutenção do mesmo. O adminstrador:
+- Tem todas as permissões do `PROFESSOR`
+- Pode atualizar e deletar qualquer post
+- Pode cadastrar um novo usuário `PROFESSOR` e `ADMIN`
 
 ## Responsabilidades
 Neste repositório, a responsabilidade foi desenvolver o backend da aplicação, incluindo:
@@ -118,8 +141,8 @@ Crie um arquivo `.env` a partir de [.env.example](./.env.example).
 | Método | Rota | Autenticação | Permissão | Descrição |
 | --- | --- | --- | --- | --- |
 | `GET` | `/docs` | Não | - | Documentação Swagger da API |
-| `POST` | `/api/user` | Sim | `PROFESSOR`, `ADMIN` | Cadastra um novo usuário |
 | `POST` | `/api/auth/login` | Não | - | Realiza login e retorna token JWT |
+| `POST` | `/api/user` | Sim | `PROFESSOR`, `ADMIN` | Cadastra um novo usuário |
 | `GET` | `/api/posts` | Sim | Qualquer usuário autenticado | Lista todos os posts |
 | `GET` | `/api/posts/search?termo=...` | Sim | Qualquer usuário autenticado | Busca posts por termo |
 | `GET` | `/api/posts/:id` | Sim | Qualquer usuário autenticado | Retorna um post pelo ID e registra visualização se o usuário for `ALUNO` |
