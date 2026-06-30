@@ -5,6 +5,8 @@ import { listPostsService } from '../services/post/ListPostsService';
 import { updatePostService } from '../services/post/UpdatePostService';
 import { deletePostService } from '../services/post/DeletePostService';
 import { searchPostsService } from '../services/post/SearchPostsService';
+import { AppError } from '../middlewares/errorHandler';
+import { markPostAsViewedService } from '../services/post/MarkPostAsViewedService';
 
 export class PostController {
   async create(request: Request, response: Response) {
@@ -28,6 +30,11 @@ export class PostController {
     try {
       const id = String(request.params.id);
       const post = await getPostService.execute(id);
+
+      if (request.user!.role.nome === 'ALUNO') {
+        await markPostAsViewedService.execute(id, request.user!.id);
+      }
+
       return response.status(200).json(post);
     } catch (error) {
       return response.status(404).json({
@@ -73,6 +80,23 @@ export class PostController {
       const posts = await searchPostsService.execute(termo);
 
       return response.status(200).json(posts);
+    } catch (error) {
+      return next(error);
+    }
+  }
+
+  async markAsViewed(request: Request, response: Response, next: NextFunction) {
+    try {
+      const postId = String(request.params.postId);
+      const userId = String(request.params.userId);
+
+      if (request.user!.id !== userId) {
+        throw new AppError(403, 'Acesso não autorizado');
+      }
+
+      const result = await markPostAsViewedService.execute(postId, userId);
+
+      return response.status(201).json(result);
     } catch (error) {
       return next(error);
     }
