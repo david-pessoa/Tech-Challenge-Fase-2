@@ -19,6 +19,8 @@ paths:
         - Posts
       summary: Listar todos os posts
       description: Retorna uma lista de todos os posts disponíveis.
+      security:
+        - bearerAuth: []
       responses:
         '200':
           description: Lista de posts retornada com sucesso.
@@ -50,6 +52,8 @@ paths:
         - Posts
       summary: Criar um novo post
       description: Permite que docentes criem novas postagens.
+      security:
+        - bearerAuth: []
       requestBody:
         required: true
         content:
@@ -104,6 +108,8 @@ paths:
         - Posts
       summary: Obter um post pelo ID
       description: Retorna o conteúdo completo de um post específico.
+      security:
+        - bearerAuth: []
       parameters:
         - name: id
           in: path
@@ -134,6 +140,8 @@ paths:
         - Posts
       summary: Atualizar um post
       description: Permite editar uma postagem existente.
+      security:
+        - bearerAuth: []
       parameters:
         - name: id
           in: path
@@ -194,6 +202,8 @@ paths:
         - Posts
       summary: Excluir um post
       description: Remove uma postagem específica.
+      security:
+        - bearerAuth: []
       parameters:
         - name: id
           in: path
@@ -231,6 +241,8 @@ paths:
         - Posts
       summary: Buscar posts
       description: Busca posts por palavras-chave presentes no título, descrição ou conteúdo.
+      security:
+        - bearerAuth: []
       parameters:
         - name: termo
           in: query
@@ -272,6 +284,8 @@ paths:
         - Posts
       summary: Marcar post como visto
       description: Registra que um usuário visualizou determinado post.
+      security:
+        - bearerAuth: []
       parameters:
         - name: postId
           in: path
@@ -361,7 +375,7 @@ paths:
               example:
                 message: Dados inválidos
 
-  /login:
+  /auth/login:
     post:
       tags:
         - Autenticação
@@ -393,8 +407,11 @@ paths:
                 properties:
                   message:
                     type: string
+                  token:
+                    type: string
               example:
                 message: Login realizado com sucesso!
+                token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjMmI1OGE0ZS1jNGNmLTRlMjAtOTc4Yy1jMWYyNzkzZWUxOGMiLCJyb2xlIjoiQURNSU4iLCJpYXQiOjE3ODI2OTYyNzUsImV4cCI6MTc4Mjc4MjY3NX0.GlTIaBuM4hpLlgBSoPduxG2A_SvEE7Xnzf4szdjw_ZE
         '401':
           description: Credenciais inválidas.
           content:
@@ -408,6 +425,11 @@ paths:
                 message: Matrícula ou senha incorreta
 
 components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
   schemas:
     Post:
       type: object
