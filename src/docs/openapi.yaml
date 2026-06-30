@@ -135,7 +135,7 @@ paths:
       tags:
         - Posts
       summary: Atualizar um post
-      description: Permite editar uma postagem existente.
+      description: Permite que professores e administradores atualizem apenas os posts que criaram.
       security:
         - bearerAuth: []
       parameters:
@@ -151,14 +151,7 @@ paths:
           application/json:
             schema:
               type: object
-              required:
-                - titulo
-                - descricao
-                - conteudo
               properties:
-                userId:
-                  type: string
-                  example: 33d5256f-5199-4a3d-b06d-e3d7cd0f64f0
                 titulo:
                   type: string
                   example: Novo título
@@ -191,6 +184,17 @@ paths:
                     type: string
               example:
                 message: Post não encontrado
+        "403":
+          description: Usuário não é o criador do post.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              example:
+                message: Acesso não autorizado
 
     delete:
       tags:
@@ -235,7 +239,7 @@ paths:
       tags:
         - Posts
       summary: Buscar posts
-      description: Busca posts por palavras-chave presentes no título, descrição ou conteúdo.
+      description: Busca posts por palavras-chave presentes no título, descrição ou conteúdo, sem diferenciar letras maiúsculas e minúsculas.
       security:
         - bearerAuth: []
       parameters:
@@ -272,6 +276,15 @@ paths:
                   dataModificacao: "2026-05-04"
         "400":
           description: Termo de busca inválido.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              example:
+                message: Termo de busca inválido
 
   /post-visto/{postId}/{userId}:
     post:

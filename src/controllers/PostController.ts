@@ -1,9 +1,10 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { createPostService } from '../services/post/CreatePostService';
 import { getPostService } from '../services/post/GetPostService';
 import { listPostsService } from '../services/post/ListPostsService';
 import { updatePostService } from '../services/post/UpdatePostService';
 import { deletePostService } from '../services/post/DeletePostService';
+import { searchPostsService } from '../services/post/SearchPostsService';
 
 export class PostController {
   async create(request: Request, response: Response) {
@@ -40,15 +41,17 @@ export class PostController {
     return response.status(200).json(posts);
   }
 
-  async update(request: Request, response: Response) {
+  async update(request: Request, response: Response, next: NextFunction) {
     try {
       const id = String(request.params.id);
-      const post = await updatePostService.execute(id, request.body);
-      return response.status(200).json(post);
-    } catch (error) {
-      return response.status(400).json({
-        message: 'Erro ao atualizar post',
+
+      await updatePostService.execute(id, request.user!.id, request.body);
+
+      return response.status(200).json({
+        message: 'Post atualizado com sucesso!',
       });
+    } catch (error) {
+      return next(error);
     }
   }
 
@@ -61,6 +64,17 @@ export class PostController {
       return response.status(404).json({
         message: 'Post não encontrado',
       });
+    }
+  }
+
+  async search(request: Request, response: Response, next: NextFunction) {
+    try {
+      const termo = String(request.query.termo ?? '');
+      const posts = await searchPostsService.execute(termo);
+
+      return response.status(200).json(posts);
+    } catch (error) {
+      return next(error);
     }
   }
 }
