@@ -33,15 +33,44 @@ Esse é o nível mais alto de acesso. Representa os administradores do sistema, 
 - Pode atualizar e deletar qualquer post
 - Pode cadastrar um novo usuário `PROFESSOR` e `ADMIN`
 
+## Integrantes
+- Beatriz Santos Mendonça Costa - RM372102
+- David Varão Lima Bentes Pessoa - RM373633
+- Michele Cristina Fernandes - RM372306
+- Vitor Hugo dos Santos Alves - RM372987
+
 ## Responsabilidades
-Neste repositório, a responsabilidade foi desenvolver o backend da aplicação, incluindo:
-- modelagem das entidades e migrations
-- autenticação com JWT
-- autorização por perfil de acesso
-- CRUD de posts
-- cadastro e login de usuários
-- registro de visualização de posts por alunos
-- documentação da API
+Neste repositório, as responsabilidades foram dividas em:
+
+### Base e infraestrutura - David
+- Iniciar o projeto.
+- Configuração do TypeScript.
+- Configuração do Express.
+- Configuração das variáveis de ambiente.
+- Criação das entidades `Post`, `User`, `PostView` e `Role`.
+- Criação das Migrations.
+- Configuração do Docker.
+- Adicionar GitHub Actions (CI/CD).
+
+### Posts - Michele
+- Criar repository.
+- Implementar CRUD completo.
+- Implementar busca.
+- Criar testes relacionados a posts.
+
+### Usuários & Roles - Victor
+- Criar cadastro de usuário.
+- Criar login com JWT.
+- Criar middleware de autenticação.
+- Criar controle de permissões.
+
+### Integração, Qualidade e Documentação - Michele
+- Criar registro de visualizações.
+- Configurar CORS para front-end.
+- Criar testes de middlewares e services.
+- Revisar documentação.
+- Ajudar na integração final.
+
 
 ## Funcionalidades
 - Cadastro de usuários com senha criptografada
