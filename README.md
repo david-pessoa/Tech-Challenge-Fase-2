@@ -16,8 +16,8 @@ Há 3 diferentes níveis de acesso (roles) para a API. Eles são: `ALUNO`, `PROF
 #### `ALUNO`
 É o nível mais baixo, deve ser usado para os alunos da escola. Nesse nível, o usuário pode:
 - Acessar a lista completa de posts
-- Acessar um post específico por um termo
-- Registrar que já visualizou determinado post
+- Acessar uma lista de posts que contém determinado termo
+- Encontrar um post pelo seu ID
 
 #### `PROFESSOR`
 Essa role representa os professores da escola. Nesse nível o usuário:
@@ -31,7 +31,7 @@ Essa role representa os professores da escola. Nesse nível o usuário:
 Esse é o nível mais alto de acesso. Representa os administradores do sistema, que realizam o desenvolvimento e manutenção do mesmo. O adminstrador:
 - Tem todas as permissões do `PROFESSOR`
 - Pode atualizar e deletar qualquer post
-- Pode cadastrar um novo usuário `PROFESSOR` e `ADMIN`
+- Pode cadastrar um novo usuário `ALUNO`, `PROFESSOR` ou `ADMIN`
 
 ## Integrantes
 - Beatriz Santos Mendonça Costa - RM372102
@@ -51,12 +51,14 @@ Neste repositório, as responsabilidades foram dividas em:
 - Criação das Migrations.
 - Configuração do Docker.
 - Adicionar GitHub Actions (CI/CD).
+- Documentação do projeto
 
 ### Posts - Michele
-- Criar repository.
-- Implementar CRUD completo.
-- Implementar busca.
+- Criar repository de posts.
+- Implementar CRUD completo de posts.
+- Implementar busca de posts.
 - Criar testes relacionados a posts.
+- Criar registro de visualizações.
 
 ### Usuários & Roles - Victor
 - Criar cadastro de usuário.
@@ -64,13 +66,11 @@ Neste repositório, as responsabilidades foram dividas em:
 - Criar middleware de autenticação.
 - Criar controle de permissões.
 
-### Integração, Qualidade e Documentação - Michele
-- Criar registro de visualizações.
-- Configurar CORS para front-end.
-- Criar testes de middlewares e services.
-- Revisar documentação.
+### Testes - Beatriz
+- Implementar testes unitários
+- Revisão da documentação
+- Vídeo apresentação
 - Ajudar na integração final.
-
 
 ## Funcionalidades
 - Cadastro de usuários com senha criptografada
@@ -88,7 +88,6 @@ Neste repositório, as responsabilidades foram dividas em:
 - TypeORM
 - JWT
 - bcryptjs
-- Zod
 - Swagger UI
 - Docker e Docker Compose
 - Jest e Supertest
@@ -178,7 +177,6 @@ Crie um arquivo `.env` a partir de [.env.example](./.env.example).
 | `POST` | `/api/posts` | Sim | `PROFESSOR`, `ADMIN` | Cria um novo post |
 | `PUT` | `/api/posts/:id` | Sim | `PROFESSOR`*, `ADMIN` | Atualiza um post |
 | `DELETE` | `/api/posts/:id` | Sim | `PROFESSOR`*, `ADMIN` | Remove um post |
-| `POST` | `/api/post-visto/:postId/:userId` | Sim | Qualquer usuário autenticado | Marca um post como visualizado |
 
 > [!NOTE]
 > *OBS: Quando um usuário professor cria um post, ele será o único professor que poderá editá-lo. Contudo, administradores podem realizar todas as ações de CRUD com qualquer post, mesmo não tendo criado o post.
@@ -193,13 +191,11 @@ Authorization: Bearer <token>
 ```
 
 O middleware `authMiddleware` valida o token, busca o usuário no banco e anexa os dados à requisição.
-Depois disso, `authorizeRoles` restringe o acesso conforme o perfil:
-- `ALUNO`: leitura de posts e marcação de visualização
-- `PROFESSOR` e `ADMIN`: criação, edição e exclusão de posts
+Depois disso, `authorizeRoles` restringe o acesso conforme o perfil.
 
 ## Decisões técnicas
-- Usei JWT para manter a API stateless e simplificar a autenticação.
-- Usei roles no banco para centralizar a autorização por perfil.
+- Usamos JWT para manter a API stateless e simplificar a autenticação.
+- Aplicamos roles no banco para centralizar a autorização por perfil.
 - A visualização de posts fica em uma tabela própria (`post_views`) com restrição de unicidade por usuário e post, evitando duplicidade.
 - As migrations são versionadas com TypeORM para manter o schema reproduzível.
 - A documentação em OpenAPI facilita testes e consumo da API.
