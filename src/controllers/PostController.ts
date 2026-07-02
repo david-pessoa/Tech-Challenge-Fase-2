@@ -51,7 +51,7 @@ export class PostController {
     try {
       const id = String(request.params.id);
 
-      await updatePostService.execute(id, request.user!.id, request.body);
+      await updatePostService.execute(id, request.user!.id, request.user!.role.nome, request.body);
 
       return response.status(200).json({
         message: 'Post atualizado com sucesso!',
@@ -61,15 +61,15 @@ export class PostController {
     }
   }
 
-  async delete(request: Request, response: Response) {
+  async delete(request: Request, response: Response, next: NextFunction) {
     try {
       const id = String(request.params.id);
-      const result = await deletePostService.execute(id);
+
+      const result = await deletePostService.execute(id, request.user!.id, request.user!.role.nome);
+
       return response.status(200).json(result);
     } catch (error) {
-      return response.status(404).json({
-        message: 'Post não encontrado',
-      });
+      return next(error);
     }
   }
 
