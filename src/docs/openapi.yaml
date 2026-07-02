@@ -103,7 +103,7 @@ paths:
       tags:
         - Posts
       summary: Obter um post pelo ID
-      description: Retorna o conteúdo completo de um post específico.
+      description: Retorna o conteúdo completo de um post específico e registra automaticamente sua visualização quando acessado por um aluno.
       security:
         - bearerAuth: []
       parameters:
@@ -285,49 +285,6 @@ paths:
                     type: string
               example:
                 message: Termo de busca inválido
-
-  /post-visto/{postId}/{userId}:
-    post:
-      tags:
-        - Posts
-      summary: Marcar post como visto
-      description: Registra que um usuário visualizou determinado post.
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: postId
-          in: path
-          required: true
-          schema:
-            type: string
-        - name: userId
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        "201":
-          description: Visualização registrada com sucesso.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  result:
-                    type: boolean
-              example:
-                result: true
-        "404":
-          description: Usuário ou post não encontrado.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  result:
-                    type: boolean
-              example:
-                result: false
 
   /user:
     post:
