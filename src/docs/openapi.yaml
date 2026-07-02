@@ -335,6 +335,8 @@ paths:
         - Usuários
       summary: Criar usuário
       description: Cria um novo usuário no sistema.
+      security:           
+        - bearerAuth: [] 
       requestBody:
         required: true
         content:

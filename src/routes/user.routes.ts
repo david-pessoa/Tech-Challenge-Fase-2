@@ -1,8 +1,12 @@
 import { Router } from 'express';
-
 import { userController } from '../controllers/UserController';
+import { authMiddleware, authorizeRoles } from '../middlewares/authMiddleware';
 
 export const userRouter = Router();
 
-// Rota pública — qualquer um pode se cadastrar
-userRouter.post('/', userController.create.bind(userController));
+userRouter.post(
+  '/',
+  authMiddleware,                       
+  authorizeRoles('ADMIN', 'PROFESSOR'), 
+  userController.create.bind(userController)
+);
