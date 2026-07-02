@@ -5,7 +5,6 @@ import { listPostsService } from '../services/post/ListPostsService';
 import { updatePostService } from '../services/post/UpdatePostService';
 import { deletePostService } from '../services/post/DeletePostService';
 import { searchPostsService } from '../services/post/SearchPostsService';
-import { AppError } from '../middlewares/errorHandler';
 import { markPostAsViewedService } from '../services/post/MarkPostAsViewedService';
 
 export class PostController {
@@ -80,23 +79,6 @@ export class PostController {
       const posts = await searchPostsService.execute(termo);
 
       return response.status(200).json(posts);
-    } catch (error) {
-      return next(error);
-    }
-  }
-
-  async markAsViewed(request: Request, response: Response, next: NextFunction) {
-    try {
-      const postId = String(request.params.postId);
-      const userId = String(request.params.userId);
-
-      if (request.user!.id !== userId) {
-        throw new AppError(403, 'Acesso não autorizado');
-      }
-
-      const result = await markPostAsViewedService.execute(postId, userId);
-
-      return response.status(201).json(result);
     } catch (error) {
       return next(error);
     }
