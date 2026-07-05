@@ -103,7 +103,7 @@ paths:
       tags:
         - Posts
       summary: Obter um post pelo ID
-      description: Retorna o conteúdo completo de um post específico.
+      description: Retorna o conteúdo completo de um post específico e registra automaticamente sua visualização quando acessado por um aluno.
       security:
         - bearerAuth: []
       parameters:
@@ -135,7 +135,7 @@ paths:
       tags:
         - Posts
       summary: Atualizar um post
-      description: Permite que professores e administradores atualizem apenas os posts que criaram.
+      description: Permite que administradores atualizem qualquer post e professores atualizem apenas os posts que criaram.
       security:
         - bearerAuth: []
       parameters:
@@ -185,7 +185,7 @@ paths:
               example:
                 message: Post não encontrado
         "403":
-          description: Usuário não é o criador do post.
+          description: Usuário sem permissão para atualizar o post.
           content:
             application/json:
               schema:
@@ -200,7 +200,7 @@ paths:
       tags:
         - Posts
       summary: Excluir um post
-      description: Remove uma postagem específica.
+      description: Permite que administradores excluam qualquer post e professores excluam apenas os posts que criaram.
       security:
         - bearerAuth: []
       parameters:
@@ -221,7 +221,7 @@ paths:
                   message:
                     type: string
               example:
-                message: Post removido com sucesso!
+                message: Post removido com sucesso
         "404":
           description: Post não encontrado.
           content:
@@ -232,7 +232,18 @@ paths:
                   message:
                     type: string
               example:
-                message: Post não encontrado com sucesso!
+                message: Post não encontrado
+        "403":
+          description: Usuário sem permissão para excluir o post.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              example:
+                message: Acesso não autorizado
 
   /posts/search:
     get:
@@ -285,49 +296,6 @@ paths:
                     type: string
               example:
                 message: Termo de busca inválido
-
-  /post-visto/{postId}/{userId}:
-    post:
-      tags:
-        - Posts
-      summary: Marcar post como visto
-      description: Registra que um usuário visualizou determinado post.
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: postId
-          in: path
-          required: true
-          schema:
-            type: string
-        - name: userId
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        "201":
-          description: Visualização registrada com sucesso.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  result:
-                    type: boolean
-              example:
-                result: true
-        "404":
-          description: Usuário ou post não encontrado.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  result:
-                    type: boolean
-              example:
-                result: false
 
   /user:
     post:
