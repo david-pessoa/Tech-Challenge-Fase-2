@@ -3,7 +3,7 @@ import { AppError } from '../../middlewares/errorHandler';
 import { postRepository } from '../../repositories/PostRepository';
 
 export class UpdatePostService {
-  async execute(id: string, userId: string, dados: UpdatePostDTO) {
+  async execute(id: string, userId: string, userRole: string, dados: UpdatePostDTO) {
     const post = await postRepository.findOne({
       where: { id },
       relations: { user: true },
@@ -13,7 +13,10 @@ export class UpdatePostService {
       throw new AppError(404, 'Post não encontrado');
     }
 
-    if (post.user.id !== userId) {
+    const isAdmin = userRole === 'ADMIN';
+    const isPostCreator = post.user.id === userId;
+
+    if (!isAdmin && !isPostCreator) {
       throw new AppError(403, 'Acesso não autorizado');
     }
 

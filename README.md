@@ -1,28 +1,208 @@
-# Executando a aplicação
-## Ambiente de desenvolvimento:
+# API de Gerenciamento de Posts
+API backend para cadastro de usuários, autenticação via JWT e gerenciamento de posts com controle de perfis.
+O sistema permite criar, listar, buscar, atualizar, excluir e marcar posts como visualizados.
 
+## Problema
+Em escolas da rede pública, os professores não têm uma plataforma em que possam postar suas aulas e transmitir conhecimento para alunos de forma prática, centralizada e tecnológica. Além disso, é preciso controlar quem pode criar, atualizar e deletar materiais e registrar quem já visualizou cada postagem.
+Sem uma API centralizada, esse fluxo fica disperso e difícil de auditar.
+
+## Solução
+Foi construída uma API REST em Node.js para gerenciar usuários, roles, autenticação, posts e visualizações.
+A solução organiza o fluxo com Express, TypeORM, PostgreSQL e JWT, além de documentação Swagger disponível em `/docs`.
+
+### Níveis de acesso dentro do sistema
+Há 3 diferentes níveis de acesso (roles) para a API. Eles são: `ALUNO`, `PROFESSOR` e `ADMIN`.
+
+#### `ALUNO`
+É o nível mais baixo, deve ser usado para os alunos da escola. Nesse nível, o usuário pode:
+- Acessar a lista completa de posts
+- Acessar uma lista de posts que contém determinado termo
+- Encontrar um post pelo seu ID
+
+#### `PROFESSOR`
+Essa role representa os professores da escola. Nesse nível o usuário:
+- Tem todas as permissões do `ALUNO`
+- Pode criar novos posts
+- Pode atualizar apenas os posts que criou
+- Pode deletar apenas os posts que criou
+- Pode cadastrar um novo usuário `ALUNO`
+
+#### `ADMIN`
+Esse é o nível mais alto de acesso. Representa os administradores do sistema, que realizam o desenvolvimento e manutenção do mesmo. O adminstrador:
+- Tem todas as permissões do `PROFESSOR`
+- Pode atualizar e deletar qualquer post
+- Pode cadastrar um novo usuário `ALUNO`, `PROFESSOR` ou `ADMIN`
+
+## Integrantes
+- Beatriz Santos Mendonça Costa - RM372102
+- David Varão Lima Bentes Pessoa - RM373633
+- Michele Cristina Fernandes - RM372306
+- Vitor Hugo dos Santos Alves - RM372987
+
+## Responsabilidades
+Neste repositório, as responsabilidades foram dividas em:
+
+### Base e infraestrutura - David
+- Iniciar o projeto.
+- Configuração do TypeScript.
+- Configuração do Express.
+- Configuração das variáveis de ambiente.
+- Criação das entidades `Post`, `User`, `PostView` e `Role`.
+- Criação das Migrations.
+- Configuração do Docker.
+- Adicionar GitHub Actions (CI/CD).
+- Documentação do projeto
+
+### Posts - Michele
+- Criar repository de posts.
+- Implementar CRUD completo de posts.
+- Implementar busca de posts.
+- Criar testes relacionados a posts.
+- Criar registro de visualizações.
+
+### Usuários & Roles - Victor
+- Criar cadastro de usuário.
+- Criar login com JWT.
+- Criar middleware de autenticação.
+- Criar controle de permissões.
+
+### Testes - Beatriz
+- Implementar testes unitários
+- Revisão da documentação
+- Vídeo apresentação
+- Ajudar na integração final.
+
+## Funcionalidades
+- Cadastro de usuários com senha criptografada
+- Login com geração de token JWT
+- CRUD de posts com controle de acesso por role
+- Busca de posts por termo
+- Marcação de post como visualizado por aluno
+- Swagger UI para exploração da API
+
+## Tecnologias
+- Node.js
+- TypeScript
+- Express
+- PostgreSQL
+- TypeORM
+- JWT
+- bcryptjs
+- Swagger UI
+- Docker e Docker Compose
+- Jest e Supertest
+
+## Arquitetura
+Fluxo principal da aplicação:
+
+```text
+Cliente
+    ⬇︎
+Rotas Express
+    ⬇︎
+Middleware de autenticação e autorização
+    ⬇︎
+Controllers
+    ⬇︎
+Services
+    ⬇︎
+Repositories / TypeORM
+    ⬇︎
+PostgreSQL
+```
+
+O `authMiddleware` valida o token JWT e injeta o usuário autenticado na requisição.
+As rotas de posts usam `authorizeRoles` para restringir operações de escrita a `PROFESSOR` e `ADMIN`.
+Quando um `ALUNO` acessa um post pelo endpoint de detalhe, a visualização é registrada automaticamente.
+
+## Como rodar
+### Instalação
+```bash
+npm install
+```
+
+Antes de executar, crie o arquivo `.env` com base em `.env.example` e preencha os valores necessários.
+
+### Como rodar localmente
 ```bash
 npm run dev
 ```
 
-Execute as migrations com:
+O projeto executa as migrations na inicialização da aplicação.
+Se preferir subir a versão compilada:
 ```bash
 npm run build
-npm migration:run
+npm run start
 ```
 
-# Executando a aplicação com Docker
-## Executar containers docker
+Se quiser rodar as migrations manualmente após compilar:
+```bash
+npm run build
+npm run migration:run
+```
+
+### Como rodar com Docker
 ```bash
 docker compose up -d --build
 ```
 
-## Verifique os containers
-```bash
-docker ps
-```
-
-## Parar os containers docker
+Para encerrar os containers:
 ```bash
 docker compose down
 ```
+
+## Variáveis de ambiente
+Crie um arquivo `.env` a partir de [.env.example](./.env.example).
+
+| Variável | Exemplo | Obrigatória | Descrição |
+| --- | --- | --- | --- |
+| `PORT` | `3000` | Sim (apenas quando rodar localmente) | Porta da API |
+| `DB_HOST` | `localhost` ou `postgres` | Sim | Host do banco PostgreSQL |
+| `DB_PORT` | `5432` | Não | Porta do banco |
+| `DB_USERNAME` | `postgres` | Sim | Usuário do banco |
+| `DB_PASSWORD` | `postgres` | Sim | Senha do banco |
+| `DB_DATABASE` | `tech_challenge` | Sim | Nome do banco |
+| `JWT_SECRET` | `uma-chave-forte` | Sim | Chave usada para assinar o JWT |
+| `JWT_EXPIRES_IN` | `1d` | Não | Tempo de expiração do token |
+
+## Endpoints
+| Método | Rota | Autenticação | Permissão | Descrição |
+| --- | --- | --- | --- | --- |
+| `GET` | `/docs` | Não | - | Documentação Swagger da API |
+| `POST` | `/api/auth/login` | Não | - | Realiza login e retorna token JWT |
+| `POST` | `/api/user` | Sim | `PROFESSOR`, `ADMIN` | Cadastra um novo usuário |
+| `GET` | `/api/posts` | Sim | Qualquer usuário autenticado | Lista todos os posts |
+| `GET` | `/api/posts/search?termo=...` | Sim | Qualquer usuário autenticado | Busca posts por termo |
+| `GET` | `/api/posts/:id` | Sim | Qualquer usuário autenticado | Retorna um post pelo ID e registra visualização se o usuário for `ALUNO` |
+| `POST` | `/api/posts` | Sim | `PROFESSOR`, `ADMIN` | Cria um novo post |
+| `PUT` | `/api/posts/:id` | Sim | `PROFESSOR`*, `ADMIN` | Atualiza um post |
+| `DELETE` | `/api/posts/:id` | Sim | `PROFESSOR`*, `ADMIN` | Remove um post |
+
+> [!NOTE]
+> *OBS: Quando um usuário professor cria um post, ele será o único professor que poderá editá-lo. Contudo, administradores podem realizar todas as ações de CRUD com qualquer post, mesmo não tendo criado o post.
+
+## Autenticação
+A autenticação é feita com JWT.
+O endpoint `/api/auth/login` valida matrícula e senha, retorna o token e os dados básicos do usuário.
+
+Nas rotas protegidas, o cliente deve enviar o header:
+```http
+Authorization: Bearer <token>
+```
+
+O middleware `authMiddleware` valida o token, busca o usuário no banco e anexa os dados à requisição.
+Depois disso, `authorizeRoles` restringe o acesso conforme o perfil.
+
+## Decisões técnicas
+- Usamos JWT para manter a API stateless e simplificar a autenticação.
+- Aplicamos roles no banco para centralizar a autorização por perfil.
+- A visualização de posts fica em uma tabela própria (`post_views`) com restrição de unicidade por usuário e post, evitando duplicidade.
+- As migrations são versionadas com TypeORM para manter o schema reproduzível.
+- A documentação em OpenAPI facilita testes e consumo da API.
+
+## Melhorias futuras
+- Adicionar paginação nas listagens de posts
+- Padronizar validações de entrada em todos os endpoints com schemas reutilizáveis
+- Implementar refresh token
+- Criar seeds automáticas para ambientes de desenvolvimento
+- Melhorar o tratamento de erros com respostas mais consistentes
