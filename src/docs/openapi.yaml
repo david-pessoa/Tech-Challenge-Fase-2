@@ -18,7 +18,7 @@ paths:
       tags:
         - Posts
       summary: Listar todos os posts
-      description: Retorna uma lista de todos os posts disponíveis.
+      description: Retorna a lista de posts. Para alunos, informa se o post já foi visualizado. Para professores e administradores, informa os alunos que visualizaram o post.
       security:
         - bearerAuth: []
       responses:
@@ -32,20 +32,29 @@ paths:
                   $ref: "#/components/schemas/Post"
               example:
                 - postId: 78e6d80d-b03a-48a6-881d-a695979e8a69
-                  userId: 33d5256f-5199-4a3d-b06d-e3d7cd0f64f0
-                  titulo: Aula inicial
-                  descricao: Primeira aula de ciências do curso
-                  conteudo: Lorem Ipsum dolor sit amet...
-                  dataCriacao: "2026-01-29"
-                  dataModificacao: "2026-05-04"
+                  titulo: Aula 1 - TypeScript
+                  descricao: Introdução ao TypeScript
+                  conteudo: Conteúdo da aula
+                  dataCriacao: "2026-07-06T10:00:00.000Z"
+                  dataModificacao: "2026-07-06T10:00:00.000Z"
+                  criadoPor:
+                    nome: Ana Professora
+                    tipoUsuario: PROFESSOR
+                  foiVisto: true
 
-                - postId: 78e6d80d-b03a-48a6-881d-a695979e8a69
-                  userId: 33d5256f-5199-4a3d-b06d-e3d7cd0f64f0
-                  titulo: Aula de Biologia
-                  descricao: Introdução à célula animal
-                  conteudo: Lorem Ipsum dolor sit amet...
-                  dataCriacao: "2026-02-10"
-                  dataModificacao: "2026-05-15"
+                - postId: 90b6d80d-b03a-48a6-881d-a695979e8a70
+                  titulo: Aula 2 - Node.js
+                  descricao: Introdução ao Node.js
+                  conteudo: Conteúdo da aula
+                  dataCriacao: "2026-07-06T11:00:00.000Z"
+                  dataModificacao: "2026-07-06T11:00:00.000Z"
+                  criadoPor:
+                    nome: Ana Professora
+                    tipoUsuario: PROFESSOR
+                  visualizacoes:
+                    - nome: Maria
+                      tipoUsuario: ALUNO
+                      viewedAt: "2026-07-06T12:00:00.000Z"
 
     post:
       tags:
@@ -103,7 +112,7 @@ paths:
       tags:
         - Posts
       summary: Obter um post pelo ID
-      description: Retorna o conteúdo completo de um post específico.
+      description: Retorna o conteúdo completo de um post específico. Quando acessado por um aluno, registra automaticamente a visualização do post.
       security:
         - bearerAuth: []
       parameters:
@@ -122,12 +131,11 @@ paths:
                 $ref: "#/components/schemas/Post"
               example:
                 postId: 33d5256f-5199-4a3d-b06d-e3d7cd0f64f0
-                userId: 78e6d80d-b03a-48a6-881d-a695979e8a69
                 titulo: Aula inicial
                 descricao: Primeira aula de ciências do curso
                 conteudo: Lorem Ipsum dolor sit amet...
-                dataCriacao: "2026-01-29"
-                dataModificacao: "2026-05-04"
+                dataCriacao: "2026-01-29T10:00:00.000Z"
+                dataModificacao: "2026-05-04T10:00:00.000Z"
         "404":
           description: Post não encontrado.
 
@@ -135,7 +143,7 @@ paths:
       tags:
         - Posts
       summary: Atualizar um post
-      description: Permite que professores e administradores atualizem apenas os posts que criaram.
+      description: Permite que administradores atualizem qualquer post e professores atualizem apenas os posts que criaram.
       security:
         - bearerAuth: []
       parameters:
@@ -200,7 +208,7 @@ paths:
       tags:
         - Posts
       summary: Excluir um post
-      description: Remove uma postagem específica.
+      description: Permite que administradores excluam qualquer post e professores excluam apenas os posts que criaram.
       security:
         - bearerAuth: []
       parameters:
@@ -221,7 +229,7 @@ paths:
                   message:
                     type: string
               example:
-                message: Post removido com sucesso!
+                message: Post removido com sucesso
         "404":
           description: Post não encontrado.
           content:
@@ -232,7 +240,7 @@ paths:
                   message:
                     type: string
               example:
-                message: Post não encontrado com sucesso!
+                message: Post não encontrado
 
   /posts/search:
     get:
@@ -286,57 +294,14 @@ paths:
               example:
                 message: Termo de busca inválido
 
-  /post-visto/{postId}/{userId}:
-    post:
-      tags:
-        - Posts
-      summary: Marcar post como visto
-      description: Registra que um usuário visualizou determinado post.
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: postId
-          in: path
-          required: true
-          schema:
-            type: string
-        - name: userId
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        "201":
-          description: Visualização registrada com sucesso.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  result:
-                    type: boolean
-              example:
-                result: true
-        "404":
-          description: Usuário ou post não encontrado.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  result:
-                    type: boolean
-              example:
-                result: false
-
   /user:
     post:
       tags:
         - Usuários
       summary: Criar usuário
       description: Cria um novo usuário no sistema.
-      security:           
-        - bearerAuth: [] 
+      security:
+        - bearerAuth: []
       requestBody:
         required: true
         content:
@@ -444,9 +409,7 @@ components:
     Post:
       type: object
       properties:
-        id:
-          type: string
-        userId:
+        postId:
           type: string
         titulo:
           type: string
@@ -454,7 +417,35 @@ components:
           type: string
         conteudo:
           type: string
-
+        dataCriacao:
+          type: string
+          format: date-time
+        dataModificacao:
+          type: string
+          format: date-time
+        criadoPor:
+          type: object
+          properties:
+            nome:
+              type: string
+            tipoUsuario:
+              type: string
+        foiVisto:
+          type: boolean
+          description: Retornado para usuários do tipo ALUNO.
+        visualizacoes:
+          type: array
+          description: Retornado para usuários PROFESSOR ou ADMIN.
+          items:
+            type: object
+            properties:
+              nome:
+                type: string
+              tipoUsuario:
+                type: string
+              viewedAt:
+                type: string
+                format: date-time
     Usuario:
       type: object
       properties:
