@@ -139,63 +139,65 @@ describe('Exclusão de post', () => {
 
         expect(postRepository.remove).toHaveBeenCalledWith(post);
     });
-});
 
 
-it('Não deve permitir que outro professor atualize o post', async () => {
-    const creator = new User();
-    creator.id = 'creator-1';
 
-    const post = new Post();
-    post.id = 'post-1';
-    post.titulo = 'Título antigo';
-    post.descricao = 'Descrição antiga';
-    post.conteudo = 'Conteúdo antigo';
-    post.user = creator;
+    it('Não deve permitir que outro professor atualize o post', async () => {
+        const creator = new User();
+        creator.id = 'creator-1';
 
-    (postRepository.findOne as jest.Mock).mockResolvedValue(post);
+        const post = new Post();
+        post.id = 'post-1';
+        post.titulo = 'Título antigo';
+        post.descricao = 'Descrição antiga';
+        post.conteudo = 'Conteúdo antigo';
+        post.user = creator;
 
-    await expect(
-        updatePostService.execute(
-            'post-1',
-            'creator-2',
-            'PROFESSOR',
-            {
-                titulo: 'Tentativa de alteração',
-            }
-        )
-    ).rejects.toMatchObject({
-        statusCode: 403,
-        message: 'Acesso não autorizado',
+        (postRepository.findOne as jest.Mock).mockResolvedValue(post);
+
+        await expect(
+            updatePostService.execute(
+                'post-1',
+                'creator-2',
+                'PROFESSOR',
+                {
+                    titulo: 'Tentativa de alteração',
+                }
+            )
+        ).rejects.toMatchObject({
+            statusCode: 403,
+            message: 'Acesso não autorizado',
+        });
+
+        expect(postRepository.save).not.toHaveBeenCalled();
     });
 
-    expect(postRepository.save).not.toHaveBeenCalled();
-});
 
+    it('Não deve permitir que outro professor exclua o post', async () => {
+        const creator = new User();
+        creator.id = 'creator-1';
 
-it('Não deve permitir que outro professor exclua o post', async () => {
-    const creator = new User();
-    creator.id = 'creator-1';
+        const post = new Post();
+        post.id = 'post-1';
+        post.titulo = 'Post de outro professor';
+        post.descricao = 'Descrição do post';
+        post.conteudo = 'Conteúdo do post';
+        post.user = creator;
 
-    const post = new Post();
-    post.id = 'post-1';
-    post.titulo = 'Post de outro professor';
-    post.descricao = 'Descrição do post';
-    post.conteudo = 'Conteúdo do post';
-    post.user = creator;
+        (postRepository.findOne as jest.Mock).mockResolvedValue(post);
 
-    (postRepository.findOne as jest.Mock).mockResolvedValue(post);
+        await expect(
+            deletePostService.execute(
+                'post-1',
+                'creator-2',
+                'PROFESSOR'
+            )
+        ).rejects.toMatchObject({
+            statusCode: 403,
+            message: 'Acesso não autorizado',
+        });
 
-    await expect(
-        deletePostService.execute(
-            'post-1',
-            'creator-2',
-            'PROFESSOR'
-        )
-    ).rejects.toMatchObject({
-        statusCode: 403,
-        message: 'Acesso não autorizado',
+        expect(postRepository.remove).not.toHaveBeenCalled();
     });
 
-    expect(postRepository.remove).not.toHaveBeenCalled();
 });
