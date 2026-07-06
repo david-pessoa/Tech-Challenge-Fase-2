@@ -17,7 +17,7 @@ jest.mock('../repositories/PostRepository', () => ({
 describe('Post', () => {
     it('Deve criar um post corretamente', () => {
         const creator = new User();
-        creator.id = 'creator-id';
+        creator.id = 'bd1de63c-5df5-4dfd-9736-ace2d7f092b1';
         creator.nome = 'Ana Professora';
 
         const post = new Post();
@@ -41,10 +41,10 @@ describe('Atualização de post', () => {
 
     it('Deve permitir que o creator atualize o próprio post', async () => {
         const creator = new User();
-        creator.id = 'creator-1';
+        creator.id = 'bd1de63c-5df5-4dfd-9736-ace2d7f092b1';
 
         const post = new Post();
-        post.id = 'post-1';
+        post.id = 'cea50a97-f63e-4cd6-8a2c-e2a02f93c6e4';
         post.titulo = 'Título antigo';
         post.descricao = 'Descrição antiga';
         post.conteudo = 'Conteúdo antigo';
@@ -54,8 +54,8 @@ describe('Atualização de post', () => {
         (postRepository.save as jest.Mock).mockResolvedValue(post);
 
         const updatePost = await updatePostService.execute(
-            'post-1',
-            'creator-1',
+            'cea50a97-f63e-4cd6-8a2c-e2a02f93c6e4',
+            'bd1de63c-5df5-4dfd-9736-ace2d7f092b1',
             'creator',
             {
                 titulo: 'Título atualizado',
@@ -74,10 +74,10 @@ describe('Listagem de posts', () => {
 
     it('Deve retornar todos os posts', async () => {
         const creator = new User();
-        creator.id = 'creator-1';
+        creator.id = 'bd1de63c-5df5-4dfd-9736-ace2d7f092b1';
 
         const firstPost = new Post();
-        firstPost.id = 'post-1';
+        firstPost.id = 'cea50a97-f63e-4cd6-8a2c-e2a02f93c6e4';
         firstPost.titulo = 'TypeScript';
         firstPost.descricao = 'Introdução ao TypeScript';
         firstPost.conteudo = 'Conteúdo da aula';
@@ -86,7 +86,7 @@ describe('Listagem de posts', () => {
         firstPost.user = creator;
 
         const secondPost = new Post();
-        secondPost.id = 'post-2';
+        secondPost.id = '9d92fefb-4610-4b41-ab7c-1841cd0275f5';
         secondPost.titulo = 'Node.js';
         secondPost.descricao = 'Introdução ao Node.js';
         secondPost.conteudo = 'Conteúdo da aula';
@@ -102,8 +102,8 @@ describe('Listagem de posts', () => {
         const listPosts = await listPostsService.execute();
 
         expect(listPosts).toHaveLength(2);
-        expect(listPosts[0].postId).toBe('post-2');
-        expect(listPosts[1].postId).toBe('post-1');
+        expect(listPosts[0].postId).toBe('9d92fefb-4610-4b41-ab7c-1841cd0275f5');
+        expect(listPosts[1].postId).toBe('cea50a97-f63e-4cd6-8a2c-e2a02f93c6e4');
         expect(postRepository.find).toHaveBeenCalled();
     });
 });
@@ -115,10 +115,10 @@ describe('Exclusão de post', () => {
 
     it('Deve permitir que o criador exclua o próprio post', async () => {
         const creator = new User();
-        creator.id = 'creator-1';
+        creator.id = 'cea50a97-f63e-4cd6-8a2c-e2a02f93c6e4';
 
         const post = new Post();
-        post.id = 'post-1';
+        post.id = '9d92fefb-4610-4b41-ab7c-1841cd0275f5';
         post.titulo = 'Post para exclusão';
         post.descricao = 'Descrição do post';
         post.conteudo = 'Conteúdo do post';
@@ -128,8 +128,8 @@ describe('Exclusão de post', () => {
         (postRepository.remove as jest.Mock).mockResolvedValue(post);
 
         const result = await deletePostService.execute(
-            'post-1',
-            'creator-1',
+            '9d92fefb-4610-4b41-ab7c-1841cd0275f5',
+            'cea50a97-f63e-4cd6-8a2c-e2a02f93c6e4',
             'PROFESSOR'
         );
 
@@ -144,10 +144,10 @@ describe('Exclusão de post', () => {
 
     it('Não deve permitir que outro professor atualize o post', async () => {
         const creator = new User();
-        creator.id = 'creator-1';
+        creator.id = '9d92fefb-4610-4b41-ab7c-1841cd0275f5';
 
         const post = new Post();
-        post.id = 'post-1';
+        post.id = 'b7436d95-91e3-48ce-826b-dda58ef02eca';
         post.titulo = 'Título antigo';
         post.descricao = 'Descrição antiga';
         post.conteudo = 'Conteúdo antigo';
@@ -157,8 +157,8 @@ describe('Exclusão de post', () => {
 
         await expect(
             updatePostService.execute(
-                'post-1',
-                'creator-2',
+                'b7436d95-91e3-48ce-826b-dda58ef02eca',
+                '5a0e25a2-afa5-44e1-b519-4d1e2139725a',
                 'PROFESSOR',
                 {
                     titulo: 'Tentativa de alteração',
@@ -175,10 +175,10 @@ describe('Exclusão de post', () => {
 
     it('Não deve permitir que outro professor exclua o post', async () => {
         const creator = new User();
-        creator.id = 'creator-1';
+        creator.id = '5a0e25a2-afa5-44e1-b519-4d1e2139725a';
 
         const post = new Post();
-        post.id = 'post-1';
+        post.id = 'f973021d-39f8-43b0-81cf-986557959d95';
         post.titulo = 'Post de outro professor';
         post.descricao = 'Descrição do post';
         post.conteudo = 'Conteúdo do post';
@@ -188,8 +188,8 @@ describe('Exclusão de post', () => {
 
         await expect(
             deletePostService.execute(
-                'post-1',
-                'creator-2',
+                'f973021d-39f8-43b0-81cf-986557959d95',
+                '86c0ca58-c3f6-4fe7-8e0b-12df89530ac7',
                 'PROFESSOR'
             )
         ).rejects.toMatchObject({
