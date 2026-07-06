@@ -7,7 +7,6 @@ import { postRoutes } from './routes/post.routes';
 import { userRouter } from './routes/user.routes';
 import { authRouter } from './routes/auth.routes';
 import { errorHandler } from './middlewares/errorHandler';
-import { postViewRoutes } from './routes/post-view.routes';
 
 export const app = express();
 
@@ -24,7 +23,6 @@ app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, swaggerOption
 
 // Rotas da aplicação
 app.use('/api/posts', postRoutes);
-app.use('/api/post-visto', postViewRoutes);
 app.use('/api/user', userRouter); // cadastro de usuários
 app.use('/api/auth', authRouter); // login
 
