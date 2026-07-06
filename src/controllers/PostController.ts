@@ -43,8 +43,12 @@ export class PostController {
     }
   }
 
-  async list(_request: Request, response: Response) {
-    const posts = await listPostsService.execute();
+  async list(request: Request, response: Response) {
+    const posts = await listPostsService.execute(
+      request.user!.id,
+      request.user!.role.nome
+    );
+
     return response.status(200).json(posts);
   }
 
