@@ -3,12 +3,14 @@ import { User } from '../entities/User';
 import { postRepository } from '../repositories/PostRepository';
 import { updatePostService } from '../services/post/UpdatePostService';
 import { listPostsService } from '../services/post/ListPostsService';
+import { deletePostService } from '../services/post/DeletePostService';
 
 jest.mock('../repositories/PostRepository', () => ({
     postRepository: {
         find: jest.fn(),
         findOne: jest.fn(),
         save: jest.fn(),
+        remove: jest.fn(),
     },
 }));
 
@@ -103,5 +105,38 @@ describe('Listagem de posts', () => {
         expect(listPosts[0].postId).toBe('post-2');
         expect(listPosts[1].postId).toBe('post-1');
         expect(postRepository.find).toHaveBeenCalled();
+    });
+});
+
+describe('Exclusão de post', () => {
+    beforeEach(() => {
+        jest.clearAllMocks();
+    });
+
+    it('Deve permitir que o criador exclua o próprio post', async () => {
+        const creator = new User();
+        creator.id = 'creator-1';
+
+        const post = new Post();
+        post.id = 'post-1';
+        post.titulo = 'Post para exclusão';
+        post.descricao = 'Descrição do post';
+        post.conteudo = 'Conteúdo do post';
+        post.user = creator;
+
+        (postRepository.findOne as jest.Mock).mockResolvedValue(post);
+        (postRepository.remove as jest.Mock).mockResolvedValue(post);
+
+        const result = await deletePostService.execute(
+            'post-1',
+            'creator-1',
+            'PROFESSOR'
+        );
+
+        expect(result).toEqual({
+            message: 'Post removido com sucesso',
+        });
+
+        expect(postRepository.remove).toHaveBeenCalledWith(post);
     });
 });
