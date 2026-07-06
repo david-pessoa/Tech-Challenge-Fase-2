@@ -47,6 +47,9 @@ paths:
                   dataCriacao: '2026-02-10'
                   dataModificacao: '2026-05-15'
 
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
     post:
       tags:
         - Posts
@@ -97,6 +100,11 @@ paths:
                     type: string
               example:
                 message: 'Dados inválidos'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
 
   /posts/{id}:
     get:
@@ -128,8 +136,15 @@ paths:
                 conteudo: Lorem Ipsum dolor sit amet...
                 dataCriacao: '2026-01-29'
                 dataModificacao: '2026-05-04'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
         '404':
           description: Post não encontrado.
+          content:
+            application/json:
+              example:
+                message: Post não encontrado
 
     put:
       tags:
@@ -184,17 +199,11 @@ paths:
                     type: string
               example:
                 message: Post não encontrado
-        "403":
-          description: Usuário sem permissão para atualizar o post.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-              example:
-                message: Acesso não autorizado
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
 
     delete:
       tags:
@@ -222,7 +231,7 @@ paths:
                     type: string
               example:
                 message: Post removido com sucesso
-        "404":
+        '404':
           description: Post não encontrado.
           content:
             application/json:
@@ -233,17 +242,11 @@ paths:
                     type: string
               example:
                 message: Post não encontrado
-        "403":
-          description: Usuário sem permissão para excluir o post.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-              example:
-                message: Acesso não autorizado
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
 
   /posts/search:
     get:
@@ -296,6 +299,8 @@ paths:
                     type: string
               example:
                 message: Termo de busca inválido
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
 
   /user:
     post:
@@ -303,8 +308,8 @@ paths:
         - Usuários
       summary: Criar usuário
       description: Cria um novo usuário no sistema.
-      security:           
-        - bearerAuth: [] 
+      security:
+        - bearerAuth: []
       requestBody:
         required: true
         content:
@@ -352,6 +357,11 @@ paths:
                     type: string
               example:
                 message: Dados inválidos
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
 
   /auth/login:
     post:
@@ -400,7 +410,7 @@ paths:
                   message:
                     type: string
               example:
-                message: Matrícula ou senha incorreta
+                message: Matrícula ou senha inválidas
 
 components:
   securitySchemes:
@@ -434,3 +444,28 @@ components:
           type: string
         nome:
           type: string
+
+    ErrorResponse:
+      type: object
+      properties:
+        message:
+          type: string
+
+  responses:
+    UnauthorizedError:
+      description: Token de autenticação inválido ou expirado.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            message: Token inválido ou expirado.
+
+    ForbiddenError:
+      description: O usuário autenticado não possui permissão para acessar este recurso.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            message: Acesso não autorizado.
