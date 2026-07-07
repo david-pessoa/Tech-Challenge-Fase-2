@@ -50,6 +50,9 @@ paths:
         '401':
           $ref: '#/components/responses/UnauthorizedError'
 
+        '401':
+          $ref: '#/components/responses/NoTokenInformedError'
+
     post:
       tags:
         - Posts
@@ -452,6 +455,15 @@ components:
           type: string
 
   responses:
+    NoTokenInformedError:
+      description: Token de autenticação não informado.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            message: Token não informado
+
     UnauthorizedError:
       description: Token de autenticação inválido ou expirado.
       content:

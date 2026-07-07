@@ -141,10 +141,30 @@ npm run build
 npm run migration:run
 ```
 
+#### Criando usuário `ADMIN`
+É necessário criar um usuário `ADMIN` para que ele possa cadastrar os outros usuários da aplicação.
+Esse usuário deverá ser adicionado diretamente ao banco de dados.
+
+Exemplo de criação de usuário admin inicial via terminal
+```bash
+psql -U postgres -d tech_challenge
+INSERT INTO users (id, matricula, nome, senha, role_id) VALUES ('0b70e39b-58ef-4d04-b039-3036a65b0bbe', '101010', 'Francisco', '$2a$12$Bgq9Hm5RSJGsUsd9NwKa9.zkJoO6SEK.7yehP46O0kmxiVGhxSKNm', '0a7e9fd1-69ea-4d96-9cb8-8417b71acef5');
+```
+> [!WARNING]
+> A senha introduzida no banco deverá ser o bcrypt hash da senha original do usuário. Você pode obter esse hash [aqui](https://bcrypt-generator.com/)
+
 ### Como rodar com Docker
 ```bash
 docker compose up -d --build
 ```
+
+#### Criando o usuário `ADMIN`
+Ao rodar a aplicação com docker, precisamos entrar no container do banco de dados para poder acessar o postgres. Então o comando para acessar a base de dados muda para:
+```bash
+docker exec -it postgres_db psql -U postgres -d tech_challenge
+```
+
+O comando para inserção de dados na base de dados permanece igual.
 
 Para encerrar os containers:
 ```bash
