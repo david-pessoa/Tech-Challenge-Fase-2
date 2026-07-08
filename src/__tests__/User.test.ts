@@ -23,12 +23,12 @@ jest.mock('bcryptjs', () => ({
 }));
 
 describe('UserService - Criação de Usuários', () => {
-  const roleAdmin = { id: 'role-1', nome: 'ADMIN' } as Role;
-  const roleProfessor = { id: 'role-2', nome: 'PROFESSOR' } as Role;
-  const roleAluno = { id: 'role-3', nome: 'ALUNO' } as Role;
+  const roleAdmin = { id: 'bd1de63c-5df5-4dfd-9736-ace2d7f092b1', nome: 'ADMIN' } as Role;
+  const roleProfessor = { id: '5a0e25a2-afa5-44e1-b519-4d1e2139725a', nome: 'PROFESSOR' } as Role;
+  const roleAluno = { id: 'ffc3d557-17c0-474e-a2f5-5fa816f2d854', nome: 'ALUNO' } as Role;
 
-  const adminLogado = { id: 'user-admin', role: roleAdmin } as User;
-  const professorLogado = { id: 'user-prof', role: roleProfessor } as User;
+  const adminLogado = { id: '16dd67fd-afec-4080-a36f-0c8605d9c662', role: roleAdmin } as User;
+  const professorLogado = { id: 'cea50a97-f63e-4cd6-8a2c-e2a02f93c6e4', role: roleProfessor } as User;
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -49,7 +49,7 @@ describe('UserService - Criação de Usuários', () => {
     (userRepository.save as jest.Mock).mockResolvedValue(mockUsuarioSalvo);
 
     const resultado = await userService.create(
-      { matricula: '345678', nome: 'Novo Prof', senha: 'Prof345', roleId: 'role-2' },
+      { matricula: '345678', nome: 'Novo Prof', senha: 'Prof345', roleId: '5a0e25a2-afa5-44e1-b519-4d1e2139725a' },
       adminLogado
     );
 
@@ -73,7 +73,7 @@ describe('UserService - Criação de Usuários', () => {
     (userRepository.save as jest.Mock).mockResolvedValue(mockUsuarioSalvo);
 
     const resultado = await userService.create(
-      { matricula: '874569', nome: 'Novo Aluno', senha: 'Aluni936', roleId: 'role-3' },
+      { matricula: '874569', nome: 'Novo Aluno', senha: 'Aluni936', roleId: '	ffc3d557-17c0-474e-a2f5-5fa816f2d854' },
       professorLogado
     );
 
@@ -88,7 +88,7 @@ describe('UserService - Criação de Usuários', () => {
 
     await expect(
       userService.create(
-        { matricula: '754914', nome: 'Admin Invasor', senha: 'Admin853', roleId: 'role-1' },
+        { matricula: '754914', nome: 'Admin Invasor', senha: 'Admin853', roleId: 'bd1de63c-5df5-4dfd-9736-ace2d7f092b1' },
         professorLogado 
       )
     ).rejects.toMatchObject({
@@ -105,7 +105,7 @@ describe('UserService - Criação de Usuários', () => {
 
     await expect(
       userService.create(
-        { matricula: '564959', nome: 'Prof Falso', senha: 'Prof457', roleId: 'role-2' },
+        { matricula: '564959', nome: 'Prof Falso', senha: 'Prof457', roleId: '5a0e25a2-afa5-44e1-b519-4d1e2139725a' },
         professorLogado 
       )
     ).rejects.toMatchObject({
@@ -121,7 +121,7 @@ describe('UserService - Criação de Usuários', () => {
 
     await expect(
       userService.create(
-        { matricula: '000', nome: 'Clone', senha: 'Clone754', roleId: 'role-3' },
+        { matricula: '000', nome: 'Clone', senha: 'Clone754', roleId: '	ffc3d557-17c0-474e-a2f5-5fa816f2d854' },
         adminLogado
       )
     ).rejects.toMatchObject({
