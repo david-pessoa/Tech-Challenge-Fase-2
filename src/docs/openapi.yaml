@@ -455,23 +455,22 @@ components:
           type: string
 
   responses:
-    NoTokenInformedError:
-      description: Token de autenticação não informado.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            message: Token não informado
-
     UnauthorizedError:
-      description: Token de autenticação inválido ou expirado.
+      description: Falha na autenticação.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
-          example:
-            message: Token inválido ou expirado.
+          examples:
+            noToken: 
+              summary: Token não informado
+              value: 
+                message: Token não informado
+    
+            InvalidToken:
+              summary: Token inválido ou expirado.
+              value:
+                message: Token inválido ou expirado.
 
     ForbiddenError:
       description: O usuário autenticado não possui permissão para acessar este recurso.
