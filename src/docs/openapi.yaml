@@ -30,35 +30,19 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Post'
-              example:
-                - postId: 78e6d80d-b03a-48a6-881d-a695979e8a69
-                  titulo: Aula 1 - TypeScript
-                  descricao: Introdução ao TypeScript
-                  conteudo: Conteúdo da aula
-                  dataCriacao: "2026-07-06T10:00:00.000Z"
-                  dataModificacao: "2026-07-06T10:00:00.000Z"
-                  criadoPor:
-                    nome: Ana Professora
-                    tipoUsuario: PROFESSOR
-                  foiVisto: true
-
-                - postId: 90b6d80d-b03a-48a6-881d-a695979e8a70
-                  titulo: Aula 2 - Node.js
-                  descricao: Introdução ao Node.js
-                  conteudo: Conteúdo da aula
-                  dataCriacao: "2026-07-06T11:00:00.000Z"
-                  dataModificacao: "2026-07-06T11:00:00.000Z"
-                  criadoPor:
-                    nome: Ana Professora
-                    tipoUsuario: PROFESSOR
-                  visualizacoes:
-                    - nome: Maria
-                      tipoUsuario: ALUNO
-                      viewedAt: "2026-07-06T12:00:00.000Z"
-
+                oneOf:
+                  - type: array
+                    items:
+                      $ref: '#/components/schemas/PostAluno'
+                  - type: array
+                    items:
+                      $ref: '#/components/schemas/PostProfessor'
+              examples:
+                aluno:
+                  $ref: '#/components/examples/ListaPostsAluno'
+                professor:
+                  $ref: '#/components/examples/ListaPostsProfessor'
+             
         '401':
           $ref: '#/components/responses/UnauthorizedError'
 
@@ -431,46 +415,97 @@ components:
       scheme: bearer
       bearerFormat: JWT
   schemas:
-    Post:
+    PostBase:
       type: object
       properties:
         postId:
           type: string
+          example: 86c0ca58-c3f6-4fe7-8e0b-12df89530ac7
         titulo:
           type: string
+          example: Aula 1 - TypeScript
         descricao:
           type: string
+          example: Introdução ao TypeScript
         conteudo:
           type: string
+          example: Conteúdo da aula...
         dataCriacao:
           type: string
-          format: date-time
+          format: "2026-07-06T10:00:00.000Z"
         dataModificacao:
           type: string
-          format: date-time
+          format: "2026-07-06T10:00:00.000Z"
         criadoPor:
           type: object
           properties:
             nome:
               type: string
+              example: Ana Carolina
             tipoUsuario:
               type: string
-        foiVisto:
-          type: boolean
-          description: Retornado para usuários do tipo ALUNO.
-        visualizacoes:
-          type: array
+              example: PROFESSOR
+
+    PostAluno:
+      allOf:
+        - $ref: '#/components/schemas/PostBase'
+        - type: object
+          properties:
+            foiVisto:
+              type: boolean
+              example: false
+
+    PostProfessor:
+      allOf:
+        - $ref: '#/components/schemas/PostBase'
+        - type: object
           description: Retornado para usuários PROFESSOR ou ADMIN.
-          items:
-            type: object
-            properties:
-              nome:
-                type: string
-              tipoUsuario:
-                type: string
-              viewedAt:
-                type: string
-                format: date-time
+          properties:
+            visualizacoes:
+              type: object
+              properties:
+                nome:
+                  type: string
+                  example: Maria
+                tipoUsuario:
+                  type: string
+                  example: ALUNO
+                viewedAt:
+                  type: string
+                  format: date-time
+                  example: "2026-07-06T12:00:00.000Z"
+  examples:
+    ListaPostsAluno:
+      summary: Resposta para aluno
+      value:
+        - postId: 78e6d80d-b03a-48a6-881d-a695979e8a69
+          titulo: Aula 1 - TypeScript
+          descricao: Introdução ao TypeScript
+          conteudo: Conteúdo da aula
+          dataCriacao: "2026-07-06T10:00:00.000Z"
+          dataModificacao: "2026-07-06T10:00:00.000Z"
+          criadoPor:
+            nome: Ana Carolina
+            tipoUsuario: PROFESSOR
+          foiVisto: true
+
+    ListaPostsProfessor:
+      summary: Resposta para professor e admin
+      value:
+        - postId: 90b6d80d-b03a-48a6-881d-a695979e8a70
+          titulo: Aula 2 - Node.js
+          descricao: Introdução ao Node.js
+          conteudo: Conteúdo da aula
+          dataCriacao: "2026-07-06T11:00:00.000Z"
+          dataModificacao: "2026-07-06T11:00:00.000Z"
+          criadoPor:
+            nome: Ana Carolina
+            tipoUsuario: PROFESSOR
+          visualizacoes:
+            - nome: Maria
+              tipoUsuario: ALUNO
+              viewedAt: "2026-07-06T12:00:00.000Z"
+  
     Usuario:
       type: object
       properties:
