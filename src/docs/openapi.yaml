@@ -6,6 +6,9 @@ info:
 
 servers:
   - url: http://localhost:3000/api
+    description: Servidor Local
+  - url: https://tech-challenge-fase-2-1uhu.onrender.com/docs/
+    description: Servidor em Produção (Render)
 
 tags:
   - name: Posts
