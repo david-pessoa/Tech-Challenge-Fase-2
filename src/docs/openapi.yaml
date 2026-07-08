@@ -123,7 +123,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Post'
+                $ref: '#/components/schemas/PostBase'
               example:
                 postId: 33d5256f-5199-4a3d-b06d-e3d7cd0f64f0
                 titulo: Aula inicial
@@ -343,7 +343,16 @@ paths:
               example:
                 message: Usuário criado com sucesso!
         '400':
-          description: Dados inválidos.
+          $ref: '#/components/responses/CreateUserError'
+
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+        
+        '500':
+          description: Role padrão ALUNO não encontrada
           content:
             application/json:
               schema:
@@ -352,12 +361,7 @@ paths:
                   message:
                     type: string
               example:
-                message: Dados inválidos
-        '401':
-          $ref: '#/components/responses/UnauthorizedError'
-
-        '403':
-          $ref: '#/components/responses/ForbiddenError'
+                message: Role padrão ALUNO não encontrada
 
   /auth/login:
     post:
@@ -491,6 +495,25 @@ components:
                   type: string
                   format: date-time
                   example: '2026-07-06T12:00:00.000Z'
+
+    Usuario:
+      type: object
+      properties:
+        userId:
+          type: string
+        roleId:
+          type: string
+        matricula:
+          type: string
+        nome:
+          type: string
+
+    ErrorResponse:
+      type: object
+      properties:
+        message:
+          type: string
+
   examples:
     ListaPostsAluno:
       summary: Resposta para aluno
@@ -523,31 +546,13 @@ components:
               tipoUsuario: ALUNO
               viewedAt: '2026-07-06T12:00:00.000Z'
 
-    Usuario:
-      type: object
-      properties:
-        userId:
-          type: string
-        roleId:
-          type: string
-        matricula:
-          type: string
-        nome:
-          type: string
-
-    ErrorResponse:
-      type: object
-      properties:
-        message:
-          type: string
-
   responses:
     UnauthorizedError:
       description: Falha na autenticação.
       content:
         application/json:
           schema:
-            $ref: '#/components/examples/ErrorResponse'
+            $ref: '#/components/schemas/ErrorResponse'
           examples:
             noToken:
               summary: Token não informado
@@ -564,6 +569,24 @@ components:
       content:
         application/json:
           schema:
-            $ref: '#/components/examples/ErrorResponse'
+            $ref: '#/components/schemas/ErrorResponse'
           example:
             message: Acesso não autorizado.
+
+    CreateUserError:
+      description: Dados inválidos na requisição
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            EnrollmentAlreadyExists:
+              summary: Matrícula já cadastrada
+              value:
+                message: Matrícula já cadastrada
+            RoleNotFound:
+              summary: Role não encontrada
+              value:
+                message: Role não encontrada
+            
+
