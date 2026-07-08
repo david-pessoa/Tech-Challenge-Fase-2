@@ -349,8 +349,22 @@ paths:
           $ref: '#/components/responses/UnauthorizedError'
 
         '403':
-          $ref: '#/components/responses/ForbiddenError'
-        
+          description: O usuário autenticado não possui permissão para acessar este recurso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                AlunoCannotCreateUser:
+                  summary: Aluno tenta criar novo usuário
+                  value:
+                    message: Acesso não autorizado.
+
+                ProfessorCanOnlyCreateAluno:
+                  summary: Professor tenta criar novo usuário que não é aluno
+                  value:
+                    message: Professores só possuem permissão para cadastrar alunos.
+
         '500':
           description: Role padrão ALUNO não encontrada
           content:
