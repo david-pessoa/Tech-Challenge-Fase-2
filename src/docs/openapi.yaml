@@ -42,7 +42,7 @@ paths:
                   $ref: '#/components/examples/ListaPostsAluno'
                 professor:
                   $ref: '#/components/examples/ListaPostsProfessor'
-             
+
         '401':
           $ref: '#/components/responses/UnauthorizedError'
 
@@ -129,9 +129,9 @@ paths:
                 titulo: Aula inicial
                 descricao: Primeira aula de ciências do curso
                 conteudo: Lorem Ipsum dolor sit amet...
-                dataCriacao: "2026-01-29T10:00:00.000Z"
-                dataModificacao: "2026-05-04T10:00:00.000Z"
-        "404":
+                dataCriacao: '2026-01-29T10:00:00.000Z'
+                dataModificacao: '2026-05-04T10:00:00.000Z'
+        '404':
           description: Post não encontrado.
           content:
             application/json:
@@ -269,8 +269,8 @@ paths:
                   titulo: Aula inicial
                   descricao: Primeira aula de matemática do curso
                   conteudo: Lorem Ipsum dolor sit amet...
-                  dataCriacao: "2026-01-29T10:00:00.000Z"
-                  dataModificacao: "2026-05-04T10:00:00.000Z"
+                  dataCriacao: '2026-01-29T10:00:00.000Z'
+                  dataModificacao: '2026-05-04T10:00:00.000Z'
                   criadoPor:
                     nome: Ana Professora
                     tipoUsuario: PROFESSOR
@@ -279,8 +279,8 @@ paths:
                   titulo: Aula de Matemática
                   descricao: Aula de função do 2º grau
                   conteudo: Lorem Ipsum dolor sit amet...
-                  dataCriacao: "2026-03-10T10:00:00.000Z"
-                  dataModificacao: "2026-05-04T10:00:00.000Z"
+                  dataCriacao: '2026-03-10T10:00:00.000Z'
+                  dataModificacao: '2026-05-04T10:00:00.000Z'
                   criadoPor:
                     nome: Ricardo Professor
                     tipoUsuario: PROFESSOR
@@ -393,9 +393,26 @@ paths:
                     type: string
                   token:
                     type: string
+                  usuario:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      nome:
+                        type: string
+                      matricula:
+                        type: string
+                      role:
+                        type: string
               example:
                 message: Login realizado com sucesso!
                 token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjMmI1OGE0ZS1jNGNmLTRlMjAtOTc4Yy1jMWYyNzkzZWUxOGMiLCJyb2xlIjoiQURNSU4iLCJpYXQiOjE3ODI2OTYyNzUsImV4cCI6MTc4Mjc4MjY3NX0.GlTIaBuM4hpLlgBSoPduxG2A_SvEE7Xnzf4szdjw_ZE
+                usuario:
+                  properties:
+                    id: c2b58a4e-c4cf-4e20-978c-c1f2793ee18c
+                    nome: Francisco
+                    matricula: '101010'
+                    role: ALUNO
         '401':
           description: Credenciais inválidas.
           content:
@@ -432,10 +449,10 @@ components:
           example: Conteúdo da aula...
         dataCriacao:
           type: string
-          format: "2026-07-06T10:00:00.000Z"
+          format: '2026-07-06T10:00:00.000Z'
         dataModificacao:
           type: string
-          format: "2026-07-06T10:00:00.000Z"
+          format: '2026-07-06T10:00:00.000Z'
         criadoPor:
           type: object
           properties:
@@ -473,7 +490,7 @@ components:
                 viewedAt:
                   type: string
                   format: date-time
-                  example: "2026-07-06T12:00:00.000Z"
+                  example: '2026-07-06T12:00:00.000Z'
   examples:
     ListaPostsAluno:
       summary: Resposta para aluno
@@ -482,8 +499,8 @@ components:
           titulo: Aula 1 - TypeScript
           descricao: Introdução ao TypeScript
           conteudo: Conteúdo da aula
-          dataCriacao: "2026-07-06T10:00:00.000Z"
-          dataModificacao: "2026-07-06T10:00:00.000Z"
+          dataCriacao: '2026-07-06T10:00:00.000Z'
+          dataModificacao: '2026-07-06T10:00:00.000Z'
           criadoPor:
             nome: Ana Carolina
             tipoUsuario: PROFESSOR
@@ -496,16 +513,16 @@ components:
           titulo: Aula 2 - Node.js
           descricao: Introdução ao Node.js
           conteudo: Conteúdo da aula
-          dataCriacao: "2026-07-06T11:00:00.000Z"
-          dataModificacao: "2026-07-06T11:00:00.000Z"
+          dataCriacao: '2026-07-06T11:00:00.000Z'
+          dataModificacao: '2026-07-06T11:00:00.000Z'
           criadoPor:
             nome: Ana Carolina
             tipoUsuario: PROFESSOR
           visualizacoes:
             - nome: Maria
               tipoUsuario: ALUNO
-              viewedAt: "2026-07-06T12:00:00.000Z"
-  
+              viewedAt: '2026-07-06T12:00:00.000Z'
+
     Usuario:
       type: object
       properties:
@@ -530,13 +547,13 @@ components:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/ErrorResponse'
+            $ref: '#/components/examples/ErrorResponse'
           examples:
-            noToken: 
+            noToken:
               summary: Token não informado
-              value: 
+              value:
                 message: Token não informado
-    
+
             InvalidToken:
               summary: Token inválido ou expirado.
               value:
@@ -547,6 +564,6 @@ components:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/ErrorResponse'
+            $ref: '#/components/examples/ErrorResponse'
           example:
             message: Acesso não autorizado.

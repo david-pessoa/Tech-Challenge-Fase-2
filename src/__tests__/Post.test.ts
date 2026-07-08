@@ -124,6 +124,11 @@ describe('Exclusão de post', () => {
         const creator = new User();
         creator.id = 'cea50a97-f63e-4cd6-8a2c-e2a02f93c6e4';
 
+        const role = new Role();
+        role.nome = 'PROFESSOR';
+
+        creator.role = role;
+
         const post = new Post();
         post.id = '9d92fefb-4610-4b41-ab7c-1841cd0275f5';
         post.titulo = 'Post para exclusão';
@@ -137,7 +142,7 @@ describe('Exclusão de post', () => {
         const result = await deletePostService.execute(
             '9d92fefb-4610-4b41-ab7c-1841cd0275f5',
             'cea50a97-f63e-4cd6-8a2c-e2a02f93c6e4',
-            'PROFESSOR'
+            creator.role.nome
         );
 
         expect(result).toEqual({

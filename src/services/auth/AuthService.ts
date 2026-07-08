@@ -38,6 +38,7 @@ export class AuthService {
 
     // Retorna o token e dados básicos — sem a senha
     return {
+      message: "Login realizado com sucesso!",
       token,
       usuario: {
         id: usuario.id,
