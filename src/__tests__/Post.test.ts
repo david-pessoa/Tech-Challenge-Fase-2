@@ -4,6 +4,7 @@ import { postRepository } from '../repositories/PostRepository';
 import { updatePostService } from '../services/post/UpdatePostService';
 import { listPostsService } from '../services/post/ListPostsService';
 import { deletePostService } from '../services/post/DeletePostService';
+import { Role } from '../entities/Role';
 
 jest.mock('../repositories/PostRepository', () => ({
     postRepository: {
@@ -75,6 +76,12 @@ describe('Listagem de posts', () => {
     it('Deve retornar todos os posts', async () => {
         const creator = new User();
         creator.id = 'bd1de63c-5df5-4dfd-9736-ace2d7f092b1';
+        creator.nome = 'Ana Carolina';
+
+        const role = new Role();
+        role.nome = 'PROFESSOR';
+
+        creator.role = role;
 
         const firstPost = new Post();
         firstPost.id = 'cea50a97-f63e-4cd6-8a2c-e2a02f93c6e4';
@@ -99,7 +106,7 @@ describe('Listagem de posts', () => {
             firstPost,
         ]);
 
-        const listPosts = await listPostsService.execute();
+        const listPosts = await listPostsService.execute(creator.id, role.nome);
 
         expect(listPosts).toHaveLength(2);
         expect(listPosts[0].postId).toBe('9d92fefb-4610-4b41-ab7c-1841cd0275f5');
