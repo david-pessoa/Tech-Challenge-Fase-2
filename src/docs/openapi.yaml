@@ -21,7 +21,7 @@ paths:
       tags:
         - Posts
       summary: Listar todos os posts
-      description: Retorna uma lista de todos os posts disponíveis.
+      description: Retorna a lista de posts. Para alunos, informa se o post já foi visualizado. Para professores e administradores, informa os alunos que visualizaram o post.
       security:
         - bearerAuth: []
       responses:
@@ -35,20 +35,29 @@ paths:
                   $ref: '#/components/schemas/Post'
               example:
                 - postId: 78e6d80d-b03a-48a6-881d-a695979e8a69
-                  userId: 33d5256f-5199-4a3d-b06d-e3d7cd0f64f0
-                  titulo: Aula inicial
-                  descricao: Primeira aula de ciências do curso
-                  conteudo: Lorem Ipsum dolor sit amet...
-                  dataCriacao: '2026-01-29'
-                  dataModificacao: '2026-05-04'
+                  titulo: Aula 1 - TypeScript
+                  descricao: Introdução ao TypeScript
+                  conteudo: Conteúdo da aula
+                  dataCriacao: "2026-07-06T10:00:00.000Z"
+                  dataModificacao: "2026-07-06T10:00:00.000Z"
+                  criadoPor:
+                    nome: Ana Professora
+                    tipoUsuario: PROFESSOR
+                  foiVisto: true
 
-                - postId: 78e6d80d-b03a-48a6-881d-a695979e8a69
-                  userId: 33d5256f-5199-4a3d-b06d-e3d7cd0f64f0
-                  titulo: Aula de Biologia
-                  descricao: Introdução à célula animal
-                  conteudo: Lorem Ipsum dolor sit amet...
-                  dataCriacao: '2026-02-10'
-                  dataModificacao: '2026-05-15'
+                - postId: 90b6d80d-b03a-48a6-881d-a695979e8a70
+                  titulo: Aula 2 - Node.js
+                  descricao: Introdução ao Node.js
+                  conteudo: Conteúdo da aula
+                  dataCriacao: "2026-07-06T11:00:00.000Z"
+                  dataModificacao: "2026-07-06T11:00:00.000Z"
+                  criadoPor:
+                    nome: Ana Professora
+                    tipoUsuario: PROFESSOR
+                  visualizacoes:
+                    - nome: Maria
+                      tipoUsuario: ALUNO
+                      viewedAt: "2026-07-06T12:00:00.000Z"
 
         '401':
           $ref: '#/components/responses/UnauthorizedError'
@@ -114,7 +123,7 @@ paths:
       tags:
         - Posts
       summary: Obter um post pelo ID
-      description: Retorna o conteúdo completo de um post específico e registra automaticamente sua visualização quando acessado por um aluno.
+      description: Retorna o conteúdo completo de um post específico. Quando acessado por um aluno, registra automaticamente a visualização do post.
       security:
         - bearerAuth: []
       parameters:
@@ -133,16 +142,12 @@ paths:
                 $ref: '#/components/schemas/Post'
               example:
                 postId: 33d5256f-5199-4a3d-b06d-e3d7cd0f64f0
-                userId: 78e6d80d-b03a-48a6-881d-a695979e8a69
                 titulo: Aula inicial
                 descricao: Primeira aula de ciências do curso
                 conteudo: Lorem Ipsum dolor sit amet...
-                dataCriacao: '2026-01-29'
-                dataModificacao: '2026-05-04'
-        '401':
-          $ref: '#/components/responses/UnauthorizedError'
-
-        '404':
+                dataCriacao: "2026-01-29T10:00:00.000Z"
+                dataModificacao: "2026-05-04T10:00:00.000Z"
+        "404":
           description: Post não encontrado.
           content:
             application/json:
@@ -277,20 +282,24 @@ paths:
                   $ref: '#/components/schemas/Post'
               example:
                 - postId: 33d5256f-5199-4a3d-b06d-e3d7cd0f64f0
-                  userId: 78e6d80d-b03a-48a6-881d-a695979e8a69
                   titulo: Aula inicial
                   descricao: Primeira aula de matemática do curso
                   conteudo: Lorem Ipsum dolor sit amet...
-                  dataCriacao: '2026-01-29'
-                  dataModificacao: '2026-05-04'
+                  dataCriacao: "2026-01-29T10:00:00.000Z"
+                  dataModificacao: "2026-05-04T10:00:00.000Z"
+                  criadoPor:
+                    nome: Ana Professora
+                    tipoUsuario: PROFESSOR
 
-                - postId: 33d5256f-5199-4a3d-b06d-e3d7cd0f64f0
-                  userId: 78e6d80d-b03a-48a6-881d-a695979e8a69
+                - postId: 44d5256f-5199-4a3d-b06d-e3d7cd0f64f1
                   titulo: Aula de Matemática
                   descricao: Aula de função do 2º grau
                   conteudo: Lorem Ipsum dolor sit amet...
-                  dataCriacao: '2026-03-10'
-                  dataModificacao: '2026-05-04'
+                  dataCriacao: "2026-03-10T10:00:00.000Z"
+                  dataModificacao: "2026-05-04T10:00:00.000Z"
+                  criadoPor:
+                    nome: Ricardo Professor
+                    tipoUsuario: PROFESSOR
         '400':
           description: Termo de busca inválido.
           content:
@@ -425,9 +434,7 @@ components:
     Post:
       type: object
       properties:
-        id:
-          type: string
-        userId:
+        postId:
           type: string
         titulo:
           type: string
@@ -435,7 +442,35 @@ components:
           type: string
         conteudo:
           type: string
-
+        dataCriacao:
+          type: string
+          format: date-time
+        dataModificacao:
+          type: string
+          format: date-time
+        criadoPor:
+          type: object
+          properties:
+            nome:
+              type: string
+            tipoUsuario:
+              type: string
+        foiVisto:
+          type: boolean
+          description: Retornado para usuários do tipo ALUNO.
+        visualizacoes:
+          type: array
+          description: Retornado para usuários PROFESSOR ou ADMIN.
+          items:
+            type: object
+            properties:
+              nome:
+                type: string
+              tipoUsuario:
+                type: string
+              viewedAt:
+                type: string
+                format: date-time
     Usuario:
       type: object
       properties:
