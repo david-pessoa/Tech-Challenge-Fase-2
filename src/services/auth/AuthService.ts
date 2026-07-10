@@ -16,14 +16,14 @@ export class AuthService {
 
     // Se não encontrou, retorna erro genérico (não revelamos se é matrícula ou senha)
     if (!usuario) {
-      throw new AppError(401, 'Matrícula ou senha inválidos');
+      throw new AppError(401, 'Matrícula ou senha inválidas');
     }
 
     // Compara a senha informada com o hash salvo no banco
     const senhaCorreta = await bcrypt.compare(dados.senha, usuario.senha);
 
     if (!senhaCorreta) {
-      throw new AppError(401, 'Matrícula ou senha inválidos');
+      throw new AppError(401, 'Matrícula ou senha inválidas');
     }
 
     // Gera o token JWT com os dados básicos do usuário
@@ -38,6 +38,7 @@ export class AuthService {
 
     // Retorna o token e dados básicos — sem a senha
     return {
+      message: "Login realizado com sucesso!",
       token,
       usuario: {
         id: usuario.id,

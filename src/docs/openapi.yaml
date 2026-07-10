@@ -30,34 +30,21 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Post'
-              example:
-                - postId: 78e6d80d-b03a-48a6-881d-a695979e8a69
-                  titulo: Aula 1 - TypeScript
-                  descricao: Introdução ao TypeScript
-                  conteudo: Conteúdo da aula
-                  dataCriacao: "2026-07-06T10:00:00.000Z"
-                  dataModificacao: "2026-07-06T10:00:00.000Z"
-                  criadoPor:
-                    nome: Ana Professora
-                    tipoUsuario: PROFESSOR
-                  foiVisto: true
+                oneOf:
+                  - type: array
+                    items:
+                      $ref: '#/components/schemas/PostAluno'
+                  - type: array
+                    items:
+                      $ref: '#/components/schemas/PostProfessor'
+              examples:
+                aluno:
+                  $ref: '#/components/examples/ListaPostsAluno'
+                professor:
+                  $ref: '#/components/examples/ListaPostsProfessor'
 
-                - postId: 90b6d80d-b03a-48a6-881d-a695979e8a70
-                  titulo: Aula 2 - Node.js
-                  descricao: Introdução ao Node.js
-                  conteudo: Conteúdo da aula
-                  dataCriacao: "2026-07-06T11:00:00.000Z"
-                  dataModificacao: "2026-07-06T11:00:00.000Z"
-                  criadoPor:
-                    nome: Ana Professora
-                    tipoUsuario: PROFESSOR
-                  visualizacoes:
-                    - nome: Maria
-                      tipoUsuario: ALUNO
-                      viewedAt: "2026-07-06T12:00:00.000Z"
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
 
     post:
       tags:
@@ -109,6 +96,11 @@ paths:
                     type: string
               example:
                 message: 'Dados inválidos'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
 
   /posts/{id}:
     get:
@@ -131,16 +123,20 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Post'
+                $ref: '#/components/schemas/PostBase'
               example:
                 postId: 33d5256f-5199-4a3d-b06d-e3d7cd0f64f0
                 titulo: Aula inicial
                 descricao: Primeira aula de ciências do curso
                 conteudo: Lorem Ipsum dolor sit amet...
-                dataCriacao: "2026-01-29T10:00:00.000Z"
-                dataModificacao: "2026-05-04T10:00:00.000Z"
-        "404":
+                dataCriacao: '2026-01-29T10:00:00.000Z'
+                dataModificacao: '2026-05-04T10:00:00.000Z'
+        '404':
           description: Post não encontrado.
+          content:
+            application/json:
+              example:
+                message: Post não encontrado
 
     put:
       tags:
@@ -195,17 +191,11 @@ paths:
                     type: string
               example:
                 message: Post não encontrado
-        "403":
-          description: Usuário sem permissão para atualizar o post.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-              example:
-                message: Acesso não autorizado
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
 
     delete:
       tags:
@@ -233,7 +223,7 @@ paths:
                     type: string
               example:
                 message: Post removido com sucesso
-        "404":
+        '404':
           description: Post não encontrado.
           content:
             application/json:
@@ -244,17 +234,11 @@ paths:
                     type: string
               example:
                 message: Post não encontrado
-        "403":
-          description: Usuário sem permissão para excluir o post.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-              example:
-                message: Acesso não autorizado
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
 
   /posts/search:
     get:
@@ -285,8 +269,8 @@ paths:
                   titulo: Aula inicial
                   descricao: Primeira aula de matemática do curso
                   conteudo: Lorem Ipsum dolor sit amet...
-                  dataCriacao: "2026-01-29T10:00:00.000Z"
-                  dataModificacao: "2026-05-04T10:00:00.000Z"
+                  dataCriacao: '2026-01-29T10:00:00.000Z'
+                  dataModificacao: '2026-05-04T10:00:00.000Z'
                   criadoPor:
                     nome: Ana Professora
                     tipoUsuario: PROFESSOR
@@ -295,8 +279,8 @@ paths:
                   titulo: Aula de Matemática
                   descricao: Aula de função do 2º grau
                   conteudo: Lorem Ipsum dolor sit amet...
-                  dataCriacao: "2026-03-10T10:00:00.000Z"
-                  dataModificacao: "2026-05-04T10:00:00.000Z"
+                  dataCriacao: '2026-03-10T10:00:00.000Z'
+                  dataModificacao: '2026-05-04T10:00:00.000Z'
                   criadoPor:
                     nome: Ricardo Professor
                     tipoUsuario: PROFESSOR
@@ -311,6 +295,8 @@ paths:
                     type: string
               example:
                 message: Termo de busca inválido
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
 
   /user:
     post:
@@ -357,7 +343,30 @@ paths:
               example:
                 message: Usuário criado com sucesso!
         '400':
-          description: Dados inválidos.
+          $ref: '#/components/responses/CreateUserError'
+
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+        '403':
+          description: O usuário autenticado não possui permissão para acessar este recurso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                AlunoCannotCreateUser:
+                  summary: Aluno tenta criar novo usuário
+                  value:
+                    message: Acesso não autorizado.
+
+                ProfessorCanOnlyCreateAluno:
+                  summary: Professor tenta criar novo usuário que não é aluno
+                  value:
+                    message: Professores só possuem permissão para cadastrar alunos.
+
+        '500':
+          description: Role padrão ALUNO não encontrada
           content:
             application/json:
               schema:
@@ -366,7 +375,7 @@ paths:
                   message:
                     type: string
               example:
-                message: Dados inválidos
+                message: Role padrão ALUNO não encontrada
 
   /auth/login:
     post:
@@ -402,9 +411,26 @@ paths:
                     type: string
                   token:
                     type: string
+                  usuario:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      nome:
+                        type: string
+                      matricula:
+                        type: string
+                      role:
+                        type: string
               example:
                 message: Login realizado com sucesso!
                 token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjMmI1OGE0ZS1jNGNmLTRlMjAtOTc4Yy1jMWYyNzkzZWUxOGMiLCJyb2xlIjoiQURNSU4iLCJpYXQiOjE3ODI2OTYyNzUsImV4cCI6MTc4Mjc4MjY3NX0.GlTIaBuM4hpLlgBSoPduxG2A_SvEE7Xnzf4szdjw_ZE
+                usuario:
+                  properties:
+                    id: c2b58a4e-c4cf-4e20-978c-c1f2793ee18c
+                    nome: Francisco
+                    matricula: '101010'
+                    role: ALUNO
         '401':
           description: Credenciais inválidas.
           content:
@@ -415,7 +441,7 @@ paths:
                   message:
                     type: string
               example:
-                message: Matrícula ou senha incorreta
+                message: Matrícula ou senha inválidas
 
 components:
   securitySchemes:
@@ -424,46 +450,66 @@ components:
       scheme: bearer
       bearerFormat: JWT
   schemas:
-    Post:
+    PostBase:
       type: object
       properties:
         postId:
           type: string
+          example: 86c0ca58-c3f6-4fe7-8e0b-12df89530ac7
         titulo:
           type: string
+          example: Aula 1 - TypeScript
         descricao:
           type: string
+          example: Introdução ao TypeScript
         conteudo:
           type: string
+          example: Conteúdo da aula...
         dataCriacao:
           type: string
-          format: date-time
+          format: '2026-07-06T10:00:00.000Z'
         dataModificacao:
           type: string
-          format: date-time
+          format: '2026-07-06T10:00:00.000Z'
         criadoPor:
           type: object
           properties:
             nome:
               type: string
+              example: Ana Carolina
             tipoUsuario:
               type: string
-        foiVisto:
-          type: boolean
-          description: Retornado para usuários do tipo ALUNO.
-        visualizacoes:
-          type: array
+              example: PROFESSOR
+
+    PostAluno:
+      allOf:
+        - $ref: '#/components/schemas/PostBase'
+        - type: object
+          properties:
+            foiVisto:
+              type: boolean
+              example: false
+
+    PostProfessor:
+      allOf:
+        - $ref: '#/components/schemas/PostBase'
+        - type: object
           description: Retornado para usuários PROFESSOR ou ADMIN.
-          items:
-            type: object
-            properties:
-              nome:
-                type: string
-              tipoUsuario:
-                type: string
-              viewedAt:
-                type: string
-                format: date-time
+          properties:
+            visualizacoes:
+              type: object
+              properties:
+                nome:
+                  type: string
+                  example: Maria
+                tipoUsuario:
+                  type: string
+                  example: ALUNO
+                viewedAt:
+                  type: string
+                  format: date-time
+                  example: '2026-07-06T12:00:00.000Z'
+
     Usuario:
       type: object
       properties:
@@ -475,3 +521,86 @@ components:
           type: string
         nome:
           type: string
+
+    ErrorResponse:
+      type: object
+      properties:
+        message:
+          type: string
+
+  examples:
+    ListaPostsAluno:
+      summary: Resposta para aluno
+      value:
+        - postId: 78e6d80d-b03a-48a6-881d-a695979e8a69
+          titulo: Aula 1 - TypeScript
+          descricao: Introdução ao TypeScript
+          conteudo: Conteúdo da aula
+          dataCriacao: '2026-07-06T10:00:00.000Z'
+          dataModificacao: '2026-07-06T10:00:00.000Z'
+          criadoPor:
+            nome: Ana Carolina
+            tipoUsuario: PROFESSOR
+          foiVisto: true
+
+    ListaPostsProfessor:
+      summary: Resposta para professor e admin
+      value:
+        - postId: 90b6d80d-b03a-48a6-881d-a695979e8a70
+          titulo: Aula 2 - Node.js
+          descricao: Introdução ao Node.js
+          conteudo: Conteúdo da aula
+          dataCriacao: '2026-07-06T11:00:00.000Z'
+          dataModificacao: '2026-07-06T11:00:00.000Z'
+          criadoPor:
+            nome: Ana Carolina
+            tipoUsuario: PROFESSOR
+          visualizacoes:
+            - nome: Maria
+              tipoUsuario: ALUNO
+              viewedAt: '2026-07-06T12:00:00.000Z'
+
+  responses:
+    UnauthorizedError:
+      description: Falha na autenticação.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            noToken:
+              summary: Token não informado
+              value:
+                message: Token não informado
+
+            InvalidToken:
+              summary: Token inválido ou expirado.
+              value:
+                message: Token inválido ou expirado.
+
+    ForbiddenError:
+      description: O usuário autenticado não possui permissão para acessar este recurso.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            message: Acesso não autorizado.
+
+    CreateUserError:
+      description: Dados inválidos na requisição
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            EnrollmentAlreadyExists:
+              summary: Matrícula já cadastrada
+              value:
+                message: Matrícula já cadastrada
+            RoleNotFound:
+              summary: Role não encontrada
+              value:
+                message: Role não encontrada
+            
+
