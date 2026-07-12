@@ -143,25 +143,44 @@ npm run migration:run
 
 #### Criando usuário `ADMIN`
 É necessário criar um usuário `ADMIN` para que ele possa cadastrar os outros usuários da aplicação.
-Esse usuário deverá ser adicionado diretamente ao banco de dados.
+Esse usuário deverá ser adicionado diretamente ao banco de dados por meio do script em shell `createUser`.
 
-Exemplo de criação de usuário admin inicial via terminal
-```bash
-psql -U postgres -d tech_challenge
-INSERT INTO users (id, matricula, nome, senha, role_id) VALUES ('0b70e39b-58ef-4d04-b039-3036a65b0bbe', '101010', 'Francisco', '$2a$12$Bgq9Hm5RSJGsUsd9NwKa9.zkJoO6SEK.7yehP46O0kmxiVGhxSKNm', '0a7e9fd1-69ea-4d96-9cb8-8417b71acef5');
+Mude o valor de `DB_PORT`para `5432` no arquivo `.env`:
 ```
-> [!WARNING]
-> A senha introduzida no banco deverá ser o bcrypt hash da senha original do usuário. Você pode obter esse hash [aqui](https://bcrypt-generator.com/)
+DB_PORT='5432'
+```
+
+Dê permissão de execução ao arquivo e execute-o em seguida
+```bash
+chmod +x createUser.sh 
+./createUser.sh local
+```
+
+Cadastre o novo usuário informando as informações solicitadas
+```
+Cadastro de Usuários
+Digite a matrícula do usuário: 898989
+Digite o nome do usuário: SuperUsuario
+Digite a senha do usuário: 
+Digite o nome da role [ADMIN]: 
+```
+> [!NOTE]
+> É possível deixar em branco o campo de role apertando a tecla Enter. Nesse caso, a role atribuída ao usuário será a de admin
 
 ### Como rodar com Docker
 ```bash
 docker compose up -d --build
 ```
 
+Troque o valor de `DB_PORT`para `5433` no arquivo `.env`:
+```
+DB_PORT='5432'
+```
+
 #### Criando o usuário `ADMIN`
-Ao rodar a aplicação com docker, precisamos entrar no container do banco de dados para poder acessar o postgres. Então o comando para acessar a base de dados muda para:
+Ao rodar a aplicação com docker, utiliza-se o mesmo script para criação de usuários, mas passando o argumento com valor diferente, indicando que estamos usando o docker.
 ```bash
-docker exec -it postgres_db psql -U postgres -d tech_challenge
+./createUser.sh docker
 ```
 
 O comando para inserção de dados na base de dados permanece igual.
@@ -178,7 +197,7 @@ Crie um arquivo `.env` a partir de [.env.example](./.env.example).
 | --- | --- | --- | --- |
 | `PORT` | `3000` | Sim (apenas quando rodar localmente) | Porta da API |
 | `DB_HOST` | `localhost` ou `postgres` | Sim | Host do banco PostgreSQL |
-| `DB_PORT` | `5432` | Não | Porta do banco |
+| `DB_PORT` | `5432` | Sim | Porta do banco |
 | `DB_USERNAME` | `postgres` | Sim | Usuário do banco |
 | `DB_PASSWORD` | `postgres` | Sim | Senha do banco |
 | `DB_DATABASE` | `tech_challenge` | Sim | Nome do banco |
