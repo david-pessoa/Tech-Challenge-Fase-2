@@ -66,6 +66,25 @@ describe('Atualização de post', () => {
         expect(updatePost.titulo).toBe('Título atualizado');
         expect(postRepository.save).toHaveBeenCalledWith(post);
     });
+
+    it('Deve retornar 404 quando o id do post for inválido no PUT', async () => {
+        await expect(
+            updatePostService.execute(
+                'id-invalido',
+                'bd1de63c-5df5-4dfd-9736-ace2d7f092b1',
+                'PROFESSOR',
+                {
+                    titulo: 'Título atualizado',
+                }
+            )
+        ).rejects.toMatchObject({
+            statusCode: 404,
+            message: 'Post não encontrado',
+        });
+
+        expect(postRepository.findOne).not.toHaveBeenCalled();
+        expect(postRepository.save).not.toHaveBeenCalled();
+    });
 });
 
 describe('Listagem de posts', () => {
