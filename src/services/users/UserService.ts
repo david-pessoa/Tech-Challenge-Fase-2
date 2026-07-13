@@ -20,7 +20,7 @@ export class UserService {
 
     let roleBuscada: Role | null = null;
 
-    // Extraí role passada no corpo da requsição
+    // Extraí role passada no corpo da requisição
     if (dados.role) {
       roleBuscada = await roleRepository.findOne({
         where: { nome: dados.role.toUpperCase() },
