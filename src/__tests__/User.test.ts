@@ -49,7 +49,7 @@ describe('UserService - Criação de Usuários', () => {
     (userRepository.save as jest.Mock).mockResolvedValue(mockUsuarioSalvo);
 
     const resultado = await userService.create(
-      { matricula: '345678', nome: 'Novo Prof', senha: 'Prof345', roleId: '5a0e25a2-afa5-44e1-b519-4d1e2139725a' },
+      { matricula: '345678', nome: 'Novo Prof', senha: 'Prof345', role: 'PROFESSOR' },
       adminLogado
     );
 
@@ -73,7 +73,7 @@ describe('UserService - Criação de Usuários', () => {
     (userRepository.save as jest.Mock).mockResolvedValue(mockUsuarioSalvo);
 
     const resultado = await userService.create(
-      { matricula: '874569', nome: 'Novo Aluno', senha: 'Aluni936', roleId: '	ffc3d557-17c0-474e-a2f5-5fa816f2d854' },
+      { matricula: '874569', nome: 'Novo Aluno', senha: 'Aluni936', role: 'ALUNO' },
       professorLogado
     );
 
@@ -88,7 +88,7 @@ describe('UserService - Criação de Usuários', () => {
 
     await expect(
       userService.create(
-        { matricula: '754914', nome: 'Admin Invasor', senha: 'Admin853', roleId: 'bd1de63c-5df5-4dfd-9736-ace2d7f092b1' },
+        { matricula: '754914', nome: 'Admin Invasor', senha: 'Admin853', role: 'ADMIN' },
         professorLogado 
       )
     ).rejects.toMatchObject({
@@ -105,7 +105,7 @@ describe('UserService - Criação de Usuários', () => {
 
     await expect(
       userService.create(
-        { matricula: '564959', nome: 'Prof Falso', senha: 'Prof457', roleId: '5a0e25a2-afa5-44e1-b519-4d1e2139725a' },
+        { matricula: '564959', nome: 'Prof Falso', senha: 'Prof457', role: 'PROFESSOR' },
         professorLogado 
       )
     ).rejects.toMatchObject({
@@ -121,7 +121,7 @@ describe('UserService - Criação de Usuários', () => {
 
     await expect(
       userService.create(
-        { matricula: '000', nome: 'Clone', senha: 'Clone754', roleId: '	ffc3d557-17c0-474e-a2f5-5fa816f2d854' },
+        { matricula: '000', nome: 'Clone', senha: 'Clone754', role: 'PROFESSOR' },
         adminLogado
       )
     ).rejects.toMatchObject({

@@ -145,10 +145,6 @@ npm run migration:run
 É necessário criar um usuário `ADMIN` para que ele possa cadastrar os outros usuários da aplicação.
 Esse usuário deverá ser adicionado diretamente ao banco de dados por meio do script em shell `createUser`.
 
-Mude o valor de `DB_PORT`para `5432` no arquivo `.env`:
-```
-DB_PORT='5432'
-```
 
 Dê permissão de execução ao arquivo e execute-o em seguida
 ```bash
@@ -170,11 +166,6 @@ Digite o nome da role [ADMIN]:
 ### Como rodar com Docker
 ```bash
 docker compose up -d --build
-```
-
-Troque o valor de `DB_PORT`para `5433` no arquivo `.env`:
-```
-DB_PORT='5432'
 ```
 
 #### Criando o usuário `ADMIN`

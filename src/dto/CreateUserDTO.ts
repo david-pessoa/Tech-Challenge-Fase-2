@@ -3,5 +3,5 @@ export interface CreateUserDTO {
   matricula: string;
   nome: string;
   senha: string;
-  roleId?: string; // opcional — se não informado, usa ALUNO por padrão
+  role?: string; // opcional — se não informado, usa ALUNO por padrão
 }

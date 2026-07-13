@@ -313,14 +313,13 @@ paths:
             schema:
               type: object
               required:
-                - roleId
                 - matricula
                 - senha
                 - nome
               properties:
-                roleId:
+                role:
                   type: string
-                  example: 78e6d80d-b03a-48a6-881d-a695979e8a69
+                  example: ALUNO
                 matricula:
                   type: string
                   example: 303030
@@ -338,10 +337,25 @@ paths:
               schema:
                 type: object
                 properties:
-                  message:
+                  id:
                     type: string
-              example:
-                message: Usuário criado com sucesso!
+                    example: ae853bf8-9297-4ec2-b13d-3ddbbf332f4f
+                  matricula:
+                    type: string
+                    example: "303030"
+                  nome:
+                    type: string
+                    example: João Silva
+                  role:
+                    type: object
+                    properties:
+                      id: 
+                        type: string
+                        example: 78e6d80d-b03a-48a6-881d-a695979e8a69
+                      nome: 
+                        type: string
+                        example: ALUNO
+
         '400':
           $ref: '#/components/responses/CreateUserError'
 

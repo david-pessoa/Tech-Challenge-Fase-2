@@ -20,14 +20,17 @@ export class UserService {
 
     let roleBuscada: Role | null = null;
 
-    if (dados.roleId) {
+    // Extraí role passada no corpo da requsição
+    if (dados.role) {
       roleBuscada = await roleRepository.findOne({
-        where: { id: dados.roleId },
+        where: { nome: dados.role.toUpperCase() },
       });
 
       if (!roleBuscada) {
         throw new AppError(400, 'Role não encontrada');
       }
+
+    // Na ausência de role no corpo da requsição, atribui role de aluno
     } else {
       roleBuscada = await roleRepository.findOne({
         where: { nome: 'ALUNO' },
