@@ -10,6 +10,9 @@ Sem uma API centralizada, esse fluxo fica disperso e difícil de auditar.
 Foi construída uma API REST em Node.js para gerenciar usuários, roles, autenticação, posts e visualizações.
 A solução organiza o fluxo com Express, TypeORM, PostgreSQL e JWT, além de documentação Swagger disponível em `/docs`.
 
+### Link para API em produção no Render:
+[https://tech-challenge-fase-2-1uhu.onrender.com/docs/#/Usu%C3%A1rios/post_user](https://tech-challenge-fase-2-1uhu.onrender.com/docs/#/Usu%C3%A1rios/post_user)
+
 ### Níveis de acesso dentro do sistema
 Há 3 diferentes níveis de acesso (roles) para a API. Eles são: `ALUNO`, `PROFESSOR` e `ADMIN`.
 
