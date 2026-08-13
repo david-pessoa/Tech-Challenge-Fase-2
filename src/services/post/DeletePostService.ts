@@ -19,8 +19,11 @@ export class DeletePostService {
     }
 
     const isAdmin = userRole === 'ADMIN';
-    const isPostCreator = post.user.id === userId;
+    if (!post.user) {
+      throw new AppError(400, 'Post sem criador associado. Criador removido pelo administrador.');
+    }
 
+    const isPostCreator = post.user.id === userId;
     if (!isAdmin && !isPostCreator) {
       throw new AppError(403, 'Acesso não autorizado');
     }

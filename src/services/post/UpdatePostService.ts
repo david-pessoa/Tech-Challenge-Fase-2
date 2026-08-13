@@ -20,6 +20,10 @@ export class UpdatePostService {
     }
 
     const isAdmin = userRole === 'ADMIN';
+    if (!post.user) {
+      throw new AppError(400, 'Post sem criador associado. Criador removido pelo administrador.');
+    }
+
     const isPostCreator = post.user.id === userId;
 
     if (!isAdmin && !isPostCreator) {

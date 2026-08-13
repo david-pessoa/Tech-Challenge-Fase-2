@@ -10,3 +10,10 @@ userRouter.post(
   authorizeRoles('ADMIN', 'PROFESSOR'), 
   userController.create.bind(userController)
 );
+
+userRouter.delete(
+  '/:id',
+  authMiddleware,
+  authorizeRoles('ADMIN'),
+  userController.delete.bind(userController)
+);
