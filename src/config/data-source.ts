@@ -9,6 +9,7 @@ import { Post } from '../entities/Post';
 import { PostView } from '../entities/PostView';
 import { PostEPostView1781746779920 } from '../migrations/1781746779920-PostEPostView';
 import { SetNullOnPostUserDelete1786576866089 } from '../migrations/1786576866089-SetNullOnPostUserDelete';
+import { Subject } from '../entities/Subject';
 
 export const AppDataSource = new DataSource({
   type: 'postgres',
@@ -19,7 +20,7 @@ export const AppDataSource = new DataSource({
   database: env.database.name,
   synchronize: false,
   logging: false,
-  entities: [Role, User, Post, PostView],
+  entities: [Role, User, Post, PostView, Subject],
   migrations: [
     InitialSchema1781745332530, 
     PostEPostView1781746779920, 
