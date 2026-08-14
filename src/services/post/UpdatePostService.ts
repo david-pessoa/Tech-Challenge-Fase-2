@@ -1,6 +1,7 @@
 import { UpdatePostDTO } from '../../dto/UpdatePostDTO';
 import { AppError } from '../../middlewares/errorHandler';
 import { postRepository } from '../../repositories/PostRepository';
+import { subjectRepository } from '../../repositories/SubjectRepository';
 
 export class UpdatePostService {
   async execute(id: string, userId: string, userRole: string, dados: UpdatePostDTO) {
@@ -12,7 +13,7 @@ export class UpdatePostService {
 
     const post = await postRepository.findOne({
       where: { id },
-      relations: { user: true },
+      relations: { user: true, subject: true },
     });
 
     if (!post) {
@@ -20,11 +21,11 @@ export class UpdatePostService {
     }
 
     const isAdmin = userRole === 'ADMIN';
-    if (!post.user) {
+    if (!post.user && !isAdmin) {
       throw new AppError(400, 'Post sem criador associado. Criador removido pelo administrador.');
     }
 
-    const isPostCreator = post.user.id === userId;
+    const isPostCreator = post.user?.id === userId;
 
     if (!isAdmin && !isPostCreator) {
       throw new AppError(403, 'Acesso não autorizado');
@@ -33,6 +34,27 @@ export class UpdatePostService {
     if (dados.titulo) post.titulo = dados.titulo;
     if (dados.descricao) post.descricao = dados.descricao;
     if (dados.conteudo) post.conteudo = dados.conteudo;
+    if (dados.image) post.image = dados.image;
+
+    if (dados.subjectId || dados.subjectName) {
+      if (dados.subjectId && !uuidRegex.test(dados.subjectId)) {
+        throw new AppError(400, 'ID de matéria inválido');
+      }
+
+      const subject = dados.subjectId
+        ? await subjectRepository.findOne({
+          where: { id: dados.subjectId },
+        })
+        : await subjectRepository.findOne({
+          where: { nome: dados.subjectName! },
+        });
+
+      if (!subject) {
+        throw new AppError(400, 'Matéria não encontrada');
+      }
+
+      post.subject = subject;
+    }
 
     await postRepository.save(post);
 

@@ -17,7 +17,7 @@ export class SearchPostsService {
         { descricao: ILike(`%${termoBusca}%`) },
         { conteudo: ILike(`%${termoBusca}%`) },
       ],
-      relations: { user: true },
+      relations: { user: true, subject: true },
       order: { dataCriacao: 'ASC' },
     });
 
@@ -27,6 +27,11 @@ export class SearchPostsService {
       titulo: post.titulo,
       descricao: post.descricao,
       conteudo: post.conteudo,
+      image: post.image ? post.image.toString('base64') : null,
+      subject: {
+        id: post.subject.id,
+        nome: post.subject.nome,
+      },
       dataCriacao: post.dataCriacao,
       dataModificacao: post.dataModificacao,
     }));

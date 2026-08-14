@@ -12,6 +12,7 @@ export class PostController {
     try {
       await createPostService.execute({
         ...request.body,
+        image: request.file?.buffer ?? null,
         userId: request.user!.id,
       });
 
@@ -55,7 +56,10 @@ export class PostController {
     try {
       const id = String(request.params.id);
 
-      await updatePostService.execute(id, request.user!.id, request.user!.role.nome, request.body);
+      await updatePostService.execute(id, request.user!.id, request.user!.role.nome, {
+        ...request.body,
+        image: request.file?.buffer,
+      });
 
       return response.status(200).json({
         message: 'Post atualizado com sucesso!',

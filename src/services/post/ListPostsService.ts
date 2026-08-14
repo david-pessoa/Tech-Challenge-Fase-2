@@ -1,4 +1,3 @@
-import { AppError } from '../../middlewares/errorHandler';
 import { postRepository } from '../../repositories/PostRepository';
 
 export class ListPostsService {
@@ -8,6 +7,7 @@ export class ListPostsService {
         user: {
           role: true,
         },
+        subject: true,
         visualizacoes: {
           user: {
             role: true,
@@ -32,6 +32,11 @@ export class ListPostsService {
         titulo: post.titulo,
         descricao: post.descricao,
         conteudo: post.conteudo,
+        image: post.image ? post.image.toString('base64') : null,
+        subject: {
+          id: post.subject.id,
+          nome: post.subject.nome,
+        },
         dataCriacao: post.dataCriacao,
         dataModificacao: post.dataModificacao,
         criadoPor: post.user
@@ -51,11 +56,7 @@ export class ListPostsService {
       }
 
       if (userRole === 'PROFESSOR') {
-        if (!post.user) {
-          throw new AppError(400, 'Post sem criador associado. Criador removido pelo administrador.');
-        }
-
-        const isPostCreator = post.user.id === userId;
+        const isPostCreator = post.user?.id === userId;
         return {
           ...basePost,
           visualizacoes: isPostCreator ? visualizacoes : [],
