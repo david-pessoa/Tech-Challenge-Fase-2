@@ -40,7 +40,7 @@ export class Post {
   @JoinColumn({ name: 'user_id' })
   user!: User | null;
 
-  @Column({ name: 'image', nullable: true })
+  @Column({ type: 'text', name: 'image', nullable: true })
   image!: string | null;
 
   @OneToMany(() => PostView, postView => postView.post)
