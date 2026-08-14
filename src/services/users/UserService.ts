@@ -75,13 +75,13 @@ export class UserService {
     });
 
     if (!user) {
-      throw new AppError(404, 'Usuario não encontrado');
+      throw new AppError(404, 'Usuário não encontrado');
     }
 
     await userRepository.remove(user);
 
     return {
-      message: 'Usuario excluído com sucesso',
+      message: 'Usuário deletado com sucesso',
     };
   }
 }
