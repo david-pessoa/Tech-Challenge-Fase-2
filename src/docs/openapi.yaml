@@ -56,13 +56,14 @@ paths:
       requestBody:
         required: true
         content:
-          application/json:
+          multipart/form-data:
             schema:
               type: object
               required:
                 - titulo
                 - descricao
                 - conteudo
+                - subjectName
               properties:
                 titulo:
                   type: string
@@ -73,6 +74,21 @@ paths:
                 conteudo:
                   type: string
                   example: Lorem Ipsum dolor sit amet...
+                image:
+                  type: string
+                  format: binary
+                subjectName:
+                  type: string
+                  description: Matéria do post. No Swagger, este campo aparece como dropdown.
+                  enum:
+                    - Geral
+                    - Português
+                    - Matemática
+                    - Geografia
+                    - História
+                    - Ciências
+                    - Ensino Religioso
+                  example: Matemática
       responses:
         '201':
           description: Post criado com sucesso.
@@ -129,6 +145,10 @@ paths:
                 titulo: Aula inicial
                 descricao: Primeira aula de ciências do curso
                 conteudo: Lorem Ipsum dolor sit amet...
+                image: iVBORw0KGgoAAAANSUhEUgAAAAEAAAAB
+                subject:
+                  id: 78e6d80d-b03a-48a6-881d-a695979e8a69
+                  nome: Ciências
                 dataCriacao: '2026-01-29T10:00:00.000Z'
                 dataModificacao: '2026-05-04T10:00:00.000Z'
         '404':
@@ -155,7 +175,7 @@ paths:
       requestBody:
         required: true
         content:
-          application/json:
+          multipart/form-data:
             schema:
               type: object
               properties:
@@ -168,6 +188,21 @@ paths:
                 conteudo:
                   type: string
                   example: Conteúdo atualizado da postagem.
+                image:
+                  type: string
+                  format: binary
+                subjectName:
+                  type: string
+                  description: Matéria do post. No Swagger, este campo aparece como dropdown.
+                  enum:
+                    - Geral
+                    - Português
+                    - Matemática
+                    - Geografia
+                    - História
+                    - Ciências
+                    - Ensino Religioso
+                  example: Matemática
       responses:
         '200':
           description: Post atualizado com sucesso.
@@ -269,6 +304,10 @@ paths:
                   titulo: Aula inicial
                   descricao: Primeira aula de matemática do curso
                   conteudo: Lorem Ipsum dolor sit amet...
+                  image: iVBORw0KGgoAAAANSUhEUgAAAAEAAAAB
+                  subject:
+                    id: 78e6d80d-b03a-48a6-881d-a695979e8a69
+                    nome: Matemática
                   dataCriacao: '2026-01-29T10:00:00.000Z'
                   dataModificacao: '2026-05-04T10:00:00.000Z'
                   criadoPor:
@@ -279,6 +318,10 @@ paths:
                   titulo: Aula de Matemática
                   descricao: Aula de função do 2º grau
                   conteudo: Lorem Ipsum dolor sit amet...
+                  image: iVBORw0KGgoAAAANSUhEUgAAAAEAAAAB
+                  subject:
+                    id: 44d5256f-5199-4a3d-b06d-e3d7cd0f64f1
+                    nome: Matemática
                   dataCriacao: '2026-03-10T10:00:00.000Z'
                   dataModificacao: '2026-05-04T10:00:00.000Z'
                   criadoPor:
@@ -527,6 +570,13 @@ components:
         conteudo:
           type: string
           example: Conteúdo da aula...
+        image:
+          type: string
+          nullable: true
+          description: Imagem do post codificada em base64.
+          example: iVBORw0KGgoAAAANSUhEUgAAAAEAAAAB
+        subject:
+          $ref: '#/components/schemas/Subject'
         dataCriacao:
           type: string
           format: '2026-07-06T10:00:00.000Z'
@@ -542,6 +592,16 @@ components:
             tipoUsuario:
               type: string
               example: PROFESSOR
+
+    Subject:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 78e6d80d-b03a-48a6-881d-a695979e8a69
+        nome:
+          type: string
+          example: Matemática
 
     PostAluno:
       allOf:
@@ -598,6 +658,10 @@ components:
           titulo: Aula 1 - TypeScript
           descricao: Introdução ao TypeScript
           conteudo: Conteúdo da aula
+          image: iVBORw0KGgoAAAANSUhEUgAAAAEAAAAB
+          subject:
+            id: 78e6d80d-b03a-48a6-881d-a695979e8a69
+            nome: Matemática
           dataCriacao: '2026-07-06T10:00:00.000Z'
           dataModificacao: '2026-07-06T10:00:00.000Z'
           criadoPor:
@@ -612,6 +676,10 @@ components:
           titulo: Aula 2 - Node.js
           descricao: Introdução ao Node.js
           conteudo: Conteúdo da aula
+          image: iVBORw0KGgoAAAANSUhEUgAAAAEAAAAB
+          subject:
+            id: 90b6d80d-b03a-48a6-881d-a695979e8a70
+            nome: Ciências
           dataCriacao: '2026-07-06T11:00:00.000Z'
           dataModificacao: '2026-07-06T11:00:00.000Z'
           criadoPor:

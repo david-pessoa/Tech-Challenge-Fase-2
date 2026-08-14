@@ -15,6 +15,11 @@ const swaggerOptions = {
   swaggerOptions: {
     persistAuthorization: true,
   },
+  customCss: `
+    .parameter__empty_value_toggle {
+      display: none !important;
+    }
+  `,
 };
 
 app.use(express.json());
