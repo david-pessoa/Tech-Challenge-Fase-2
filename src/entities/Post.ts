@@ -40,8 +40,8 @@ export class Post {
   @JoinColumn({ name: 'user_id' })
   user!: User | null;
 
-  @Column({ type: 'text', name: 'image', nullable: true })
-  image!: string | null;
+  @Column({ type: 'bytea', name: 'image', nullable: true })
+  image!: Buffer | null;
 
   @OneToMany(() => PostView, postView => postView.post)
   visualizacoes!: PostView[];

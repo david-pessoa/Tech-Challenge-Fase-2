@@ -28,7 +28,7 @@ export class AddSubjects1786667649646 implements MigrationInterface {
 
     await queryRunner.query(`
       ALTER TABLE "posts"
-      ADD "image" character varying
+      ADD "image" bytea
     `);
 
     await queryRunner.query(`
