@@ -79,7 +79,6 @@ paths:
                   format: binary
                 subjectName:
                   type: string
-                  description: Matéria do post. No Swagger, este campo aparece como dropdown.
                   enum:
                     - Geral
                     - Português
@@ -193,7 +192,6 @@ paths:
                   format: binary
                 subjectName:
                   type: string
-                  description: Matéria do post. No Swagger, este campo aparece como dropdown.
                   enum:
                     - Geral
                     - Português
