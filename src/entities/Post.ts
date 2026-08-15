@@ -33,12 +33,9 @@ export class Post {
   @UpdateDateColumn({ name: 'data_modificacao' })
   dataModificacao!: Date;
 
-  @ManyToOne(() => User, user => user.posts, {
-    nullable: true,
-    onDelete: 'SET NULL',
-  })
+  @ManyToOne(() => User, user => user.posts, { nullable: false, onDelete: 'CASCADE' })
   @JoinColumn({ name: 'user_id' })
-  user!: User | null;
+  user!: User;
 
   @Column({ type: 'bytea', name: 'image', nullable: true })
   image!: Buffer | null;
