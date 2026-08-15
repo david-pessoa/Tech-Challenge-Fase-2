@@ -32,12 +32,9 @@ export class Post {
   @UpdateDateColumn({ name: 'data_modificacao' })
   dataModificacao!: Date;
 
-  @ManyToOne(() => User, user => user.posts, {
-    nullable: true,
-    onDelete: 'SET NULL',
-  })
+  @ManyToOne(() => User, user => user.posts, { nullable: false, onDelete: 'CASCADE' })
   @JoinColumn({ name: 'user_id' })
-  user!: User | null;
+  user!: User;
 
   @OneToMany(() => PostView, postView => postView.post)
   visualizacoes!: PostView[];
