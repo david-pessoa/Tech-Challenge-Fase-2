@@ -204,6 +204,7 @@ Crie um arquivo `.env` a partir de [.env.example](./.env.example).
 | `GET` | `/docs` | Não | - | Documentação Swagger da API |
 | `POST` | `/api/auth/login` | Não | - | Realiza login e retorna token JWT |
 | `POST` | `/api/user` | Sim | `PROFESSOR`, `ADMIN` | Cadastra um novo usuário |
+| `DELETE` | `/api/user/:id` | Sim | `ADMIN` | Remove um usuário. Posts criados por ele e visualizações desses posts são removidos em cascata |
 | `GET` | `/api/posts` | Sim | Qualquer usuário autenticado | Lista todos os posts |
 | `GET` | `/api/posts/search?termo=...` | Sim | Qualquer usuário autenticado | Busca posts por termo |
 | `GET` | `/api/posts/:id` | Sim | Qualquer usuário autenticado | Retorna um post pelo ID e registra visualização se o usuário for `ALUNO` |

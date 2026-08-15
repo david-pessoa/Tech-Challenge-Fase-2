@@ -396,7 +396,7 @@ paths:
       tags:
         - Usuários
       summary: Deletar usuário
-      description: Deleta um usuário do sistema. Apenas administradores podem deletar usuários.
+      description: Deleta um usuário do sistema. Apenas administradores podem deletar usuários. Quando o usuário excluído for criador de posts, seus posts também são excluídos. As visualizações vinculadas a esses posts são excluídas em cascata.
       security:
         - bearerAuth: []
       parameters:
