@@ -130,3 +130,94 @@ describe('UserService - Criação de Usuários', () => {
     });
   });
 });
+
+describe('UserService - Atualização de Usuários', () => {
+  const roleProfessor = { id: '5a0e25a2-afa5-44e1-b519-4d1e2139725a', nome: 'PROFESSOR' } as Role;
+  const roleAluno = { id: 'ffc3d557-17c0-474e-a2f5-5fa816f2d854', nome: 'ALUNO' } as Role;
+
+  const idValido = '16dd67fd-afec-4080-a36f-0c8605d9c662';
+  const idInvalido = 'id-invalido';
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('Deve atualizar o nome de um usuário existente', async () => {
+    const usuarioExistente = { id: idValido, nome: 'Nome Antigo', senha: 'senha_antiga', role: roleAluno } as User;
+
+    (userRepository.findOne as jest.Mock).mockResolvedValue(usuarioExistente);
+    (userRepository.save as jest.Mock).mockResolvedValue(usuarioExistente);
+
+    const resultado = await userService.update(idValido, { nome: 'Nome Novo' });
+
+    expect(resultado).toHaveProperty('nome', 'Nome Novo');
+    expect(resultado).not.toHaveProperty('senha');
+    expect(userRepository.save).toHaveBeenCalled();
+  });
+
+  it('Deve criptografar a nova senha ao atualizar', async () => {
+    const usuarioExistente = { id: idValido, nome: 'Fulano', senha: 'senha_antiga', role: roleAluno } as User;
+
+    (userRepository.findOne as jest.Mock).mockResolvedValue(usuarioExistente);
+    (userRepository.save as jest.Mock).mockResolvedValue(usuarioExistente);
+
+    await userService.update(idValido, { senha: 'NovaSenha123' });
+
+    expect(usuarioExistente.senha).toBe('senha_criptografada_fake');
+    expect(userRepository.save).toHaveBeenCalled();
+  });
+
+  it('Deve atualizar a role de um usuário para uma role válida', async () => {
+    const usuarioExistente = { id: idValido, nome: 'Fulano', senha: 'senha_antiga', role: roleAluno } as User;
+
+    (userRepository.findOne as jest.Mock).mockResolvedValue(usuarioExistente);
+    (roleRepository.findOne as jest.Mock).mockResolvedValue(roleProfessor);
+    (userRepository.save as jest.Mock).mockResolvedValue(usuarioExistente);
+
+    const resultado = await userService.update(idValido, { role: 'PROFESSOR' });
+
+    expect(resultado.role).toEqual(roleProfessor);
+    expect(userRepository.save).toHaveBeenCalled();
+  });
+
+  it('Não deve atualizar para uma role inexistente', async () => {
+    const usuarioExistente = { id: idValido, nome: 'Fulano', senha: 'senha_antiga', role: roleAluno } as User;
+
+    (userRepository.findOne as jest.Mock).mockResolvedValue(usuarioExistente);
+    (roleRepository.findOne as jest.Mock).mockResolvedValue(null);
+
+    await expect(
+      userService.update(idValido, { role: 'INEXISTENTE' })
+    ).rejects.toMatchObject({
+      statusCode: 400,
+      message: 'Role não encontrada',
+    });
+
+    expect(userRepository.save).not.toHaveBeenCalled();
+  });
+
+  it('Não deve atualizar um usuário com id em formato inválido', async () => {
+    await expect(
+      userService.update(idInvalido, { nome: 'Qualquer Nome' })
+    ).rejects.toMatchObject({
+      statusCode: 404,
+      message: 'Usuário não encontrado',
+    });
+
+    expect(userRepository.findOne).not.toHaveBeenCalled();
+    expect(userRepository.save).not.toHaveBeenCalled();
+  });
+
+  it('Não deve atualizar um usuário que não existe', async () => {
+    (userRepository.findOne as jest.Mock).mockResolvedValue(null);
+
+    await expect(
+      userService.update(idValido, { nome: 'Qualquer Nome' })
+    ).rejects.toMatchObject({
+      statusCode: 404,
+      message: 'Usuário não encontrado',
+    });
+
+    expect(userRepository.save).not.toHaveBeenCalled();
+  });
+});

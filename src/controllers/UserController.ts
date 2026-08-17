@@ -12,6 +12,17 @@ export class UserController {
       next(error);
     }
   }
+
+  async update(request: Request, response: Response, next: NextFunction) {
+    try {
+      const id = String(request.params.id);
+      const usuario = await userService.update(id, request.body);
+
+      response.status(200).json(usuario);
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 export const userController = new UserController();
