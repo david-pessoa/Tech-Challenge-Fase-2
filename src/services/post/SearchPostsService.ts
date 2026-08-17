@@ -23,7 +23,7 @@ export class SearchPostsService {
 
     return posts.map(post => ({
       postId: post.id,
-      userId: post.user.id,
+      userId: post.user ? post.user.id : null,
       titulo: post.titulo,
       descricao: post.descricao,
       conteudo: post.conteudo,

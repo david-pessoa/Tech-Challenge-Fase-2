@@ -34,8 +34,8 @@ export class ListPostsService {
         dataCriacao: post.dataCriacao,
         dataModificacao: post.dataModificacao,
         criadoPor: {
-          nome: post.user.nome,
-          tipoUsuario: post.user.role.nome,
+            nome: post.user.nome,
+            tipoUsuario: post.user.role.nome,
         },
       };
 
@@ -49,7 +49,6 @@ export class ListPostsService {
 
       if (userRole === 'PROFESSOR') {
         const isPostCreator = post.user.id === userId;
-
         return {
           ...basePost,
           visualizacoes: isPostCreator ? visualizacoes : [],

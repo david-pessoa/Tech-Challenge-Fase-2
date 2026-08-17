@@ -20,7 +20,6 @@ export class DeletePostService {
 
     const isAdmin = userRole === 'ADMIN';
     const isPostCreator = post.user.id === userId;
-
     if (!isAdmin && !isPostCreator) {
       throw new AppError(403, 'Acesso não autorizado');
     }

@@ -8,6 +8,8 @@ import { InitialSchema1781745332530 } from '../migrations/1781745332530-InitialS
 import { Post } from '../entities/Post';
 import { PostView } from '../entities/PostView';
 import { PostEPostView1781746779920 } from '../migrations/1781746779920-PostEPostView';
+import { CascadePostsOnUserDelete1786576866089 } from '../migrations/1786576866089-CascadePostsOnUserDelete';
+import { CleanupOrphanPostsAfterUserDelete1786758093339 } from '../migrations/1786758093339-CleanupOrphanPostsAfterUserDelete';
 
 export const AppDataSource = new DataSource({
   type: 'postgres',
@@ -19,5 +21,10 @@ export const AppDataSource = new DataSource({
   synchronize: false,
   logging: false,
   entities: [Role, User, Post, PostView],
-  migrations: [InitialSchema1781745332530, PostEPostView1781746779920],
+  migrations: [
+    InitialSchema1781745332530,
+    PostEPostView1781746779920,
+    CascadePostsOnUserDelete1786576866089,
+    CleanupOrphanPostsAfterUserDelete1786758093339,
+  ],
 });
