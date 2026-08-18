@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { createCommentService} from '../services/comment/CreateCommentService';
+import { getCommentService } from '../services/comment/GetCommentService';
 
 export class CommentController {
   async create(request: Request, response: Response) {
@@ -23,18 +24,16 @@ export class CommentController {
   }
 
   async findById(request: Request, response: Response) {
-    // try {
-    //   const postId = String(request.params.postId);
-    //   const commentId = String(request.params.commentId);
+    try {
+      const id = String(request.params.commentId);
+      const comment = await getCommentService.execute(id);
 
-    //   const comment = await getCommentService.execute(postId, commentId);
-
-    //   return response.status(200).json(comment);
-    // } catch (error) {
-    //   return response.status(404).json({
-    //     message: 'Comentário não encontrado',
-    //   });
-    // }
+      return response.status(200).json(comment);
+    } catch (error) {
+      return response.status(404).json({
+        message: 'Comentário não encontrado',
+      });
+    }
   }
 
   async list(request: Request, response: Response) {

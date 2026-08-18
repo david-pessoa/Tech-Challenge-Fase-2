@@ -31,7 +31,7 @@ app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, swaggerOption
 app.use('/api/posts', postRoutes);
 app.use('/api/user', userRouter); // cadastro de usuários
 app.use('/api/auth', authRouter); // login
-app.use('/api/post/:postId/comment', commentRoutes) //Comentários de posts
+app.use('/api/post/comment', commentRoutes) //Comentários de posts
 
 // Middleware de erros
 app.use(errorHandler);
