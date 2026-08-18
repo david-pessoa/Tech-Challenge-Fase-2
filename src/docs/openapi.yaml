@@ -368,7 +368,8 @@ paths:
           required: true
           schema:
             type: string
-          description: ID do post
+            format: uuid
+          description: ID do comentário
       responses:
         '200':
           description: Lista de posts encontrados.
@@ -399,6 +400,159 @@ paths:
                   message:
                     type: string
                     example: Comentário não encontrado
+    
+    patch:
+      tags:
+        - Comentários
+      summary: Atualiza os dados do comentário
+      description: Esta rota atualiza o conteúdo de um comentário
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: commentId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: ID do comentário
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - conteudo
+              properties:
+                conteudo:
+                  type: string
+                  example: Novo conteúdo para o comentário
+      responses:
+        '200':
+          description: Atualização feita com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Comentário atualizado com sucesso!
+
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        
+        '403':
+          description: Impede outros usuários de editar os comentários. Apenas o autor do comentário ou um Admin podem editar comentários
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Somente o autor do comentário pode editar seus próprios comentários
+
+        '404': 
+          description: Comentário não encontrado
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      message:
+                        type: string
+                        example: Autor do comentário não encontrado
+                  - type: object
+                    properties:
+                      message:
+                        type: string
+                        example: Comentário não encontrado
+
+    post:
+      tags:
+        - Comentários
+      summary: Cria um novo comentário num post
+      description: Retorna uma mensagem indicando sucesso. O parâmetro da rota representa o ID do post.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: commentId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: ID do post
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - conteudo
+              properties:
+                parentCommentId:
+                  type: string
+                  format: uuid
+                  example: ae853bf8-9297-4ec2-b13d-3ddbbf332f4f
+                conteudo:
+                  type: string
+                  example: Lorem Ipsum dolor sit amet...
+      responses:
+        '201':
+          description: Comentário criado com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Comentário criado com sucesso!
+        '400':
+          description: Dados inválidos
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    examples:
+                      noUserId:
+                        value: Usuário é obrigatório
+                      noPostId:
+                        value: Post é obrigatório.
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          description: Somente o autor do post pode responder a comentários do post
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Somente o autor do post pode responder a comentários do post
+        '404':
+          description: Usuário ou post não encontrado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    examples:
+                      userNotFound:
+                        value: Usuário não encontrado
+                      postNotFound:
+                        value: Post não encontrado
 
   /post/comment/list/{postId}:
     get: 
@@ -444,8 +598,6 @@ paths:
                   dataCriacao: 2026-08-18T21:57:04.433Z
                   dataModificacao: 2026-08-18T21:57:04.433Z
 
-                
-
         '401':
           $ref: '#/components/responses/UnauthorizedError'
 
@@ -460,94 +612,6 @@ paths:
                     type: string
                     example: Post não encontrado
 
-  /post/comment/{postId}:
-    post:
-      tags:
-        - Comentários
-      summary: Cria um novo comentário num post
-      description: Retorna uma mensagem indicando sucesso.
-      security:
-        - bearerAuth: []
-      parameters:
-      - name: postId
-        in: path
-        required: true
-        schema:
-          type: string
-        description: ID do post
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required:
-                - conteudo
-
-              properties:
-                parentCommentId:
-                  type: string
-                  example: ae853bf8-9297-4ec2-b13d-3ddbbf332f4f
-                conteudo:
-                  type: string
-                  example: Lorem Ipsum dolor sit amet...
-      responses:
-        '201':
-          description: Commentário criado com sucesso
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: Comentário criado com sucesso!
-        '400': 
-          description: Somente o autor do post pode responder a comentários do post
-          content:
-            application/json:
-              schema:
-              examples:
-                noUserId:
-                  summary: Quando o userId não é passado corretamente
-                  value:
-                    message: Usuário é obrigatório
-
-                noPostId:
-                  summary: Quando o postId não é passado corretamente
-                  value:
-                    message: Post é obrigatório.
-        '401':
-          $ref: '#/components/responses/UnauthorizedError'
-        
-        '403': 
-          description: Somente o autor do post pode responder a comentários do post
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: Somente o autor do post pode responder a comentários do post
-                  
-        '404': 
-          description: Somente o autor do post pode responder a comentários do post
-          content:
-            application/json:
-              schema:
-              examples:
-                userNotFound:
-                  summary: Usuário não encontrado
-                  value:
-                    message: Usuário não encontrado
-
-                postNotFound:
-                  summary: Post não encontrado
-                  value:
-                    message: Post não encontrado
-
-      
   /user:
     post:
       tags:
