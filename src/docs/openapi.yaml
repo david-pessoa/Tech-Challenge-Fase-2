@@ -12,6 +12,7 @@ servers:
 
 tags:
   - name: Posts
+  - name: Comentários
   - name: Usuários
   - name: Autenticação
 
@@ -352,6 +353,94 @@ paths:
           schema:
             type: string
           description: ID do post
+  
+  /post/comment/{postId}:
+    post:
+      tags:
+        - Comentários
+      summary: Cria um novo comentário num post
+      description: Retorna uma mensagem indicando sucesso.
+      security:
+        - bearerAuth: []
+      parameters:
+      - name: postId
+        in: path
+        required: true
+        schema:
+          type: string
+        description: ID do post
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - conteudo
+
+              properties:
+                parentCommentId:
+                  type: string
+                  example: ae853bf8-9297-4ec2-b13d-3ddbbf332f4f
+                conteudo:
+                  type: string
+                  example: Lorem Ipsum dolor sit amet...
+      responses:
+        '201':
+          description: Commentário criado com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Comentário criado com sucesso!
+        '400': 
+          description: Somente o autor do post pode responder a comentários do post
+          content:
+            application/json:
+              schema:
+              examples:
+                noUserId:
+                  summary: Quando o userId não é passado corretamente
+                  value:
+                    message: Usuário é obrigatório
+
+                noPostId:
+                  summary: Quando o postId não é passado corretamente
+                  value:
+                    message: Post é obrigatório.
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        
+        '403': 
+          description: Somente o autor do post pode responder a comentários do post
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Somente o autor do post pode responder a comentários do post
+                  
+        '404': 
+          description: Somente o autor do post pode responder a comentários do post
+          content:
+            application/json:
+              schema:
+              examples:
+                userNotFound:
+                  summary: Usuário não encontrado
+                  value:
+                    message: Usuário não encontrado
+
+                postNotFound:
+                  summary: Post não encontrado
+                  value:
+                    message: Post não encontrado
+
       
   /user:
     post:
@@ -643,6 +732,26 @@ components:
                   type: string
                   format: date-time
                   example: '2026-07-06T12:00:00.000Z'
+    Commment:
+      type: object
+      properties:
+        parentCommentId: 
+          type: string
+        commentId: 
+          type: string
+        postId: 
+          type: string
+        userId: 
+          type: string
+        conteudo: 
+          type: string
+        dataCriacao:
+          type: string
+          format: '2026-07-06T10:00:00.000Z'
+        dataModificacao:
+          type: string
+          format: '2026-07-06T10:00:00.000Z'
+        
 
     Usuario:
       type: object
