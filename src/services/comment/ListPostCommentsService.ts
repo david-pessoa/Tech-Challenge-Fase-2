@@ -1,3 +1,4 @@
+import { AppError } from '../../middlewares/errorHandler';
 import { commentRepository } from '../../repositories/CommentRepository';
 import { postRepository } from '../../repositories/PostRepository';
 
@@ -11,7 +12,7 @@ export class ListPostCommentsService {
     });
 
     if (!post) {
-      throw new Error('Post não encontrado');
+      throw new AppError(404, 'Post não encontrado');
     }
 
     console.log(post.comments);

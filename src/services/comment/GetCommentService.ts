@@ -1,3 +1,4 @@
+import { AppError } from "../../middlewares/errorHandler";
 import { commentRepository } from "../../repositories/CommentRepository";
 
 export class GetCommentService {
@@ -12,7 +13,7 @@ export class GetCommentService {
     });
 
     if (!comment) {
-      throw new Error('Comentário não encontrado');
+      throw new AppError(404, 'Comentário não encontrado');
     }
 
     return {

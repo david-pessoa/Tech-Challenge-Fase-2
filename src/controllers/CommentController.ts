@@ -2,9 +2,10 @@ import { NextFunction, Request, Response } from 'express';
 import { createCommentService} from '../services/comment/CreateCommentService';
 import { getCommentService } from '../services/comment/GetCommentService';
 import { listPostCommentsService } from '../services/comment/ListPostCommentsService';
+import { updateCommentService } from '../services/comment/UpdateCommentService';
 
 export class CommentController {
-  async create(request: Request, response: Response) {
+  async create(request: Request, response: Response, next: NextFunction) {
     try {
       const postId = String(request.params.postId);
 
@@ -18,22 +19,18 @@ export class CommentController {
         message: 'Commentário criado com sucesso!',
       });
     } catch (error) {
-      return response.status(400).json({
-        message: 'Dados inválidos',
-      });
+      return next(error)
     }
   }
 
-  async findById(request: Request, response: Response) {
+  async findById(request: Request, response: Response, next: NextFunction) {
     try {
       const id = String(request.params.commentId);
       const comment = await getCommentService.execute(id);
 
       return response.status(200).json(comment);
     } catch (error) {
-      return response.status(404).json({
-        message: 'Comentário não encontrado',
-      });
+      return next(error)
     }
   }
 
@@ -45,20 +42,17 @@ export class CommentController {
   }
 
   async update(request: Request, response: Response, next: NextFunction) {
-    // try {
-    //   const id = String(request.params.id);
+    try {
+      const CommentId = String(request.params.commentId);
 
-    //   await updatePostService.execute(id, request.user!.id, request.user!.role.nome, {
-    //     ...request.body,
-    //     image: request.file?.buffer,
-    //   });
+      await updateCommentService.execute(CommentId, request.user!.id, request.body);
 
-    //   return response.status(200).json({
-    //     message: 'Post atualizado com sucesso!',
-    //   });
-    // } catch (error) {
-    //   return next(error);
-    // }
+      return response.status(200).json({
+        message: 'Comentário atualizado com sucesso!',
+      });
+    } catch (error) {
+      return next(error);
+    }
   }
 
   async delete(request: Request, response: Response, next: NextFunction) {
