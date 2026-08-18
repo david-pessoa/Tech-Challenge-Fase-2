@@ -12,6 +12,7 @@ router.get('/:commentId', commentController.findById);
 router.get('/list/:postId', commentController.list);
 
 router.patch('/:commentId', commentController.update);
+router.delete('/:commentId', commentController.delete);
 
 
 

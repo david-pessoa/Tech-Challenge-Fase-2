@@ -3,6 +3,7 @@ import { createCommentService} from '../services/comment/CreateCommentService';
 import { getCommentService } from '../services/comment/GetCommentService';
 import { listPostCommentsService } from '../services/comment/ListPostCommentsService';
 import { updateCommentService } from '../services/comment/UpdateCommentService';
+import { deleteCommentService } from '../services/comment/DeleteCommentService';
 
 export class CommentController {
   async create(request: Request, response: Response, next: NextFunction) {
@@ -56,15 +57,15 @@ export class CommentController {
   }
 
   async delete(request: Request, response: Response, next: NextFunction) {
-    // try {
-    //   const id = String(request.params.id);
+    try {
+      const id = String(request.params.commentId);
 
-    //   const result = await deletePostService.execute(id, request.user!.id, request.user!.role.nome);
+      const result = await deleteCommentService.execute(id, request.user!.id, request.user!.role.nome);
 
-    //   return response.status(200).json(result);
-    // } catch (error) {
-    //   return next(error);
-    // }
+      return response.status(200).json(result);
+    } catch (error) {
+      return next(error);
+    }
   }
 }
 
