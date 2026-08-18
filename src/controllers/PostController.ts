@@ -6,6 +6,7 @@ import { updatePostService } from '../services/post/UpdatePostService';
 import { deletePostService } from '../services/post/DeletePostService';
 import { searchPostsService } from '../services/post/SearchPostsService';
 import { markPostAsViewedService } from '../services/post/MarkPostAsViewedService';
+import { getPostImageService } from '../services/post/GetPostImageService';
 
 export class PostController {
   async create(request: Request, response: Response) {
@@ -44,10 +45,7 @@ export class PostController {
   }
 
   async list(request: Request, response: Response) {
-    const posts = await listPostsService.execute(
-      request.user!.id,
-      request.user!.role.nome
-    );
+    const posts = await listPostsService.execute(request.user!.id, request.user!.role.nome);
 
     return response.status(200).json(posts);
   }
@@ -89,6 +87,36 @@ export class PostController {
       return response.status(200).json(posts);
     } catch (error) {
       return next(error);
+    }
+  }
+
+  async getPostImage(request: Request, response: Response) {
+    try {
+      const id = String(request.params.id);
+      const post = await getPostImageService.execute(id);
+
+      if (!post.image) {
+        return response.status(404).json({
+          message: 'Imagem não encontrada',
+        });
+      }
+
+      const { fileTypeFromBuffer } = await import('file-type');
+      const tipo = await fileTypeFromBuffer(post.image);
+
+      if (!tipo) {
+        return response.status(415).json({
+          message: 'Tipo de imagem não identificado',
+        });
+      }
+
+      response.type(tipo.mime);
+      return response.send(post.image);
+
+    } catch (error) {
+      response.status(500).json({
+        message: 'Erro ao obter a imagem',
+      });
     }
   }
 }

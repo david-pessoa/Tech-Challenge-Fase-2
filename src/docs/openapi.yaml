@@ -338,7 +338,21 @@ paths:
                 message: Termo de busca inválido
         '401':
           $ref: '#/components/responses/UnauthorizedError'
-
+  
+  /posts/{id}/image:
+    get:
+      tags:
+        - Posts
+      summary: Buscar imagem do post
+      description: Busca imagens
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID do post
+      
   /user:
     post:
       tags:

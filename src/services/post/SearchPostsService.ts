@@ -27,7 +27,7 @@ export class SearchPostsService {
       titulo: post.titulo,
       descricao: post.descricao,
       conteudo: post.conteudo,
-      image: post.image ? post.image.toString('base64') : null,
+      image: post.image ? `/api/posts/${post.id}/image` : null,
       subject: {
         id: post.subject.id,
         nome: post.subject.nome,
