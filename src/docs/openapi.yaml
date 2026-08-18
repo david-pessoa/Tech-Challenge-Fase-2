@@ -354,7 +354,53 @@ paths:
             type: string
           description: ID do post
   
-  /post/comment/{postId}:
+  /post/comment/{commentId}:
+    get: 
+      tags:
+        - Comentários
+      summary: Obtém um comentário pelo ID
+      description: Esta rota obtém todos os dados de um post fornecendo apenas seu ID
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: commentId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID do post
+      responses:
+        '200':
+          description: Lista de posts encontrados.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Commment'
+              example:
+                commentId: 428e7264-b4fa-46c6-a595-568e27b947d5
+                postId: ffc3d557-17c0-474e-a2f5-5fa816f2d854
+                userId: 7a00b76b-6528-4f49-a3d7-f95648008a62
+                conteudo: Conteúdo do Post... Lorem Ipsum dolor sit amet
+                dataCriacao: 2026-08-18T21:57:04.433Z
+                dataModificacao: 2026-08-18T21:57:04.433Z
+
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+        '404': 
+          description: Comentário não encontrado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Comentário não encontrado
+
+
     post:
       tags:
         - Comentários
