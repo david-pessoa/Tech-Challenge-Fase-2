@@ -8,9 +8,8 @@ router.use(authMiddleware);
 
 router.post('/:postId', commentController.create);
 router.get('/:commentId', commentController.findById);
-// router.get('/', commentController.list);
-// router.get('/:id', commentController.findById);
-// router.get('/:id', commentController.findById);
+router.get('/list/:postId', commentController.list);
+
 
 
 

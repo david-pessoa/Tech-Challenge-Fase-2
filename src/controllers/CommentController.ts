@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { createCommentService} from '../services/comment/CreateCommentService';
 import { getCommentService } from '../services/comment/GetCommentService';
+import { listPostCommentsService } from '../services/comment/ListPostCommentsService';
 
 export class CommentController {
   async create(request: Request, response: Response) {
@@ -37,9 +38,10 @@ export class CommentController {
   }
 
   async list(request: Request, response: Response) {
-    // const posts = await listPostsService.execute(request.user!.id, request.user!.role.nome);
+    const postId = String(request.params.postId);
+    const postComments = await listPostCommentsService.execute(postId);
 
-    // return response.status(200).json(posts);
+    return response.status(200).json(postComments);
   }
 
   async update(request: Request, response: Response, next: NextFunction) {
