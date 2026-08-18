@@ -5,6 +5,7 @@
   "scripts": {
     "build": "tsc",
     "check": "tsc --noEmit",
+    "watch": "ts-node src/server.ts --watch",
     "dev": "ts-node src/server.ts",
     "start": "node dist/server.js",
     "migration:run": "typeorm migration:run -d ./dist/config/data-source.js",
