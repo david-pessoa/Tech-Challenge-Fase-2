@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { createCommentService} from '../services/comment/CreateCommentService';
+import { createCommentService } from '../services/comment/CreateCommentService';
 import { getCommentService } from '../services/comment/GetCommentService';
 import { listPostCommentsService } from '../services/comment/ListPostCommentsService';
 import { updateCommentService } from '../services/comment/UpdateCommentService';
@@ -13,14 +13,14 @@ export class CommentController {
       await createCommentService.execute({
         ...request.body,
         userId: request.user!.id,
-        postId
+        postId,
       });
 
       return response.status(201).json({
         message: 'Commentário criado com sucesso!',
       });
     } catch (error) {
-      return next(error)
+      return next(error);
     }
   }
 
@@ -31,15 +31,19 @@ export class CommentController {
 
       return response.status(200).json(comment);
     } catch (error) {
-      return next(error)
+      return next(error);
     }
   }
 
-  async list(request: Request, response: Response) {
-    const postId = String(request.params.postId);
-    const postComments = await listPostCommentsService.execute(postId);
-
-    return response.status(200).json(postComments);
+  async list(request: Request, response: Response, next: NextFunction) {
+    try {
+      const postId = String(request.params.postId);
+      const postComments = await listPostCommentsService.execute(postId);
+      return response.status(200).json(postComments);
+      
+    } catch (error) {
+      next(error);
+    }
   }
 
   async update(request: Request, response: Response, next: NextFunction) {
@@ -60,7 +64,11 @@ export class CommentController {
     try {
       const id = String(request.params.commentId);
 
-      const result = await deleteCommentService.execute(id, request.user!.id, request.user!.role.nome);
+      const result = await deleteCommentService.execute(
+        id,
+        request.user!.id,
+        request.user!.role.nome
+      );
 
       return response.status(200).json(result);
     } catch (error) {

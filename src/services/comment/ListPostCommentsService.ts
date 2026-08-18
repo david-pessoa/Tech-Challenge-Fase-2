@@ -15,14 +15,13 @@ export class ListPostCommentsService {
       throw new AppError(404, 'Post não encontrado');
     }
 
-    console.log(post.comments);
-
     const result = await Promise.all(
       post.comments.map(async comment => {
         const commentData = await commentRepository.findOne({
           where: { id: comment.id },
           relations: {
             user: true,
+            parentComment: true
           },
         });
 

@@ -400,7 +400,67 @@ paths:
                     type: string
                     example: Comentário não encontrado
 
+  /post/comment/list/{postId}:
+    get: 
+      tags:
+        - Comentários
+      summary: Obtém lista com todos os dados dos comentários vinculados a um post
+      description: Esta rota obtém todos os dados dos comentários de um post fornecendo apenas seu ID
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: postId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID do post
+      responses:
+        '200':
+          description: Lista de comentários encontrados.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Commment'
+              example:
+                - id: 428e7264-b4fa-46c6-a595-568e27b947d5
+                  user: Francisco
+                  conteudo: Conteúdo do Post... Lorem Ipsum dolor sit amet
+                  dataCriacao: 2026-08-18T21:57:04.433Z
+                  dataModificacao: 2026-08-18T21:57:04.433Z
 
+                - id: 428e7264-b4fa-46c6-a595-568e27b947d5
+                  parentComment: 78e6d80d-b03a-48a6-881d-a695979e8a69
+                  user: Francisco
+                  conteudo: Conteúdo do Post... Lorem Ipsum dolor sit amet
+                  dataCriacao: 2026-08-18T21:57:04.433Z
+                  dataModificacao: 2026-08-18T21:57:04.433Z
+
+                - id: 428e7264-b4fa-46c6-a595-568e27b947d5
+                  user: Francisco
+                  conteudo: Conteúdo do Post... Lorem Ipsum dolor sit amet
+                  dataCriacao: 2026-08-18T21:57:04.433Z
+                  dataModificacao: 2026-08-18T21:57:04.433Z
+
+                
+
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+        '404': 
+          description: Post não encontrado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Post não encontrado
+
+  /post/comment/{postId}:
     post:
       tags:
         - Comentários
