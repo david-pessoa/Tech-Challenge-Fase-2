@@ -14,15 +14,6 @@ export class CreateCommentService {
       throw new Error('Post é obrigatório');
     }
 
-    let parentComment = null;
-    if (comment?.parentCommentId) {
-      parentComment = await commentRepository.findOne({
-        where: { id: comment.parentCommentId },
-      });
-      if (!parentComment)
-        throw new Error('Comentário pai fornecido não foi encontrado é obrigatório');
-    }
-
     const user = await userRepository.findOne({
       where: { id: comment.userId },
     });
@@ -33,10 +24,25 @@ export class CreateCommentService {
 
     const post = await postRepository.findOne({
       where: { id: comment.postId },
+      relations: {
+        user: true,
+      },
     });
 
     if (!post) {
       throw new Error('Post não encontrado');
+    }
+
+    let parentComment = null;
+    if (comment?.parentCommentId) {
+      parentComment = await commentRepository.findOne({
+        where: { id: comment.parentCommentId },
+      });
+      if (!parentComment)
+        throw new Error('Comentário pai fornecido não foi encontrado. Ele é obrigatório');
+
+      if (post.user.id !== comment.userId)
+        throw new Error('Somente o autor do post pode responder a comentários do post');
     }
 
     const newComment = commentRepository.create({
