@@ -7,6 +7,7 @@ export class ListPostsService {
         user: {
           role: true,
         },
+        subject: true,
         visualizacoes: {
           user: {
             role: true,
@@ -31,6 +32,11 @@ export class ListPostsService {
         titulo: post.titulo,
         descricao: post.descricao,
         conteudo: post.conteudo,
+        image: post.image ? `/api/posts/${post.id}/image` : null,
+        subject: {
+          id: post.subject.id,
+          nome: post.subject.nome,
+        },
         dataCriacao: post.dataCriacao,
         dataModificacao: post.dataModificacao,
         criadoPor: {

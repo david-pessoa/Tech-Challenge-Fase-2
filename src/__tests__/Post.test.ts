@@ -5,6 +5,7 @@ import { updatePostService } from '../services/post/UpdatePostService';
 import { listPostsService } from '../services/post/ListPostsService';
 import { deletePostService } from '../services/post/DeletePostService';
 import { Role } from '../entities/Role';
+import { Subject } from '../entities/Subject';
 
 jest.mock('../repositories/PostRepository', () => ({
     postRepository: {
@@ -26,11 +27,13 @@ describe('Post', () => {
         post.descricao = 'Conceitos iniciais da linguagem';
         post.conteudo = 'Conteúdo da aula sobre TypeScript';
         post.user = creator;
+        post.subject = createSubject();
 
         expect(post.titulo).toBe('Introdução ao TypeScript');
         expect(post.descricao).toBe('Conceitos iniciais da linguagem');
         expect(post.conteudo).toBe('Conteúdo da aula sobre TypeScript');
         expect(post.user).toBe(creator);
+        expect(post.subject.nome).toBe('Matemática');
     });
 });
 
@@ -50,6 +53,7 @@ describe('Atualização de post', () => {
         post.descricao = 'Descrição antiga';
         post.conteudo = 'Conteúdo antigo';
         post.user = creator;
+        post.subject = createSubject();
 
         (postRepository.findOne as jest.Mock).mockResolvedValue(post);
         (postRepository.save as jest.Mock).mockResolvedValue(post);
@@ -110,6 +114,7 @@ describe('Listagem de posts', () => {
         firstPost.dataCriacao = new Date('2026-07-01');
         firstPost.dataModificacao = new Date('2026-07-01');
         firstPost.user = creator;
+        firstPost.subject = createSubject();
 
         const secondPost = new Post();
         secondPost.id = '9d92fefb-4610-4b41-ab7c-1841cd0275f5';
@@ -119,6 +124,7 @@ describe('Listagem de posts', () => {
         secondPost.dataCriacao = new Date('2026-07-02');
         secondPost.dataModificacao = new Date('2026-07-02');
         secondPost.user = creator;
+        secondPost.subject = createSubject();
 
         (postRepository.find as jest.Mock).mockResolvedValue([
             secondPost,
@@ -154,6 +160,7 @@ describe('Exclusão de post', () => {
         post.descricao = 'Descrição do post';
         post.conteudo = 'Conteúdo do post';
         post.user = creator;
+        post.subject = createSubject();
 
         (postRepository.findOne as jest.Mock).mockResolvedValue(post);
         (postRepository.remove as jest.Mock).mockResolvedValue(post);
@@ -183,6 +190,7 @@ describe('Exclusão de post', () => {
         post.descricao = 'Descrição antiga';
         post.conteudo = 'Conteúdo antigo';
         post.user = creator;
+        post.subject = createSubject();
 
         (postRepository.findOne as jest.Mock).mockResolvedValue(post);
 
@@ -214,6 +222,7 @@ describe('Exclusão de post', () => {
         post.descricao = 'Descrição do post';
         post.conteudo = 'Conteúdo do post';
         post.user = creator;
+        post.subject = createSubject();
 
         (postRepository.findOne as jest.Mock).mockResolvedValue(post);
 
@@ -232,3 +241,10 @@ describe('Exclusão de post', () => {
     });
 
 });
+
+function createSubject() {
+    const subject = new Subject();
+    subject.id = '78e6d80d-b03a-48a6-881d-a695979e8a69';
+    subject.nome = 'Matemática';
+    return subject;
+}

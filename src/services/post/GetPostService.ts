@@ -6,6 +6,7 @@ export class GetPostService {
       where: { id },
       relations: {
         user: true,
+        subject: true,
       },
     });
 
@@ -19,6 +20,11 @@ export class GetPostService {
       titulo: post.titulo,
       descricao: post.descricao,
       conteudo: post.conteudo,
+      image: post.image ? `/api/posts/${post.id}/image` : null,
+      subject: {
+        id: post.subject.id,
+        nome: post.subject.nome,
+      },
       dataCriacao: post.dataCriacao,
       dataModificacao: post.dataModificacao,
     };

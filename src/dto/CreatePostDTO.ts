@@ -3,4 +3,7 @@ export interface CreatePostDTO {
   descricao: string;
   conteudo: string;
   userId: string;
+  image?: Buffer | null;
+  subjectId?: string;
+  subjectName?: string;
 }

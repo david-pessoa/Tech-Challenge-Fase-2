@@ -11,6 +11,7 @@ import {
 
 import { User } from './User';
 import { PostView } from './PostView';
+import { Subject } from './Subject';
 
 @Entity('posts')
 export class Post {
@@ -36,6 +37,13 @@ export class Post {
   @JoinColumn({ name: 'user_id' })
   user!: User;
 
+  @Column({ type: 'bytea', name: 'image', nullable: true })
+  image!: Buffer | null;
+
   @OneToMany(() => PostView, postView => postView.post)
   visualizacoes!: PostView[];
+
+  @ManyToOne(() => Subject, subject => subject.posts, { nullable: false })
+  @JoinColumn({ name: 'subject_id' })
+  subject!: Subject;
 }
