@@ -6,6 +6,7 @@ import YAML from 'yamljs';
 import { postRoutes } from './routes/post.routes';
 import { userRouter } from './routes/user.routes';
 import { authRouter } from './routes/auth.routes';
+import { commentRoutes } from './routes/comment.routes';
 import { errorHandler } from './middlewares/errorHandler';
 
 export const app = express();
@@ -30,6 +31,7 @@ app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, swaggerOption
 app.use('/api/posts', postRoutes);
 app.use('/api/user', userRouter); // cadastro de usuários
 app.use('/api/auth', authRouter); // login
+app.use('/api/post/:postId/comment', commentRoutes) //Comentários de posts
 
 // Middleware de erros
 app.use(errorHandler);
