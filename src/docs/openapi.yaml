@@ -638,7 +638,11 @@ paths:
                   dataModificacao: 2026-08-18T21:57:04.433Z
 
                 - id: 428e7264-b4fa-46c6-a595-568e27b947d5
-                  parentComment: 78e6d80d-b03a-48a6-881d-a695979e8a69
+                  childComment:
+                    id: 2bd0fd4f-48a8-4142-9235-3fe969a40074
+                    conteudo: Resposta do professor
+                    dataCriacao: 2026-08-18T21:57:04.433Z
+                    dataModificacao: 2026-08-18T21:57:04.433Z
                   user: Francisco
                   conteudo: Conteúdo do Post... Lorem Ipsum dolor sit amet
                   dataCriacao: 2026-08-18T21:57:04.433Z
