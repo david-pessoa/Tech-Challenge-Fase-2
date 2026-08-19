@@ -1,6 +1,7 @@
 import { AppError } from '../../middlewares/errorHandler';
 import { commentRepository } from '../../repositories/CommentRepository';
 import { postRepository } from '../../repositories/PostRepository';
+import { IsNull } from 'typeorm';
 
 export class ListPostCommentsService {
   async execute(id: string) {
@@ -18,25 +19,32 @@ export class ListPostCommentsService {
     const result = await Promise.all(
       post.comments.map(async comment => {
         const commentData = await commentRepository.findOne({
-          where: { id: comment.id },
+          where: { id: comment.id, parentComment: IsNull() },
           relations: {
             user: true,
-            parentComment: true
+            childComment: true,
+            parentComment: true,
           },
         });
 
+        // Se o comentário tem um comentário pai, retorna nulo
+        if(commentData == null)
+          return null
+
         return {
-          id: comment.id,
-          parentComment: commentData?.parentComment?.id,
+          id: commentData?.id,
+          childComment: commentData?.childComment,
           user: commentData?.user.nome,
-          conteudo: comment.conteudo,
-          dataCriacao: comment.dataCriacao,
-          dataModificacao: comment.dataModificacao,
+          conteudo: commentData?.conteudo,
+          dataCriacao: commentData?.dataCriacao,
+          dataModificacao: commentData?.dataModificacao,
         };
       })
     );
 
-    return result;
+    // Retira valores nulos da lista
+    const filteredResult = result.filter(data => data != null);
+    return filteredResult;
   }
 }
 
