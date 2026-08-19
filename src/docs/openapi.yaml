@@ -401,76 +401,6 @@ paths:
                     type: string
                     example: Comentário não encontrado
     
-    patch:
-      tags:
-        - Comentários
-      summary: Atualiza os dados do comentário
-      description: Esta rota atualiza o conteúdo de um comentário
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: commentId
-          in: path
-          required: true
-          schema:
-            type: string
-            format: uuid
-          description: ID do comentário
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required:
-                - conteudo
-              properties:
-                conteudo:
-                  type: string
-                  example: Novo conteúdo para o comentário
-      responses:
-        '200':
-          description: Atualização feita com sucesso
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: Comentário atualizado com sucesso!
-
-        '401':
-          $ref: '#/components/responses/UnauthorizedError'
-        
-        '403':
-          description: Impede outros usuários de editar os comentários. Apenas o autor do comentário ou um Admin podem editar comentários
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: Somente o autor do comentário pode editar seus próprios comentários
-
-        '404': 
-          description: Comentário não encontrado
-          content:
-            application/json:
-              schema:
-                oneOf:
-                  - type: object
-                    properties:
-                      message:
-                        type: string
-                        example: Autor do comentário não encontrado
-                  - type: object
-                    properties:
-                      message:
-                        type: string
-                        example: Comentário não encontrado
-
     post:
       tags:
         - Comentários
@@ -553,6 +483,128 @@ paths:
                         value: Usuário não encontrado
                       postNotFound:
                         value: Post não encontrado
+    
+    patch:
+      tags:
+        - Comentários
+      summary: Atualiza os dados do comentário
+      description: Esta rota atualiza o conteúdo de um comentário
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: commentId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: ID do comentário
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - conteudo
+              properties:
+                conteudo:
+                  type: string
+                  example: Novo conteúdo para o comentário
+      responses:
+        '200':
+          description: Atualização feita com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Comentário atualizado com sucesso!
+
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        
+        '403':
+          description: Impede outros usuários de editar os comentários. Apenas o autor do comentário ou um Admin podem editar comentários
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Somente o autor do comentário pode editar seus próprios comentários
+
+        '404': 
+          description: Comentário não encontrado
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      message:
+                        type: string
+                        example: Autor do comentário não encontrado
+                  - type: object
+                    properties:
+                      message:
+                        type: string
+                        example: Comentário não encontrado
+    
+    delete:
+      tags:
+        - Comentários
+      summary: Deletar um comentário de um post pelo ID
+      description: Deleta um comentário. Apenas o autor do comentário, ou o autor do post ou um Admin podem deletar um comentário
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: commentId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: ID do comentário a ser deletado
+      responses:
+        '200':
+          description: Comentário removido com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              example:
+                message: Comentário removido com sucesso
+
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+
+        '404':
+          description: Comentário ou Post vinculado não encontrados
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              examples:
+                commentNotFound:
+                  summary: Comentário não encontrado
+                  value:
+                    message: Comentário não encontrado
+                postNotFound:
+                  summary: Post não encontrado
+                  value:
+                    message: Post não encontrado
 
   /post/comment/list/{postId}:
     get: 
