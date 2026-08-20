@@ -23,6 +23,18 @@ export class UserController {
       return next(error);
     }
   }
+
+  async getMe(request: Request, response: Response, next: NextFunction) {
+    try {
+      const usuarioLogado = request.user;
+      delete usuarioLogado.senha;
+      usuarioLogado.role = usuarioLogado.role.nome;
+
+      response.status(200).json(usuarioLogado);
+    } catch (error) {
+      return next(error);
+    }
+  }
 }
 
 export const userController = new UserController();
