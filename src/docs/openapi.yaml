@@ -493,6 +493,39 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
               example:
                 message: Usuário não encontrado
+  /user/me:
+    get:
+      tags:
+        - Usuários
+      summary: Obter dados do usuário Logado
+      description: Essa rota obtém todos os dados do usuário logado que estão na tabela Users e também a Role dele
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Dados do usuário logado obtidos com sucesso.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  matricula:
+                    type: string
+                  nome: 
+                    type: string
+                  role:
+                    type: string
+              example:
+                id: c2b58a4e-c4cf-4e20-978c-c1f2793ee18c
+                matricula: "101010"
+                nome: Francisco
+                role: ADMIN
+                
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+      
   /auth/login:
     post:
       tags:
