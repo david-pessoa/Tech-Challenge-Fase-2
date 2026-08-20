@@ -54,13 +54,17 @@ export class UserService {
       matricula: dados.matricula,
       nome: dados.nome,
       senha: senhaCriptografada,
+      image: dados.image ?? null,
       role: roleBuscada,
     });
 
     await userRepository.save(usuario);
 
     const { senha: _, ...usuarioSemSenha } = usuario;
-    return usuarioSemSenha;
+    return {
+      ...usuarioSemSenha,
+      image: usuario.image ? usuario.image.toString('base64') : null,
+    };
   }
 
   async delete(id: string) {

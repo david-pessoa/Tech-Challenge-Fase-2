@@ -5,7 +5,10 @@ export class UserController {
   async create(request: Request, response: Response, next: NextFunction) {
     try {
       const usuarioLogado = request.user;
-      const usuario = await userService.create(request.body, usuarioLogado);
+      const usuario = await userService.create({
+        ...request.body,
+        image: request.file?.buffer ?? null,
+      }, usuarioLogado);
 
       response.status(201).json(usuario);
     } catch (error) {
