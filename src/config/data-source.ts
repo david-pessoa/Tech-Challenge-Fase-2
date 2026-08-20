@@ -12,6 +12,7 @@ import { Subject } from '../entities/Subject';
 import { AddSubjects1786667649646 } from '../migrations/1786667649646-AddSubjects';
 import { CascadePostsOnUserDelete1786576866089 } from '../migrations/1786576866089-CascadePostsOnUserDelete';
 import { CleanupOrphanPostsAfterUserDelete1786758093339 } from '../migrations/1786758093339-CleanupOrphanPostsAfterUserDelete';
+import { AddImageToUsers1786762021684 } from '../migrations/1786762021684-AddImageToUsers';
 
 export const AppDataSource = new DataSource({
   type: 'postgres',
@@ -29,5 +30,6 @@ export const AppDataSource = new DataSource({
     CascadePostsOnUserDelete1786576866089,
     CleanupOrphanPostsAfterUserDelete1786758093339,
     AddSubjects1786667649646,
+    AddImageToUsers1786762021684,
   ],
 });

@@ -17,6 +17,9 @@ export class User {
   @Column()
   senha!: string;
 
+  @Column({ type: 'bytea', name: 'image', nullable: true })
+  image!: Buffer | null;
+
   @ManyToOne(() => Role, role => role.users, { nullable: false })
   @JoinColumn({ name: 'role_id' })
   role!: Role;
