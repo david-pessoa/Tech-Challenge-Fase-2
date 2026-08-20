@@ -338,7 +338,21 @@ paths:
                 message: Termo de busca inválido
         '401':
           $ref: '#/components/responses/UnauthorizedError'
-
+  
+  /posts/{id}/image:
+    get:
+      tags:
+        - Posts
+      summary: Obtém imagem anexada do post
+      description: Esta rota facilita a obtenção da imagem pelo front-end, que precisa receber a imagem por uma URL para renderizá-la.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID do post
+      
   /user:
     post:
       tags:

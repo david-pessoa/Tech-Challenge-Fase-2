@@ -5,6 +5,7 @@
   "scripts": {
     "build": "tsc",
     "check": "tsc --noEmit",
+    "watch": "ts-node src/server.ts --watch",
     "dev": "ts-node src/server.ts",
     "start": "node dist/server.js",
     "migration:run": "typeorm migration:run -d ./dist/config/data-source.js",
@@ -15,6 +16,7 @@
     "bcryptjs": "^3.0.3",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
+    "file-type": "^22.0.2",
     "jsonwebtoken": "^9.0.3",
     "multer": "^2.2.0",
     "pg": "^8.16.0",

@@ -211,6 +211,7 @@ Crie um arquivo `.env` a partir de [.env.example](./.env.example).
 | `POST` | `/api/posts` | Sim | `PROFESSOR`, `ADMIN` | Cria um novo post |
 | `PUT` | `/api/posts/:id` | Sim | `PROFESSOR`*, `ADMIN` | Atualiza um post |
 | `DELETE` | `/api/posts/:id` | Sim | `PROFESSOR`*, `ADMIN` | Remove um post |
+| `GET` | `/api/posts/:id/image` | Não | - | Obtém a imagem anexada ao post 
 
 > [!NOTE]
 > *OBS: Quando um usuário professor cria um post, ele será o único professor que poderá editá-lo. Contudo, administradores podem realizar todas as ações de CRUD com qualquer post, mesmo não tendo criado o post.
