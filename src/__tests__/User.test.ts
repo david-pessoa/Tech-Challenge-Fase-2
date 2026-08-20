@@ -152,10 +152,7 @@ describe('UserService - Criação de Usuários', () => {
         matricula: usuario.matricula,
         nome: usuario.nome,
         image: image.toString('base64'),
-        role: {
-          id: roleAluno.id,
-          nome: roleAluno.nome,
-        },
+        role: roleAluno.nome,
       },
     ]);
     expect(resultado[0]).not.toHaveProperty('senha');
