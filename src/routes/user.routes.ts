@@ -5,6 +5,13 @@ import { upload } from '../middlewares/uploadMiddleware';
 
 export const userRouter = Router();
 
+userRouter.get(
+  '/',
+  authMiddleware,
+  authorizeRoles('ADMIN', 'PROFESSOR'),
+  userController.list.bind(userController)
+);
+
 userRouter.post(
   '/',
   authMiddleware,                       

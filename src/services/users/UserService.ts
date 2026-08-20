@@ -9,6 +9,32 @@ import { userRepository } from '../../repositories/UserRepository';
 import { roleRepository } from '../../repositories/RoleRepository';
 
 export class UserService {
+  async list(usuarioLogado: User) {
+    const where = usuarioLogado.role.nome === 'PROFESSOR'
+      ? {
+        role: {
+          nome: 'ALUNO',
+        },
+      }
+      : {};
+
+    const users = await userRepository.find({
+      where,
+      relations: ['role'],
+      order: {
+        nome: 'ASC',
+      },
+    });
+
+    return users.map(user => ({
+      id: user.id,
+      matricula: user.matricula,
+      nome: user.nome,
+      image: user.image ? user.image.toString('base64') : null,
+      role: user.role.nome
+    }));
+  }
+
   async create(dados: CreateUserDTO, usuarioLogado: User) {
     const usuarioExistente = await userRepository.findOne({
       where: { matricula: dados.matricula },

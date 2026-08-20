@@ -2,6 +2,16 @@ import { NextFunction, Request, Response } from 'express';
 import { userService } from '../services/users/UserService';
 
 export class UserController {
+  async list(request: Request, response: Response, next: NextFunction) {
+    try {
+      const usuarios = await userService.list(request.user);
+
+      return response.status(200).json(usuarios);
+    } catch (error) {
+      return next(error);
+    }
+  }
+
   async create(request: Request, response: Response, next: NextFunction) {
     try {
       const usuarioLogado = request.user;
