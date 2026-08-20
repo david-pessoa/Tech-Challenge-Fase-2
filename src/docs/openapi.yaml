@@ -452,11 +452,15 @@ paths:
                 properties:
                   message:
                     type: string
-                    examples:
-                      noUserId:
-                        value: Usuário é obrigatório
-                      noPostId:
-                        value: Post é obrigatório.
+              examples:
+                noUserId:
+                  summary: Usuário obrigatório
+                  value:
+                    message: Usuário é obrigatório
+                noPostId:
+                  summary: Post obrigatório
+                  value:
+                    message: Post é obrigatório.
         '401':
           $ref: '#/components/responses/UnauthorizedError'
         '403':
@@ -478,11 +482,15 @@ paths:
                 properties:
                   message:
                     type: string
-                    examples:
-                      userNotFound:
-                        value: Usuário não encontrado
-                      postNotFound:
-                        value: Post não encontrado
+              examples:
+                userNotFound:
+                  summary: Usuário não encontrado
+                  value:
+                    message: Usuário não encontrado
+                postNotFound:
+                  summary: Post não encontrado
+                  value:
+                    message: Post não encontrado
     
     patch:
       tags:
