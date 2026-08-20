@@ -350,7 +350,7 @@ paths:
       requestBody:
         required: true
         content:
-          application/json:
+          multipart/form-data:
             schema:
               type: object
               required:
@@ -360,6 +360,10 @@ paths:
               properties:
                 role:
                   type: string
+                  enum:
+                    - ALUNO
+                    - PROFESSOR
+                    - ADMIN
                   example: ALUNO
                 matricula:
                   type: string
@@ -370,6 +374,9 @@ paths:
                 nome:
                   type: string
                   example: João Silva
+                image:
+                  type: string
+                  format: binary
       responses:
         '201':
           description: Usuário criado com sucesso.
@@ -387,6 +394,11 @@ paths:
                   nome:
                     type: string
                     example: João Silva
+                  image:
+                    type: string
+                    nullable: true
+                    description: Foto do usuário codificada em base64.
+                    example: iVBORw0KGgoAAAANSUhEUgAAAAEAAAAB
                   role:
                     type: object
                     properties:
@@ -524,15 +536,19 @@ paths:
                         type: string
                       role:
                         type: string
+                      image:
+                        type: string
+                        nullable: true
+                        description: Foto do usuário codificada em base64.
               example:
                 message: Login realizado com sucesso!
                 token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjMmI1OGE0ZS1jNGNmLTRlMjAtOTc4Yy1jMWYyNzkzZWUxOGMiLCJyb2xlIjoiQURNSU4iLCJpYXQiOjE3ODI2OTYyNzUsImV4cCI6MTc4Mjc4MjY3NX0.GlTIaBuM4hpLlgBSoPduxG2A_SvEE7Xnzf4szdjw_ZE
                 usuario:
-                  properties:
-                    id: c2b58a4e-c4cf-4e20-978c-c1f2793ee18c
-                    nome: Francisco
-                    matricula: '101010'
-                    role: ALUNO
+                  id: c2b58a4e-c4cf-4e20-978c-c1f2793ee18c
+                  nome: Francisco
+                  matricula: '101010'
+                  role: ALUNO
+                  image: iVBORw0KGgoAAAANSUhEUgAAAAEAAAAB
         '401':
           description: Credenciais inválidas.
           content:
@@ -599,6 +615,10 @@ components:
           example: 78e6d80d-b03a-48a6-881d-a695979e8a69
         nome:
           type: string
+        image:
+          type: string
+          nullable: true
+          description: Foto do usuário codificada em base64.
           example: Matemática
 
     PostAluno:
@@ -641,6 +661,10 @@ components:
           type: string
         nome:
           type: string
+        image:
+          type: string
+          nullable: true
+          description: Foto do usuário codificada em base64.
 
     ErrorResponse:
       type: object
