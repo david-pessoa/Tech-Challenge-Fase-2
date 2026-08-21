@@ -7,6 +7,7 @@ export class ListPostsService {
         user: {
           role: true,
         },
+        subject: true,
         visualizacoes: {
           user: {
             role: true,
@@ -31,11 +32,16 @@ export class ListPostsService {
         titulo: post.titulo,
         descricao: post.descricao,
         conteudo: post.conteudo,
+        image: post.image ? `/api/posts/${post.id}/image` : null,
+        subject: {
+          id: post.subject.id,
+          nome: post.subject.nome,
+        },
         dataCriacao: post.dataCriacao,
         dataModificacao: post.dataModificacao,
         criadoPor: {
-          nome: post.user.nome,
-          tipoUsuario: post.user.role.nome,
+            nome: post.user.nome,
+            tipoUsuario: post.user.role.nome,
         },
       };
 
@@ -49,7 +55,6 @@ export class ListPostsService {
 
       if (userRole === 'PROFESSOR') {
         const isPostCreator = post.user.id === userId;
-
         return {
           ...basePost,
           visualizacoes: isPostCreator ? visualizacoes : [],

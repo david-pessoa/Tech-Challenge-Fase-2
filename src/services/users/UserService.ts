@@ -31,7 +31,7 @@ export class UserService {
         throw new AppError(400, 'Role não encontrada');
       }
 
-    // Na ausência de role no corpo da requsição, atribui role de aluno
+      // Na ausência de role no corpo da requsição, atribui role de aluno
     } else {
       roleBuscada = await roleRepository.findOne({
         where: { nome: 'ALUNO' },
@@ -106,6 +106,28 @@ export class UserService {
 
     const { senha: _, ...usuarioSemSenha } = usuario;
     return usuarioSemSenha;
+  }
+
+  async delete(id: string) {
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
+    if (!uuidRegex.test(id)) {
+      throw new AppError(400, 'ID de usuário inválido');
+    }
+
+    const user = await userRepository.findOne({
+      where: { id },
+    });
+
+    if (!user) {
+      throw new AppError(404, 'Usuário não encontrado');
+    }
+
+    await userRepository.remove(user);
+
+    return {
+      message: 'Usuário deletado com sucesso',
+    };
   }
 }
 
