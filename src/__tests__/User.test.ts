@@ -151,7 +151,7 @@ describe('UserService - Criação de Usuários', () => {
         id: usuario.id,
         matricula: usuario.matricula,
         nome: usuario.nome,
-        image: image.toString('base64'),
+        image: `/api/user/${usuario.id}/image`,
         role: roleAluno.nome,
       },
     ]);

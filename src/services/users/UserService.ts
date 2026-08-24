@@ -30,7 +30,7 @@ export class UserService {
       id: user.id,
       matricula: user.matricula,
       nome: user.nome,
-      image: user.image ? user.image.toString('base64') : null,
+      image: user.image ? `/api/user/${user.id}/image` : null,
       role: user.role.nome
     }));
   }
@@ -89,7 +89,7 @@ export class UserService {
     const { senha: _, ...usuarioSemSenha } = usuario;
     return {
       ...usuarioSemSenha,
-      image: usuario.image ? usuario.image.toString('base64') : null,
+      image: usuario.image ? `/api/user/${usuario.id}/image` : null,
     };
   }
 

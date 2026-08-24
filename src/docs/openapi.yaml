@@ -743,7 +743,7 @@ paths:
                 - id: ae853bf8-9297-4ec2-b13d-3ddbbf332f4f
                   matricula: "303030"
                   nome: João Silva
-                  image: iVBORw0KGgoAAAANSUhEUgAAAAEAAAAB
+                  image: /api/user/916f9d1e-dd31-46ef-b019-db09dcfa50ea/image
                   role: ALUNO
         '401':
           $ref: '#/components/responses/UnauthorizedError'
