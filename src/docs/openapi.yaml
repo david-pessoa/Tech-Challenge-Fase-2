@@ -346,8 +346,6 @@ paths:
         - Posts
       summary: Obtém imagem anexada do post
       description: Esta rota facilita a obtenção da imagem pelo front-end, que precisa receber a imagem por uma URL para renderizá-la.
-      security:
-        - bearerAuth: []
       parameters:
         - name: id
           in: path
