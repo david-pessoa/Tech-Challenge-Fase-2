@@ -11,18 +11,17 @@ userRouter.get(
   authorizeRoles('ADMIN', 'PROFESSOR'),
   userController.list.bind(userController)
 );
+userRouter.get('/:id/image', userController.getUserImage);
+
+userRouter.use(authMiddleware);
 
 userRouter.post(
   '/',
-  authMiddleware,                       
-  authorizeRoles('ADMIN', 'PROFESSOR'), 
+  authorizeRoles('ADMIN', 'PROFESSOR'),
   upload.single('image'),
   userController.create.bind(userController)
 );
 
-userRouter.delete(
-  '/:id',
-  authMiddleware,
-  authorizeRoles('ADMIN'),
-  userController.delete.bind(userController)
-);
+userRouter.delete('/:id', authorizeRoles('ADMIN'), userController.delete.bind(userController));
+
+userRouter.get('/me', userController.getMe);

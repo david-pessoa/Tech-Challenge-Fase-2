@@ -9,7 +9,7 @@ import { markPostAsViewedService } from '../services/post/MarkPostAsViewedServic
 import { getPostImageService } from '../services/post/GetPostImageService';
 
 export class PostController {
-  async create(request: Request, response: Response) {
+  async create(request: Request, response: Response, next: NextFunction) {
     try {
       await createPostService.execute({
         ...request.body,
@@ -21,13 +21,11 @@ export class PostController {
         message: 'Post criado com sucesso!',
       });
     } catch (error) {
-      return response.status(400).json({
-        message: 'Dados inválidos',
-      });
+      next(error);
     }
   }
 
-  async findById(request: Request, response: Response) {
+  async findById(request: Request, response: Response, next: NextFunction) {
     try {
       const id = String(request.params.id);
       const post = await getPostService.execute(id);
@@ -38,9 +36,7 @@ export class PostController {
 
       return response.status(200).json(post);
     } catch (error) {
-      return response.status(404).json({
-        message: 'Post não encontrado',
-      });
+      next(error);
     }
   }
 
@@ -90,7 +86,7 @@ export class PostController {
     }
   }
 
-  async getPostImage(request: Request, response: Response) {
+  async getPostImage(request: Request, response: Response, next: NextFunction) {
     try {
       const id = String(request.params.id);
       const post = await getPostImageService.execute(id);
@@ -112,11 +108,8 @@ export class PostController {
 
       response.type(tipo.mime);
       return response.send(post.image);
-
     } catch (error) {
-      response.status(500).json({
-        message: 'Erro ao obter a imagem',
-      });
+      next(error);
     }
   }
 }

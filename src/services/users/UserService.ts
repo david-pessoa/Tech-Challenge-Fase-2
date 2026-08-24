@@ -53,7 +53,7 @@ export class UserService {
       });
 
       if (!roleBuscada) {
-        throw new AppError(400, 'Role não encontrada');
+        throw new AppError(404, 'Role não encontrada');
       }
 
       // Na ausência de role no corpo da requsição, atribui role de aluno
@@ -113,6 +113,24 @@ export class UserService {
     return {
       message: 'Usuário deletado com sucesso',
     };
+  }
+
+  async getImage(id: string) {
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
+    if (!uuidRegex.test(id)) {
+      throw new AppError(400, 'ID de usuário inválido');
+    }
+
+    const user = await userRepository.findOne({
+      where: { id },
+    });
+
+    if (!user) {
+      throw new AppError(404, 'Usuário não encontrado');
+    }
+
+    return user.image ? user.image : null;
   }
 }
 
