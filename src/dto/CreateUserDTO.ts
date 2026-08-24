@@ -4,4 +4,5 @@ export interface CreateUserDTO {
   nome: string;
   senha: string;
   role?: string; // opcional — se não informado, usa ALUNO por padrão
+  image?: Buffer | null;
 }

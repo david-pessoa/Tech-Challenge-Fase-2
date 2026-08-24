@@ -2,6 +2,7 @@ import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColum
 
 import { Role } from './Role';
 import { Post } from './Post';
+import { Comment } from './Comment';
 
 @Entity('users')
 export class User {
@@ -17,10 +18,16 @@ export class User {
   @Column()
   senha!: string;
 
+  @Column({ type: 'bytea', name: 'image', nullable: true })
+  image!: Buffer | null;
+
   @ManyToOne(() => Role, role => role.users, { nullable: false })
   @JoinColumn({ name: 'role_id' })
   role!: Role;
 
   @OneToMany(() => Post, post => post.user)
   posts!: Post[];
+
+  @OneToMany(() => Comment, comment => comment.user)
+  comments!: Comment[];
 }

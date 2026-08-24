@@ -203,9 +203,11 @@ Crie um arquivo `.env` a partir de [.env.example](./.env.example).
 | --- | --- | --- | --- | --- |
 | `GET` | `/docs` | Não | - | Documentação Swagger da API |
 | `POST` | `/api/auth/login` | Não | - | Realiza login e retorna token JWT |
+| `GET` | `/api/user` | Sim | `PROFESSOR`, `ADMIN` | Lista usuários cadastrados. O Admin vê todos os usuários, enquanto os professores têm acesso apenas aos alunos |
 | `POST` | `/api/user` | Sim | `PROFESSOR`, `ADMIN` | Cadastra um novo usuário |
 | `DELETE` | `/api/user/:id` | Sim | `ADMIN` | Remove um usuário. Posts criados por ele e visualizações desses posts são removidos em cascata |
 | `GET` | `/api/user/me` | Sim | Qualquer usuário autenticado | Obtém dados do usuário logado
+| `GET` | `/api/user/:id/image` | Não | - | Obtém a imagem do aluno
 | `GET` | `/api/posts` | Sim | Qualquer usuário autenticado | Lista todos os posts |
 | `GET` | `/api/posts/search?termo=...` | Sim | Qualquer usuário autenticado | Busca posts por termo |
 | `GET` | `/api/posts/:id` | Sim | Qualquer usuário autenticado | Retorna um post pelo ID e registra visualização se o usuário for `ALUNO` |
@@ -213,6 +215,11 @@ Crie um arquivo `.env` a partir de [.env.example](./.env.example).
 | `PUT` | `/api/posts/:id` | Sim | `PROFESSOR`*, `ADMIN` | Atualiza um post |
 | `DELETE` | `/api/posts/:id` | Sim | `PROFESSOR`*, `ADMIN` | Remove um post |
 | `GET` | `/api/posts/:id/image` | Não | - | Obtém a imagem anexada ao post 
+| `POST` | `/post/comment/{postId}` | Sim | Qualquer usuário autenticado | Cria um novo comentário vinculado ao post informado. O usuário autor é obtido pelo token autenticado. |
+| `GET` | `/post/comment/{commentId}` | Sim | Qualquer usuário autenticado | Busca um comentário específico pelo seu ID. |
+| `GET` | `/post/comment/list/{postId}` | Sim | Qualquer usuário autenticado | Lista todos os comentários vinculados a um post. |
+| `PATCH` | `/post/comment/{commentId}` | Sim | Autor do comentário, `ADMIN` | Atualiza o conteúdo de um comentário. A edição é feita pelo autor do comentário ou por um administrador. |
+| `DELETE` | `/post/comment/{commentId}` | Sim | Autor do comentário, Autor do post, `ADMIN` | Remove um comentário. A exclusão pode ser feita pelo autor do comentário, pelo autor do post ou por um administrador. |
 
 > [!NOTE]
 > *OBS: Quando um usuário professor cria um post, ele será o único professor que poderá editá-lo. Contudo, administradores podem realizar todas as ações de CRUD com qualquer post, mesmo não tendo criado o post.
