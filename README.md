@@ -205,6 +205,7 @@ Crie um arquivo `.env` a partir de [.env.example](./.env.example).
 | `POST` | `/api/auth/login` | Não | - | Realiza login e retorna token JWT |
 | `GET` | `/api/user` | Sim | `PROFESSOR`, `ADMIN` | Lista usuários cadastrados. O Admin vê todos os usuários, enquanto os professores têm acesso apenas aos alunos |
 | `POST` | `/api/user` | Sim | `PROFESSOR`, `ADMIN` | Cadastra um novo usuário |
+| `PATCH` | `/api/user/:id` | Sim | `PROFESSOR`, `ADMIN` | Atualiza os dados de um usuário. Os Administradores podem alterar o dado de qualquer usuário, mas professores só podem atualiza dados de alunos |
 | `DELETE` | `/api/user/:id` | Sim | `ADMIN` | Remove um usuário. Posts criados por ele e visualizações desses posts são removidos em cascata |
 | `GET` | `/api/user/me` | Sim | Qualquer usuário autenticado | Obtém dados do usuário logado
 | `GET` | `/api/user/:id/image` | Não | - | Obtém a imagem do aluno
