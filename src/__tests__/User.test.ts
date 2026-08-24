@@ -188,6 +188,10 @@ describe('UserService - Criação de Usuários', () => {
 describe('UserService - Atualização de Usuários', () => {
   const roleProfessor = { id: '5a0e25a2-afa5-44e1-b519-4d1e2139725a', nome: 'PROFESSOR' } as Role;
   const roleAluno = { id: 'ffc3d557-17c0-474e-a2f5-5fa816f2d854', nome: 'ALUNO' } as Role;
+  const roleAdmin = { id: 'bd1de63c-5df5-4dfd-9736-ace2d7f092b1', nome: 'ADMIN' } as Role;
+
+  const adminLogado = { id: '16dd67fd-afec-4080-a36f-0c8605d9c662', role: roleAdmin } as User;
+  const professorLogado = { id: 'cea50a97-f63e-4cd6-8a2c-e2a02f93c6e4', role: roleProfessor } as User;
 
   const idValido = '16dd67fd-afec-4080-a36f-0c8605d9c662';
   const idInvalido = 'id-invalido';
@@ -273,5 +277,58 @@ describe('UserService - Atualização de Usuários', () => {
     });
 
     expect(userRepository.save).not.toHaveBeenCalled();
+  });
+
+  it('Deve permitir que um ADMIN liste todos os usuários sem retornar senha', async () => {
+    const image = Buffer.from('foto-fake');
+    const usuario = {
+      id: 'ffc3d557-17c0-474e-a2f5-5fa816f2d854',
+      matricula: '874569',
+      nome: 'Novo Aluno',
+      senha: 'senha_criptografada_fake',
+      image,
+      role: roleAluno,
+    } as User;
+
+    (userRepository.find as jest.Mock).mockResolvedValue([usuario]);
+
+    const resultado = await userService.list(adminLogado);
+
+    expect(resultado).toEqual([
+      {
+        id: usuario.id,
+        matricula: usuario.matricula,
+        nome: usuario.nome,
+        image: `/api/user/${usuario.id}/image`,
+        role: roleAluno.nome,
+      },
+    ]);
+    expect(resultado[0]).not.toHaveProperty('senha');
+    expect(userRepository.find).toHaveBeenCalledWith({
+      where: {},
+      relations: ['role'],
+      order: {
+        nome: 'ASC',
+      },
+    });
+  });
+
+  it('Deve permitir que um PROFESSOR liste apenas alunos', async () => {
+    (userRepository.find as jest.Mock).mockResolvedValue([]);
+
+    const resultado = await userService.list(professorLogado);
+
+    expect(resultado).toEqual([]);
+    expect(userRepository.find).toHaveBeenCalledWith({
+      where: {
+        role: {
+          nome: 'ALUNO',
+        },
+      },
+      relations: ['role'],
+      order: {
+        nome: 'ASC',
+      },
+    });
   });
 });
