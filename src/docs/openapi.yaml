@@ -145,7 +145,7 @@ paths:
                 titulo: Aula inicial
                 descricao: Primeira aula de ciências do curso
                 conteudo: Lorem Ipsum dolor sit amet...
-                image: iVBORw0KGgoAAAANSUhEUgAAAAEAAAAB
+                image: /api/posts/90b6d80d-b03a-48a6-881d-a695979e8a70/image
                 subject:
                   id: 78e6d80d-b03a-48a6-881d-a695979e8a69
                   nome: Ciências
@@ -303,7 +303,7 @@ paths:
                   titulo: Aula inicial
                   descricao: Primeira aula de matemática do curso
                   conteudo: Lorem Ipsum dolor sit amet...
-                  image: iVBORw0KGgoAAAANSUhEUgAAAAEAAAAB
+                  image: /api/posts/90b6d80d-b03a-48a6-881d-a695979e8a70/image
                   subject:
                     id: 78e6d80d-b03a-48a6-881d-a695979e8a69
                     nome: Matemática
@@ -317,7 +317,7 @@ paths:
                   titulo: Aula de Matemática
                   descricao: Aula de função do 2º grau
                   conteudo: Lorem Ipsum dolor sit amet...
-                  image: iVBORw0KGgoAAAANSUhEUgAAAAEAAAAB
+                  image: /api/posts/90b6d80d-b03a-48a6-881d-a695979e8a70/image
                   subject:
                     id: 44d5256f-5199-4a3d-b06d-e3d7cd0f64f1
                     nome: Matemática
@@ -735,8 +735,8 @@ paths:
                   image:
                     type: string
                     nullable: true
-                    description: Foto do usuário codificada em base64.
-                    example: iVBORw0KGgoAAAANSUhEUgAAAAEAAAAB
+                    description: endpoint da URL da imagem de perfil.
+                    example: /api/user/ae853bf8-9297-4ec2-b13d-3ddbbf332f4f/image
                   role:
                     type: object
                     properties:
@@ -910,7 +910,7 @@ paths:
                       image:
                         type: string
                         nullable: true
-                        description: Foto do usuário codificada em base64.
+                        description: Endpoint da URL da foto de perfil do usuário.
               example:
                 message: Login realizado com sucesso!
                 token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjMmI1OGE0ZS1jNGNmLTRlMjAtOTc4Yy1jMWYyNzkzZWUxOGMiLCJyb2xlIjoiQURNSU4iLCJpYXQiOjE3ODI2OTYyNzUsImV4cCI6MTc4Mjc4MjY3NX0.GlTIaBuM4hpLlgBSoPduxG2A_SvEE7Xnzf4szdjw_ZE
@@ -919,7 +919,7 @@ paths:
                   nome: Francisco
                   matricula: '101010'
                   role: ALUNO
-                  image: iVBORw0KGgoAAAANSUhEUgAAAAEAAAAB
+                  image: /api/user/90b6d80d-b03a-48a6-881d-a695979e8a70/image
         '401':
           description: Credenciais inválidas.
           content:
@@ -958,8 +958,8 @@ components:
         image:
           type: string
           nullable: true
-          description: Imagem do post codificada em base64.
-          example: iVBORw0KGgoAAAANSUhEUgAAAAEAAAAB
+          description: Endpoint da URL da imagem do post
+          example: /api/posts/90b6d80d-b03a-48a6-881d-a695979e8a70/image
         subject:
           $ref: '#/components/schemas/Subject'
         dataCriacao:
@@ -986,11 +986,6 @@ components:
           example: 78e6d80d-b03a-48a6-881d-a695979e8a69
         nome:
           type: string
-        image:
-          type: string
-          nullable: true
-          description: Foto do usuário codificada em base64.
-          example: Matemática
 
     PostAluno:
       allOf:
@@ -1055,7 +1050,7 @@ components:
         image:
           type: string
           nullable: true
-          description: Foto do usuário codificada em base64.
+          description: endpoint da URL da imagem do usuário.
 
     ErrorResponse:
       type: object
@@ -1071,7 +1066,7 @@ components:
           titulo: Aula 1 - TypeScript
           descricao: Introdução ao TypeScript
           conteudo: Conteúdo da aula
-          image: iVBORw0KGgoAAAANSUhEUgAAAAEAAAAB
+          image: /api/posts/90b6d80d-b03a-48a6-881d-a695979e8a70/image
           subject:
             id: 78e6d80d-b03a-48a6-881d-a695979e8a69
             nome: Matemática
@@ -1089,9 +1084,9 @@ components:
           titulo: Aula 2 - Node.js
           descricao: Introdução ao Node.js
           conteudo: Conteúdo da aula
-          image: iVBORw0KGgoAAAANSUhEUgAAAAEAAAAB
+          image: /api/posts/90b6d80d-b03a-48a6-881d-a695979e8a70/image
           subject:
-            id: 90b6d80d-b03a-48a6-881d-a695979e8a70
+            id: ae853bf8-9297-4ec2-b13d-3ddbbf332f4f
             nome: Ciências
           dataCriacao: '2026-07-06T11:00:00.000Z'
           dataModificacao: '2026-07-06T11:00:00.000Z'

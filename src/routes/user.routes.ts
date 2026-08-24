@@ -5,6 +5,8 @@ import { upload } from '../middlewares/uploadMiddleware';
 
 export const userRouter = Router();
 
+userRouter.get('/:id/image', userController.getUserImage);
+
 userRouter.use(authMiddleware);
 
 userRouter.post(
