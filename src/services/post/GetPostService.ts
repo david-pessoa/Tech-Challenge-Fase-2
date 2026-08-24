@@ -1,3 +1,4 @@
+import { AppError } from '../../middlewares/errorHandler';
 import { postRepository } from '../../repositories/PostRepository';
 
 export class GetPostService {
@@ -11,7 +12,7 @@ export class GetPostService {
     });
 
     if (!post) {
-      throw new Error('Post não encontrado');
+      throw new AppError(404, 'Post não encontrado');
     }
 
     return {

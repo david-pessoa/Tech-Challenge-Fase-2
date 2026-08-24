@@ -6,6 +6,7 @@ import { Role } from '../entities/Role';
 
 jest.mock('../repositories/UserRepository', () => ({
   userRepository: {
+    find: jest.fn(),
     findOne: jest.fn(),
     create: jest.fn(),
     save: jest.fn(),
@@ -127,6 +128,59 @@ describe('UserService - Criação de Usuários', () => {
     ).rejects.toMatchObject({
       statusCode: 400,
       message: 'Matrícula já cadastrada',
+    });
+  });
+
+  it('Deve permitir que um ADMIN liste todos os usuários sem retornar senha', async () => {
+    const image = Buffer.from('foto-fake');
+    const usuario = {
+      id: 'ffc3d557-17c0-474e-a2f5-5fa816f2d854',
+      matricula: '874569',
+      nome: 'Novo Aluno',
+      senha: 'senha_criptografada_fake',
+      image,
+      role: roleAluno,
+    } as User;
+
+    (userRepository.find as jest.Mock).mockResolvedValue([usuario]);
+
+    const resultado = await userService.list(adminLogado);
+
+    expect(resultado).toEqual([
+      {
+        id: usuario.id,
+        matricula: usuario.matricula,
+        nome: usuario.nome,
+        image: `/api/user/${usuario.id}/image`,
+        role: roleAluno.nome,
+      },
+    ]);
+    expect(resultado[0]).not.toHaveProperty('senha');
+    expect(userRepository.find).toHaveBeenCalledWith({
+      where: {},
+      relations: ['role'],
+      order: {
+        nome: 'ASC',
+      },
+    });
+  });
+
+  it('Deve permitir que um PROFESSOR liste apenas alunos', async () => {
+    (userRepository.find as jest.Mock).mockResolvedValue([]);
+
+    const resultado = await userService.list(professorLogado);
+
+    expect(resultado).toEqual([]);
+    expect(userRepository.find).toHaveBeenCalledWith({
+      where: {
+        role: {
+          nome: 'ALUNO',
+        },
+      },
+      relations: ['role'],
+      order: {
+        nome: 'ASC',
+      },
     });
   });
 });

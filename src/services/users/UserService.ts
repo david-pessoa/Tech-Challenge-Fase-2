@@ -10,6 +10,32 @@ import { userRepository } from '../../repositories/UserRepository';
 import { roleRepository } from '../../repositories/RoleRepository';
 
 export class UserService {
+  async list(usuarioLogado: User) {
+    const where = usuarioLogado.role.nome === 'PROFESSOR'
+      ? {
+        role: {
+          nome: 'ALUNO',
+        },
+      }
+      : {};
+
+    const users = await userRepository.find({
+      where,
+      relations: ['role'],
+      order: {
+        nome: 'ASC',
+      },
+    });
+
+    return users.map(user => ({
+      id: user.id,
+      matricula: user.matricula,
+      nome: user.nome,
+      image: user.image ? `/api/user/${user.id}/image` : null,
+      role: user.role.nome
+    }));
+  }
+
   async create(dados: CreateUserDTO, usuarioLogado: User) {
     const usuarioExistente = await userRepository.findOne({
       where: { matricula: dados.matricula },
@@ -28,7 +54,7 @@ export class UserService {
       });
 
       if (!roleBuscada) {
-        throw new AppError(400, 'Role não encontrada');
+        throw new AppError(404, 'Role não encontrada');
       }
 
       // Na ausência de role no corpo da requsição, atribui role de aluno
@@ -55,13 +81,17 @@ export class UserService {
       matricula: dados.matricula,
       nome: dados.nome,
       senha: senhaCriptografada,
+      image: dados.image ?? null,
       role: roleBuscada,
     });
 
     await userRepository.save(usuario);
 
     const { senha: _, ...usuarioSemSenha } = usuario;
-    return usuarioSemSenha;
+    return {
+      ...usuarioSemSenha,
+      image: usuario.image ? `/api/user/${usuario.id}/image` : null,
+    };
   }
 
   // Atualiza dados de um usuário existente. Só ADMIN pode chamar esse método
@@ -128,6 +158,24 @@ export class UserService {
     return {
       message: 'Usuário deletado com sucesso',
     };
+  }
+
+  async getImage(id: string) {
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
+    if (!uuidRegex.test(id)) {
+      throw new AppError(400, 'ID de usuário inválido');
+    }
+
+    const user = await userRepository.findOne({
+      where: { id },
+    });
+
+    if (!user) {
+      throw new AppError(404, 'Usuário não encontrado');
+    }
+
+    return user.image ? user.image : null;
   }
 }
 
