@@ -203,10 +203,11 @@ Crie um arquivo `.env` a partir de [.env.example](./.env.example).
 | --- | --- | --- | --- | --- |
 | `GET` | `/docs` | Não | - | Documentação Swagger da API |
 | `POST` | `/api/auth/login` | Não | - | Realiza login e retorna token JWT |
-| `GET` | `/api/user` | Sim | `PROFESSOR`, `ADMIN` | Lista usuários cadastrados. Admin lista todos; professor lista apenas alunos |
+| `GET` | `/api/user` | Sim | `PROFESSOR`, `ADMIN` | Lista usuários cadastrados. O Admin vê todos os usuários, enquanto os professores têm acesso apenas aos alunos |
 | `POST` | `/api/user` | Sim | `PROFESSOR`, `ADMIN` | Cadastra um novo usuário |
 | `DELETE` | `/api/user/:id` | Sim | `ADMIN` | Remove um usuário. Posts criados por ele e visualizações desses posts são removidos em cascata |
 | `GET` | `/api/user/me` | Sim | Qualquer usuário autenticado | Obtém dados do usuário logado
+| `GET` | `/api/user/:id/image` | Não | - | Obtém a imagem do aluno
 | `GET` | `/api/posts` | Sim | Qualquer usuário autenticado | Lista todos os posts |
 | `GET` | `/api/posts/search?termo=...` | Sim | Qualquer usuário autenticado | Busca posts por termo |
 | `GET` | `/api/posts/:id` | Sim | Qualquer usuário autenticado | Retorna um post pelo ID e registra visualização se o usuário for `ALUNO` |

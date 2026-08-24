@@ -933,6 +933,62 @@ paths:
                 
         '401':
           $ref: '#/components/responses/UnauthorizedError'
+
+  /user/{id}/image:
+    get:
+      tags:
+        - Usuários
+      summary: Obtém a imagem de perfil do usuário
+      description: Esta rota facilita a obtenção da imagem pelo front-end, que precisa receber a imagem por uma URL para renderizá-la.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID do post
+      responses:
+        '200':
+          description: Imagem retornada com sucesso.
+          content:
+            image/png:
+              schema:
+                type: string
+                format: binary
+            image/jpeg:
+              schema:
+                type: string
+                format: binary
+            image/webp:
+              schema:
+                type: string
+                format: binary
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          description: Imagem não encontrada.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                message: Imagem não encontrada
+        '415':
+          description: Tipo de imagem não identificado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                message: Tipo de imagem não identificado
+        '500':
+          description: Erro ao obter a imagem.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                message: Erro ao obter a imagem
       
   /auth/login:
     post:
