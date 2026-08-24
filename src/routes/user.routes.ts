@@ -22,6 +22,13 @@ userRouter.post(
   userController.create.bind(userController)
 );
 
+userRouter.patch(
+  '/:id',
+  authorizeRoles('ADMIN', 'PROFESSOR'),
+  upload.single('image'),
+  userController.update.bind(userController)
+);
+
 userRouter.delete('/:id', authorizeRoles('ADMIN'), userController.delete.bind(userController));
 
-userRouter.get('/me', userController.getMe);
+userRouter.get('/me', userController.getMe.bind(userController));

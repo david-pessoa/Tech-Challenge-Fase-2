@@ -29,6 +29,21 @@ export class UserController {
     }
   }
 
+  async update(request: Request, response: Response, next: NextFunction) {
+    try {
+      const id = String(request.params.id);
+      const usuarioLogado = request.user;
+      const usuario = await userService.update(id, {
+        ...request.body,
+        image: request.file?.buffer,
+      }, usuarioLogado);
+
+      response.status(200).json(usuario);
+    } catch (error) {
+      next(error);
+    }
+  }
+
   async delete(request: Request, response: Response, next: NextFunction) {
     try {
       const id = String(request.params.id);
