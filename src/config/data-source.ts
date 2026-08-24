@@ -14,6 +14,7 @@ import { PostEPostView1781746779920 } from '../migrations/1781746779920-PostEPos
 import { AddSubjects1786667649646 } from '../migrations/1786667649646-AddSubjects';
 import { CascadePostsOnUserDelete1786576866089 } from '../migrations/1786576866089-CascadePostsOnUserDelete';
 import { CleanupOrphanPostsAfterUserDelete1786758093339 } from '../migrations/1786758093339-CleanupOrphanPostsAfterUserDelete';
+import { AddImageToUsers1786762021684 } from '../migrations/1786762021684-AddImageToUsers';
 import { CreateCommentTable1787064394494 } from '../migrations/1787064394494-CreateCommentTable';
 
 export const AppDataSource = new DataSource({
@@ -32,6 +33,7 @@ export const AppDataSource = new DataSource({
     CascadePostsOnUserDelete1786576866089,
     CleanupOrphanPostsAfterUserDelete1786758093339,
     AddSubjects1786667649646,
+    AddImageToUsers1786762021684,
     CreateCommentTable1787064394494
   ],
 });
