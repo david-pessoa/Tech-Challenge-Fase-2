@@ -12,6 +12,7 @@ servers:
 
 tags:
   - name: Posts
+  - name: Comentários
   - name: Usuários
   - name: Autenticação
 
@@ -352,7 +353,330 @@ paths:
           schema:
             type: string
           description: ID do post
-      
+  
+  /post/comment/{postId}:
+    post:
+      tags:
+        - Comentários
+      summary: Cria um novo comentário num post
+      description: Retorna uma mensagem indicando sucesso. O parâmetro da rota representa o ID do post.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: postId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: ID do post
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - conteudo
+              properties:
+                parentCommentId:
+                  type: string
+                  format: uuid
+                  example: ae853bf8-9297-4ec2-b13d-3ddbbf332f4f
+                conteudo:
+                  type: string
+                  example: Lorem Ipsum dolor sit amet...
+      responses:
+        '201':
+          description: Comentário criado com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Comentário criado com sucesso!
+        '400':
+          description: Dados inválidos
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              examples:
+                noUserId:
+                  summary: Usuário obrigatório
+                  value:
+                    message: Usuário é obrigatório
+                noPostId:
+                  summary: Post obrigatório
+                  value:
+                    message: Post é obrigatório.
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          description: Somente o autor do post pode responder a comentários do post
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Somente o autor do post pode responder a comentários do post
+        '404':
+          description: Usuário ou post não encontrado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              examples:
+                userNotFound:
+                  summary: Usuário não encontrado
+                  value:
+                    message: Usuário não encontrado
+                postNotFound:
+                  summary: Post não encontrado
+                  value:
+                    message: Post não encontrado
+  
+  /post/comment/{commentId}:
+    get: 
+      tags:
+        - Comentários
+      summary: Obtém um comentário pelo ID
+      description: Esta rota obtém todos os dados de um post fornecendo apenas seu ID
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: commentId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: ID do comentário
+      responses:
+        '200':
+          description: Lista de posts encontrados.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Commment'
+              example:
+                commentId: 428e7264-b4fa-46c6-a595-568e27b947d5
+                postId: ffc3d557-17c0-474e-a2f5-5fa816f2d854
+                userId: 7a00b76b-6528-4f49-a3d7-f95648008a62
+                conteudo: Conteúdo do Post... Lorem Ipsum dolor sit amet
+                dataCriacao: 2026-08-18T21:57:04.433Z
+                dataModificacao: 2026-08-18T21:57:04.433Z
+
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+        '404': 
+          description: Comentário não encontrado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Comentário não encontrado
+    
+    patch:
+      tags:
+        - Comentários
+      summary: Atualiza os dados do comentário
+      description: Esta rota atualiza o conteúdo de um comentário
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: commentId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: ID do comentário
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - conteudo
+              properties:
+                conteudo:
+                  type: string
+                  example: Novo conteúdo para o comentário
+      responses:
+        '200':
+          description: Atualização feita com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Comentário atualizado com sucesso!
+
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        
+        '403':
+          description: Impede outros usuários de editar os comentários. Apenas o autor do comentário ou um Admin podem editar comentários
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Somente o autor do comentário pode editar seus próprios comentários
+
+        '404': 
+          description: Comentário não encontrado
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      message:
+                        type: string
+                        example: Autor do comentário não encontrado
+                  - type: object
+                    properties:
+                      message:
+                        type: string
+                        example: Comentário não encontrado
+    
+    delete:
+      tags:
+        - Comentários
+      summary: Deletar um comentário de um post pelo ID
+      description: Deleta um comentário. Apenas o autor do comentário, ou o autor do post ou um Admin podem deletar um comentário
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: commentId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: ID do comentário a ser deletado
+      responses:
+        '200':
+          description: Comentário removido com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              example:
+                message: Comentário removido com sucesso
+
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+
+        '404':
+          description: Comentário ou Post vinculado não encontrados
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              examples:
+                commentNotFound:
+                  summary: Comentário não encontrado
+                  value:
+                    message: Comentário não encontrado
+                postNotFound:
+                  summary: Post não encontrado
+                  value:
+                    message: Post não encontrado
+
+  /post/comment/list/{postId}:
+    get: 
+      tags:
+        - Comentários
+      summary: Obtém lista com todos os dados dos comentários vinculados a um post
+      description: Esta rota obtém todos os dados dos comentários de um post fornecendo apenas seu ID
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: postId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID do post
+      responses:
+        '200':
+          description: Lista de comentários encontrados.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Commment'
+              example:
+                - id: 428e7264-b4fa-46c6-a595-568e27b947d5
+                  user: Francisco
+                  conteudo: Conteúdo do Post... Lorem Ipsum dolor sit amet
+                  dataCriacao: 2026-08-18T21:57:04.433Z
+                  dataModificacao: 2026-08-18T21:57:04.433Z
+
+                - id: 428e7264-b4fa-46c6-a595-568e27b947d5
+                  childComment:
+                    id: 2bd0fd4f-48a8-4142-9235-3fe969a40074
+                    conteudo: Resposta do professor
+                    dataCriacao: 2026-08-18T21:57:04.433Z
+                    dataModificacao: 2026-08-18T21:57:04.433Z
+                  user: Francisco
+                  conteudo: Conteúdo do Post... Lorem Ipsum dolor sit amet
+                  dataCriacao: 2026-08-18T21:57:04.433Z
+                  dataModificacao: 2026-08-18T21:57:04.433Z
+
+                - id: 428e7264-b4fa-46c6-a595-568e27b947d5
+                  user: Francisco
+                  conteudo: Conteúdo do Post... Lorem Ipsum dolor sit amet
+                  dataCriacao: 2026-08-18T21:57:04.433Z
+                  dataModificacao: 2026-08-18T21:57:04.433Z
+
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+        '404': 
+          description: Post não encontrado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Post não encontrado
+
   /user:
     post:
       tags:
@@ -696,6 +1020,26 @@ components:
                   type: string
                   format: date-time
                   example: '2026-07-06T12:00:00.000Z'
+    Commment:
+      type: object
+      properties:
+        parentCommentId: 
+          type: string
+        commentId: 
+          type: string
+        postId: 
+          type: string
+        userId: 
+          type: string
+        conteudo: 
+          type: string
+        dataCriacao:
+          type: string
+          format: '2026-07-06T10:00:00.000Z'
+        dataModificacao:
+          type: string
+          format: '2026-07-06T10:00:00.000Z'
+        
 
     Usuario:
       type: object

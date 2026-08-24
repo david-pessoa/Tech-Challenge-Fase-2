@@ -27,7 +27,7 @@ export class UserService {
       });
 
       if (!roleBuscada) {
-        throw new AppError(400, 'Role não encontrada');
+        throw new AppError(404, 'Role não encontrada');
       }
 
       // Na ausência de role no corpo da requsição, atribui role de aluno

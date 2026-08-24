@@ -12,6 +12,7 @@ import {
 import { User } from './User';
 import { PostView } from './PostView';
 import { Subject } from './Subject';
+import { Comment } from './Comment';
 
 @Entity('posts')
 export class Post {
@@ -46,4 +47,7 @@ export class Post {
   @ManyToOne(() => Subject, subject => subject.posts, { nullable: false })
   @JoinColumn({ name: 'subject_id' })
   subject!: Subject;
+
+  @OneToMany(() => Comment, comment => comment.post)
+  comments!: Comment[];
 }

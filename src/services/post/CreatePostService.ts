@@ -9,7 +9,7 @@ export class CreatePostService {
     const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
     if (!post.userId) {
-      throw new Error('Usuário é obrigatório');
+      throw new AppError(400, 'Usuário é obrigatório');
     }
 
     const user = await userRepository.findOne({
@@ -17,7 +17,7 @@ export class CreatePostService {
     });
 
     if (!user) {
-      throw new Error('Usuário não encontrado');
+      throw new AppError(404, 'Usuário não encontrado');
     }
 
     if (!post.subjectId && !post.subjectName) {
@@ -37,7 +37,7 @@ export class CreatePostService {
       });
 
     if (!subject) {
-      throw new AppError(400, 'Matéria não encontrada');
+      throw new AppError(404, 'Matéria não encontrada');
     }
 
     const newPost = postRepository.create({
