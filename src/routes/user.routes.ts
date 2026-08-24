@@ -22,9 +22,10 @@ userRouter.post(
   userController.create.bind(userController)
 );
 
-userRouter.put(
+userRouter.patch(
   '/:id',
-  authorizeRoles('ADMIN'),
+  authorizeRoles('ADMIN', 'PROFESSOR'),
+  upload.single('image'),
   userController.update.bind(userController)
 );
 

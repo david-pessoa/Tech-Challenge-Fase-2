@@ -4,4 +4,5 @@ export interface UpdateUserDTO {
   nome?: string;
   senha?: string;
   role?: string;
+  image?: Buffer | null;
 }

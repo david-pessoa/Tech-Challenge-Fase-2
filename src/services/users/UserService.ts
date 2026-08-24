@@ -11,13 +11,14 @@ import { roleRepository } from '../../repositories/RoleRepository';
 
 export class UserService {
   async list(usuarioLogado: User) {
-    const where = usuarioLogado.role.nome === 'PROFESSOR'
-      ? {
-        role: {
-          nome: 'ALUNO',
-        },
-      }
-      : {};
+    const where =
+      usuarioLogado.role.nome === 'PROFESSOR'
+        ? {
+            role: {
+              nome: 'ALUNO',
+            },
+          }
+        : {};
 
     const users = await userRepository.find({
       where,
@@ -32,7 +33,7 @@ export class UserService {
       matricula: user.matricula,
       nome: user.nome,
       image: user.image ? `/api/user/${user.id}/image` : null,
-      role: user.role.nome
+      role: user.role.nome,
     }));
   }
 
@@ -96,7 +97,7 @@ export class UserService {
 
   // Atualiza dados de um usuário existente. Só ADMIN pode chamar esse método
   // (a checagem de role é feita na rota, via authorizeRoles('ADMIN')).
-  async update(id: string, dados: UpdateUserDTO) {
+  async update(id: string, dados: UpdateUserDTO, usuarioLogado: User) {
     const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
     if (!uuidRegex.test(id)) {
@@ -120,6 +121,10 @@ export class UserService {
       usuario.senha = await bcrypt.hash(dados.senha, 10);
     }
 
+    if (dados.image) {
+      usuario.image = dados.image;
+    }
+
     if (dados.role) {
       const roleBuscada = await roleRepository.findOne({
         where: { nome: dados.role.toUpperCase() },
@@ -127,6 +132,11 @@ export class UserService {
 
       if (!roleBuscada) {
         throw new AppError(400, 'Role não encontrada');
+      }
+
+      // Professor não pode promover outro usuário
+      if (usuarioLogado.role.nome === 'PROFESSOR' && roleBuscada.nome !== 'ALUNO') {
+        throw new AppError(403, 'Professor não pode alterar dados de outros professores ou administradores!');
       }
 
       usuario.role = roleBuscada;

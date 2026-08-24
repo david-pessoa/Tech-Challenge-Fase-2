@@ -206,7 +206,7 @@ describe('UserService - Atualização de Usuários', () => {
     (userRepository.findOne as jest.Mock).mockResolvedValue(usuarioExistente);
     (userRepository.save as jest.Mock).mockResolvedValue(usuarioExistente);
 
-    const resultado = await userService.update(idValido, { nome: 'Nome Novo' });
+    const resultado = await userService.update(idValido, { nome: 'Nome Novo' }, adminLogado);
 
     expect(resultado).toHaveProperty('nome', 'Nome Novo');
     expect(resultado).not.toHaveProperty('senha');
@@ -219,7 +219,7 @@ describe('UserService - Atualização de Usuários', () => {
     (userRepository.findOne as jest.Mock).mockResolvedValue(usuarioExistente);
     (userRepository.save as jest.Mock).mockResolvedValue(usuarioExistente);
 
-    await userService.update(idValido, { senha: 'NovaSenha123' });
+    await userService.update(idValido, { senha: 'NovaSenha123' }, adminLogado);
 
     expect(usuarioExistente.senha).toBe('senha_criptografada_fake');
     expect(userRepository.save).toHaveBeenCalled();
@@ -232,7 +232,7 @@ describe('UserService - Atualização de Usuários', () => {
     (roleRepository.findOne as jest.Mock).mockResolvedValue(roleProfessor);
     (userRepository.save as jest.Mock).mockResolvedValue(usuarioExistente);
 
-    const resultado = await userService.update(idValido, { role: 'PROFESSOR' });
+    const resultado = await userService.update(idValido, { role: 'PROFESSOR' }, adminLogado);
 
     expect(resultado.role).toEqual(roleProfessor);
     expect(userRepository.save).toHaveBeenCalled();
@@ -245,7 +245,7 @@ describe('UserService - Atualização de Usuários', () => {
     (roleRepository.findOne as jest.Mock).mockResolvedValue(null);
 
     await expect(
-      userService.update(idValido, { role: 'INEXISTENTE' })
+      userService.update(idValido, { role: 'INEXISTENTE' }, adminLogado)
     ).rejects.toMatchObject({
       statusCode: 400,
       message: 'Role não encontrada',
@@ -256,7 +256,7 @@ describe('UserService - Atualização de Usuários', () => {
 
   it('Não deve atualizar um usuário com id em formato inválido', async () => {
     await expect(
-      userService.update(idInvalido, { nome: 'Qualquer Nome' })
+      userService.update(idInvalido, { nome: 'Qualquer Nome' }, adminLogado)
     ).rejects.toMatchObject({
       statusCode: 404,
       message: 'Usuário não encontrado',
@@ -270,7 +270,7 @@ describe('UserService - Atualização de Usuários', () => {
     (userRepository.findOne as jest.Mock).mockResolvedValue(null);
 
     await expect(
-      userService.update(idValido, { nome: 'Qualquer Nome' })
+      userService.update(idValido, { nome: 'Qualquer Nome' }, adminLogado)
     ).rejects.toMatchObject({
       statusCode: 404,
       message: 'Usuário não encontrado',

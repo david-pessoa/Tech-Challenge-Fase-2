@@ -339,7 +339,7 @@ paths:
                 message: Termo de busca inválido
         '401':
           $ref: '#/components/responses/UnauthorizedError'
-  
+
   /posts/{id}/image:
     get:
       tags:
@@ -395,8 +395,7 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
               example:
                 message: Erro ao obter a imagem
-      
-  
+
   /post/comment/{postId}:
     post:
       tags:
@@ -488,9 +487,9 @@ paths:
                   summary: Post não encontrado
                   value:
                     message: Post não encontrado
-  
+
   /post/comment/{commentId}:
-    get: 
+    get:
       tags:
         - Comentários
       summary: Obtém um comentário pelo ID
@@ -525,7 +524,7 @@ paths:
         '401':
           $ref: '#/components/responses/UnauthorizedError'
 
-        '404': 
+        '404':
           description: Comentário não encontrado
           content:
             application/json:
@@ -535,7 +534,7 @@ paths:
                   message:
                     type: string
                     example: Comentário não encontrado
-    
+
     patch:
       tags:
         - Comentários
@@ -577,7 +576,7 @@ paths:
 
         '401':
           $ref: '#/components/responses/UnauthorizedError'
-        
+
         '403':
           description: Impede outros usuários de editar os comentários. Apenas o autor do comentário ou um Admin podem editar comentários
           content:
@@ -589,7 +588,7 @@ paths:
                     type: string
                     example: Somente o autor do comentário pode editar seus próprios comentários
 
-        '404': 
+        '404':
           description: Comentário não encontrado
           content:
             application/json:
@@ -605,7 +604,7 @@ paths:
                       message:
                         type: string
                         example: Comentário não encontrado
-    
+
     delete:
       tags:
         - Comentários
@@ -659,7 +658,7 @@ paths:
                     message: Post não encontrado
 
   /post/comment/list/{postId}:
-    get: 
+    get:
       tags:
         - Comentários
       summary: Obtém lista com todos os dados dos comentários vinculados a um post
@@ -709,7 +708,7 @@ paths:
         '401':
           $ref: '#/components/responses/UnauthorizedError'
 
-        '404': 
+        '404':
           description: Post não encontrado
           content:
             application/json:
@@ -739,7 +738,7 @@ paths:
                   $ref: '#/components/schemas/Usuario'
               example:
                 - id: ae853bf8-9297-4ec2-b13d-3ddbbf332f4f
-                  matricula: "303030"
+                  matricula: '303030'
                   nome: João Silva
                   image: /api/user/916f9d1e-dd31-46ef-b019-db09dcfa50ea/image
                   role: ALUNO
@@ -798,7 +797,7 @@ paths:
                     example: ae853bf8-9297-4ec2-b13d-3ddbbf332f4f
                   matricula:
                     type: string
-                    example: "303030"
+                    example: '303030'
                   nome:
                     type: string
                     example: João Silva
@@ -810,10 +809,10 @@ paths:
                   role:
                     type: object
                     properties:
-                      id: 
+                      id:
                         type: string
                         example: 78e6d80d-b03a-48a6-881d-a695979e8a69
-                      nome: 
+                      nome:
                         type: string
                         example: ALUNO
 
@@ -853,6 +852,100 @@ paths:
                 message: Role padrão ALUNO não encontrada
 
   /user/{id}:
+    patch:
+      tags:
+        - Usuários
+      summary: Atualizar os dados de um usuário
+      description: Permite que apenas administradores e professores atualizem os dados dos usuários.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID do usuário
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                role:
+                  type: string
+                  enum:
+                    - ALUNO
+                    - PROFESSOR
+                    - ADMIN
+                  example: ALUNO
+                nome:
+                  type: string
+                  example: Novo nome
+                senha:
+                  type: string
+                  example: Nova senha
+                image:
+                  type: string
+                  format: binary
+
+      responses:
+        '200':
+          description: Informações de cadastro atualizadas com sucesso.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    example: ae853bf8-9297-4ec2-b13d-3ddbbf332f4f
+                  matricula:
+                    type: string
+                    example: '303030'
+                  nome:
+                    type: string
+                    example: João Silva
+                  image:
+                    type: string
+                    nullable: true
+                    description: endpoint da URL da imagem de perfil.
+                    example: /api/user/ae853bf8-9297-4ec2-b13d-3ddbbf332f4f/image
+                  role:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        example: 78e6d80d-b03a-48a6-881d-a695979e8a69
+                      nome:
+                        type: string
+                        example: ALUNO
+
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+        '403':
+          description: Se um professor tentar alterar o dado de um usuário que não é aluno, ele será impedido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                message: Professor não pode alterar dados de outros professores ou administradores!
+
+        '404':
+          description: Usuário não encontrado.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              example:
+                message: Usuário não encontrado
+
     delete:
       tags:
         - Usuários
@@ -919,16 +1012,16 @@ paths:
                     type: string
                   matricula:
                     type: string
-                  nome: 
+                  nome:
                     type: string
                   role:
                     type: string
               example:
                 id: c2b58a4e-c4cf-4e20-978c-c1f2793ee18c
-                matricula: "101010"
+                matricula: '101010'
                 nome: Francisco
                 role: ADMIN
-                
+
         '401':
           $ref: '#/components/responses/UnauthorizedError'
 
@@ -987,7 +1080,7 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
               example:
                 message: Erro ao obter a imagem
-      
+
   /auth/login:
     post:
       tags:
@@ -1058,7 +1151,6 @@ paths:
               example:
                 message: Matrícula ou senha inválidas
 
-
 components:
   securitySchemes:
     bearerAuth:
@@ -1090,10 +1182,12 @@ components:
           $ref: '#/components/schemas/Subject'
         dataCriacao:
           type: string
-          format: '2026-07-06T10:00:00.000Z'
+          format: date-time
+          example: '2026-07-06T10:00:00.000Z'
         dataModificacao:
           type: string
-          format: '2026-07-06T10:00:00.000Z'
+          format: date-time
+          example: '2026-07-06T10:00:00.000Z'
         criadoPor:
           type: object
           properties:
@@ -1144,23 +1238,24 @@ components:
     Commment:
       type: object
       properties:
-        parentCommentId: 
+        parentCommentId:
           type: string
-        commentId: 
+        commentId:
           type: string
-        postId: 
+        postId:
           type: string
-        userId: 
+        userId:
           type: string
-        conteudo: 
+        conteudo:
           type: string
         dataCriacao:
           type: string
-          format: '2026-07-06T10:00:00.000Z'
+          format: date-time
+          example: '2026-07-06T10:00:00.000Z'
         dataModificacao:
           type: string
-          format: '2026-07-06T10:00:00.000Z'
-        
+          format: date-time
+          example: '2026-07-06T10:00:00.000Z'
 
     Usuario:
       type: object
@@ -1264,4 +1359,3 @@ components:
               summary: Role não encontrada
               value:
                 message: Role não encontrada
-            
