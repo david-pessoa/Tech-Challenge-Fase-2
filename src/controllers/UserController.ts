@@ -23,7 +23,7 @@ export class UserController {
         usuarioLogado
       );
 
-      response.status(201).json(usuario);
+      response.status(201).json({ ...usuario, image: `/api/user/${usuario.id}/image` });
     } catch (error) {
       next(error);
     }
