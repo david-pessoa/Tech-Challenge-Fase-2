@@ -1120,14 +1120,7 @@ components:
         image:
           type: string
           nullable: true
-<<<<<<< HEAD
-          description: Foto do usuário codificada em base64.
-        role:
-          type: string
-          example: ALUNO
-=======
           description: endpoint da URL da imagem do usuário.
->>>>>>> main
 
     ErrorResponse:
       type: object
