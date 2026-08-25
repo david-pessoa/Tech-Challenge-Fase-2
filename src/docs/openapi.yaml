@@ -740,6 +740,7 @@ paths:
                 - id: ae853bf8-9297-4ec2-b13d-3ddbbf332f4f
                   matricula: '303030'
                   nome: João Silva
+                  birthDate: '2010-08-15'
                   image: /api/user/916f9d1e-dd31-46ef-b019-db09dcfa50ea/image
                   role: ALUNO
         '401':
@@ -781,6 +782,11 @@ paths:
                 nome:
                   type: string
                   example: João Silva
+                birthDate:
+                  type: string
+                  format: date
+                  description: Data de nascimento do usuário no formato aaaa-mm-dd.
+                  example: '2010-08-15'
                 image:
                   type: string
                   format: binary
@@ -801,6 +807,12 @@ paths:
                   nome:
                     type: string
                     example: João Silva
+                  birthDate:
+                    type: string
+                    format: date
+                    nullable: true
+                    description: Data de nascimento do usuário no formato aaaa-mm-dd.
+                    example: '2010-08-15'
                   image:
                     type: string
                     nullable: true
@@ -883,6 +895,11 @@ paths:
                 nome:
                   type: string
                   example: Novo nome
+                birthDate:
+                  type: string
+                  format: date
+                  description: Data de nascimento do usuário no formato aaaa-mm-dd.
+                  example: '2010-08-15'
                 senha:
                   type: string
                   example: Nova senha
@@ -907,6 +924,12 @@ paths:
                   nome:
                     type: string
                     example: João Silva
+                  birthDate:
+                    type: string
+                    format: date
+                    nullable: true
+                    description: Data de nascimento do usuário no formato aaaa-mm-dd.
+                    example: '2010-08-15'
                   image:
                     type: string
                     nullable: true
@@ -1014,12 +1037,17 @@ paths:
                     type: string
                   nome:
                     type: string
+                  birthDate:
+                    type: string
+                    format: date
+                    nullable: true
                   role:
                     type: string
               example:
                 id: c2b58a4e-c4cf-4e20-978c-c1f2793ee18c
                 matricula: '101010'
                 nome: Francisco
+                birthDate: '2010-08-15'
                 role: ADMIN
 
         '401':
@@ -1124,6 +1152,10 @@ paths:
                         type: string
                       matricula:
                         type: string
+                      birthDate:
+                        type: string
+                        format: date
+                        nullable: true
                       role:
                         type: string
                       image:
@@ -1137,6 +1169,7 @@ paths:
                   id: c2b58a4e-c4cf-4e20-978c-c1f2793ee18c
                   nome: Francisco
                   matricula: '101010'
+                  birthDate: '2010-08-15'
                   role: ALUNO
                   image: /api/user/90b6d80d-b03a-48a6-881d-a695979e8a70/image
         '401':
@@ -1266,6 +1299,11 @@ components:
           type: string
         nome:
           type: string
+        birthDate:
+          type: string
+          format: date
+          nullable: true
+          description: Data de nascimento do usuário no formato aaaa-mm-dd.
         image:
           type: string
           nullable: true
@@ -1359,3 +1397,11 @@ components:
               summary: Role não encontrada
               value:
                 message: Role não encontrada
+            InvalidBirthDateFormat:
+              summary: Data de nascimento em formato inválido
+              value:
+                message: Data de nascimento deve estar no formato aaaa-mm-dd
+            InvalidBirthDate:
+              summary: Data de nascimento inválida
+              value:
+                message: Data de nascimento inválida
