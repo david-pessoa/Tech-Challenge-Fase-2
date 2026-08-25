@@ -10,6 +10,32 @@ import { userRepository } from '../../repositories/UserRepository';
 import { roleRepository } from '../../repositories/RoleRepository';
 
 export class UserService {
+  private normalizeBirthDate(birthDate?: string) {
+    if (!birthDate) {
+      return null;
+    }
+
+    const birthDateRegex = /^(\d{4})-(\d{2})-(\d{2})$/;
+    const match = birthDate.match(birthDateRegex);
+
+    if (!match) {
+      throw new AppError(400, 'Data de nascimento deve estar no formato aaaa-mm-dd');
+    }
+
+    const [, year, month, day] = match;
+    const date = new Date(Number(year), Number(month) - 1, Number(day));
+    const isValidDate =
+      date.getFullYear() === Number(year) &&
+      date.getMonth() === Number(month) - 1 &&
+      date.getDate() === Number(day);
+
+    if (!isValidDate) {
+      throw new AppError(400, 'Data de nascimento inválida');
+    }
+
+    return birthDate;
+  }
+
   async list(usuarioLogado: User) {
     const where =
       usuarioLogado.role.nome === 'PROFESSOR'
@@ -32,6 +58,7 @@ export class UserService {
       id: user.id,
       matricula: user.matricula,
       nome: user.nome,
+      birthDate: user.birthDate,
       image: user.image ? `/api/user/${user.id}/image` : null,
       role: user.role.nome,
     }));
@@ -81,6 +108,7 @@ export class UserService {
     const usuario = userRepository.create({
       matricula: dados.matricula,
       nome: dados.nome,
+      birthDate: this.normalizeBirthDate(dados.birthDate),
       senha: senhaCriptografada,
       image: dados.image ?? null,
       role: roleBuscada,
@@ -117,6 +145,10 @@ export class UserService {
       usuario.nome = dados.nome;
     }
 
+    if (dados.birthDate !== undefined) {
+      usuario.birthDate = this.normalizeBirthDate(dados.birthDate);
+    }
+
     if (dados.senha) {
       usuario.senha = await bcrypt.hash(dados.senha, 10);
     }
@@ -145,7 +177,10 @@ export class UserService {
     await userRepository.save(usuario);
 
     const { senha: _, ...usuarioSemSenha } = usuario;
-    return usuarioSemSenha;
+    return {
+      ...usuarioSemSenha,
+      image: usuario.image ? `/api/user/${usuario.id}/image` : null,
+    };
   }
 
   async delete(id: string) {
