@@ -16,6 +16,7 @@ import { CascadePostsOnUserDelete1786576866089 } from '../migrations/17865768660
 import { CleanupOrphanPostsAfterUserDelete1786758093339 } from '../migrations/1786758093339-CleanupOrphanPostsAfterUserDelete';
 import { AddImageToUsers1786762021684 } from '../migrations/1786762021684-AddImageToUsers';
 import { CreateCommentTable1787064394494 } from '../migrations/1787064394494-CreateCommentTable';
+import { AddBirthDateToUsers1787612400000 } from '../migrations/1787612400000-AddBirthDateToUsers';
 
 export const AppDataSource = new DataSource({
   type: 'postgres',
@@ -34,6 +35,7 @@ export const AppDataSource = new DataSource({
     CleanupOrphanPostsAfterUserDelete1786758093339,
     AddSubjects1786667649646,
     AddImageToUsers1786762021684,
-    CreateCommentTable1787064394494
+    CreateCommentTable1787064394494,
+    AddBirthDateToUsers1787612400000
   ],
 });
