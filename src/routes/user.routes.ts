@@ -15,6 +15,14 @@ userRouter.get('/:id/image', userController.getUserImage);
 
 userRouter.use(authMiddleware);
 
+userRouter.get('/me', userController.getMe.bind(userController));
+
+userRouter.get(
+  '/:id',
+  authorizeRoles('ADMIN', 'PROFESSOR'),
+  userController.getById.bind(userController)
+);
+
 userRouter.post(
   '/',
   authorizeRoles('ADMIN', 'PROFESSOR'),
@@ -30,5 +38,3 @@ userRouter.patch(
 );
 
 userRouter.delete('/:id', authorizeRoles('ADMIN'), userController.delete.bind(userController));
-
-userRouter.get('/me', userController.getMe.bind(userController));
