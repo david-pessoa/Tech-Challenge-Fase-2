@@ -108,7 +108,7 @@ export class UserService {
     const usuario = userRepository.create({
       matricula: dados.matricula,
       nome: dados.nome,
-      birthDate: this.normalizeBirthDate(dados.birthDate),
+      birthDate: dados.birthDate ?? null,
       senha: senhaCriptografada,
       image: dados.image ?? null,
       role: roleBuscada,
@@ -145,8 +145,8 @@ export class UserService {
       usuario.nome = dados.nome;
     }
 
-    if (dados.birthDate !== undefined) {
-      usuario.birthDate = this.normalizeBirthDate(dados.birthDate);
+    if (dados.birthDate) {
+      usuario.birthDate = dados.birthDate;
     }
 
     if (dados.senha) {
