@@ -2,6 +2,7 @@
 // Todos os campos são opcionais — o cliente manda só o que quer mudar.
 export interface UpdateUserDTO {
   nome?: string;
+  birthDate?: Date;
   senha?: string;
   role?: string;
   image?: Buffer | null;

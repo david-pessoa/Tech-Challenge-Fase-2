@@ -44,6 +44,7 @@ export class AuthService {
         id: usuario.id,
         nome: usuario.nome,
         matricula: usuario.matricula,
+        birthDate: usuario.birthDate,
         role: usuario.role.nome,
         image: usuario.image ? `/api/user/${usuario.id}/image` : null
       },

@@ -36,6 +36,7 @@ export class UserService {
       nome: user.nome,
       image: user.image ? `/api/user/${user.id}/image` : null,
       role: user.role.nome,
+      birthDate: user?.birthDate
     };
   }
 
@@ -61,6 +62,7 @@ export class UserService {
       id: user.id,
       matricula: user.matricula,
       nome: user.nome,
+      birthDate: user.birthDate,
       image: user.image ? `/api/user/${user.id}/image` : null,
       role: user.role.nome,
     }));
@@ -110,6 +112,7 @@ export class UserService {
     const usuario = userRepository.create({
       matricula: dados.matricula,
       nome: dados.nome,
+      birthDate: dados.birthDate ?? null,
       senha: senhaCriptografada,
       image: dados.image ?? null,
       role: roleBuscada,
@@ -146,6 +149,10 @@ export class UserService {
       usuario.nome = dados.nome;
     }
 
+    if (dados.birthDate) {
+      usuario.birthDate = dados.birthDate;
+    }
+
     if (dados.senha) {
       usuario.senha = await bcrypt.hash(dados.senha, 10);
     }
@@ -165,7 +172,10 @@ export class UserService {
 
       // Professor não pode promover outro usuário
       if (usuarioLogado.role.nome === 'PROFESSOR' && roleBuscada.nome !== 'ALUNO') {
-        throw new AppError(403, 'Professor não pode alterar dados de outros professores ou administradores!');
+        throw new AppError(
+          403,
+          'Professor não pode alterar dados de outros professores ou administradores!'
+        );
       }
 
       usuario.role = roleBuscada;
@@ -174,7 +184,10 @@ export class UserService {
     await userRepository.save(usuario);
 
     const { senha: _, ...usuarioSemSenha } = usuario;
-    return usuarioSemSenha;
+    return {
+      ...usuarioSemSenha,
+      image: usuario.image ? `/api/user/${usuario.id}/image` : null,
+    };
   }
 
   async delete(id: string) {
