@@ -23,7 +23,7 @@ export class UserController {
         usuarioLogado
       );
 
-      response.status(201).json({ ...usuario, image: `/api/user/${usuario.id}/image` });
+      response.status(201).json(usuario);
     } catch (error) {
       next(error);
     }
@@ -33,10 +33,14 @@ export class UserController {
     try {
       const id = String(request.params.id);
       const usuarioLogado = request.user;
-      const usuario = await userService.update(id, {
-        ...request.body,
-        image: request.file?.buffer,
-      }, usuarioLogado);
+      const usuario = await userService.update(
+        id,
+        {
+          ...request.body,
+          image: request.file?.buffer,
+        },
+        usuarioLogado
+      );
 
       response.status(200).json(usuario);
     } catch (error) {
@@ -60,7 +64,7 @@ export class UserController {
       const usuarioLogado = request.user;
       delete usuarioLogado.senha;
       usuarioLogado.role = usuarioLogado.role.nome;
-      usuarioLogado.image = `/api/user/${usuarioLogado.id}/image`;
+      if (usuarioLogado.image) usuarioLogado.image = `/api/user/${usuarioLogado.id}/image`;
 
       response.status(200).json(usuarioLogado);
     } catch (error) {
