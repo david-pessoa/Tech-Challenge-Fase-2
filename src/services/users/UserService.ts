@@ -10,6 +10,36 @@ import { userRepository } from '../../repositories/UserRepository';
 import { roleRepository } from '../../repositories/RoleRepository';
 
 export class UserService {
+  async getById(id: string, usuarioLogado: User) {
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
+    if (!uuidRegex.test(id)) {
+      throw new AppError(400, 'ID de usuário inválido');
+    }
+
+    const user = await userRepository.findOne({
+      where: { id },
+      relations: ['role'],
+    });
+
+    if (!user) {
+      throw new AppError(404, 'Usuário não encontrado');
+    }
+
+    if (usuarioLogado.role.nome === 'PROFESSOR' && user.role.nome !== 'ALUNO') {
+      throw new AppError(403, 'Professor não pode acessar dados de outros professores ou administradores!');
+    }
+
+    return {
+      id: user.id,
+      matricula: user.matricula,
+      nome: user.nome,
+      image: user.image ? `/api/user/${user.id}/image` : null,
+      role: user.role.nome,
+      birthDate: user?.birthDate
+    };
+  }
+
   async list(usuarioLogado: User) {
     const where =
       usuarioLogado.role.nome === 'PROFESSOR'

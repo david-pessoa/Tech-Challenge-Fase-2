@@ -336,3 +336,96 @@ describe('UserService - Atualização de Usuários', () => {
     });
   });
 });
+
+describe('UserService - Busca de usuário por ID', () => {
+  const roleProfessor = { id: '5a0e25a2-afa5-44e1-b519-4d1e2139725a', nome: 'PROFESSOR' } as Role;
+  const roleAluno = { id: 'ffc3d557-17c0-474e-a2f5-5fa816f2d854', nome: 'ALUNO' } as Role;
+  const roleAdmin = { id: 'bd1de63c-5df5-4dfd-9736-ace2d7f092b1', nome: 'ADMIN' } as Role;
+
+  const adminLogado = { id: '16dd67fd-afec-4080-a36f-0c8605d9c662', role: roleAdmin } as User;
+  const professorLogado = { id: 'cea50a97-f63e-4cd6-8a2c-e2a02f93c6e4', role: roleProfessor } as User;
+
+  const idValido = '16dd67fd-afec-4080-a36f-0c8605d9c662';
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('Deve permitir que um ADMIN busque um usuário pelo ID sem retornar senha', async () => {
+    const image = Buffer.from('foto-fake');
+    const usuario = {
+      id: idValido,
+      matricula: '874569',
+      nome: 'Novo Aluno',
+      senha: 'senha_criptografada_fake',
+      image,
+      role: roleAluno,
+    } as User;
+
+    (userRepository.findOne as jest.Mock).mockResolvedValue(usuario);
+
+    const resultado = await userService.getById(idValido, adminLogado);
+
+    expect(resultado).toEqual({
+      id: usuario.id,
+      matricula: usuario.matricula,
+      nome: usuario.nome,
+      image: `/api/user/${usuario.id}/image`,
+      role: roleAluno.nome,
+    });
+    expect(resultado).not.toHaveProperty('senha');
+  });
+
+  it('Deve permitir que um PROFESSOR busque um ALUNO pelo ID', async () => {
+    const usuario = {
+      id: idValido,
+      matricula: '874569',
+      nome: 'Novo Aluno',
+      senha: 'senha_criptografada_fake',
+      image: null,
+      role: roleAluno,
+    } as User;
+
+    (userRepository.findOne as jest.Mock).mockResolvedValue(usuario);
+
+    const resultado = await userService.getById(idValido, professorLogado);
+
+    expect(resultado.role).toBe('ALUNO');
+  });
+
+  it('Não deve permitir que um PROFESSOR busque um usuário que não é ALUNO', async () => {
+    const usuario = {
+      id: idValido,
+      matricula: '345678',
+      nome: 'Novo Prof',
+      senha: 'senha_criptografada_fake',
+      image: null,
+      role: roleProfessor,
+    } as User;
+
+    (userRepository.findOne as jest.Mock).mockResolvedValue(usuario);
+
+    await expect(userService.getById(idValido, professorLogado)).rejects.toMatchObject({
+      statusCode: 403,
+      message: 'Professor não pode acessar dados de outros professores ou administradores!',
+    });
+  });
+
+  it('Não deve buscar usuário com ID inválido', async () => {
+    await expect(userService.getById('id-invalido', adminLogado)).rejects.toMatchObject({
+      statusCode: 400,
+      message: 'ID de usuário inválido',
+    });
+
+    expect(userRepository.findOne).not.toHaveBeenCalled();
+  });
+
+  it('Não deve buscar usuário inexistente', async () => {
+    (userRepository.findOne as jest.Mock).mockResolvedValue(null);
+
+    await expect(userService.getById(idValido, adminLogado)).rejects.toMatchObject({
+      statusCode: 404,
+      message: 'Usuário não encontrado',
+    });
+  });
+});

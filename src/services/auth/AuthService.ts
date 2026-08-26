@@ -46,7 +46,7 @@ export class AuthService {
         matricula: usuario.matricula,
         birthDate: usuario.birthDate,
         role: usuario.role.nome,
-        image: usuario.image ? usuario.image.toString('base64') : null,
+        image: usuario.image ? `/api/user/${usuario.id}/image` : null
       },
     };
   }

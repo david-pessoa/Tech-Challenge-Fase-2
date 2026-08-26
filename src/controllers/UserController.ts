@@ -2,6 +2,17 @@ import { NextFunction, Request, Response } from 'express';
 import { userService } from '../services/users/UserService';
 
 export class UserController {
+  async getById(request: Request, response: Response, next: NextFunction) {
+    try {
+      const id = String(request.params.id);
+      const usuario = await userService.getById(id, request.user);
+
+      return response.status(200).json(usuario);
+    } catch (error) {
+      return next(error);
+    }
+  }
+
   async list(request: Request, response: Response, next: NextFunction) {
     try {
       const usuarios = await userService.list(request.user);
@@ -33,10 +44,14 @@ export class UserController {
     try {
       const id = String(request.params.id);
       const usuarioLogado = request.user;
-      const usuario = await userService.update(id, {
-        ...request.body,
-        image: request.file?.buffer,
-      }, usuarioLogado);
+      const usuario = await userService.update(
+        id,
+        {
+          ...request.body,
+          image: request.file?.buffer,
+        },
+        usuarioLogado
+      );
 
       response.status(200).json(usuario);
     } catch (error) {
