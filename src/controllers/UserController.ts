@@ -23,7 +23,7 @@ export class UserController {
         usuarioLogado
       );
 
-      response.status(201).json({ ...usuario, image: `/api/user/${usuario.id}/image` });
+      response.status(201).json(usuario);
     } catch (error) {
       next(error);
     }
@@ -60,7 +60,8 @@ export class UserController {
       const usuarioLogado = request.user;
       delete usuarioLogado.senha;
       usuarioLogado.role = usuarioLogado.role.nome;
-      usuarioLogado.image = `/api/user/${usuarioLogado.id}/image`;
+      if(usuarioLogado.image) usuarioLogado.image = `/api/user/${usuarioLogado.id}/image`;
+      if(usuarioLogado.image) usuarioLogado.birthDate = usuarioLogado.birthDate;
 
       response.status(200).json(usuarioLogado);
     } catch (error) {

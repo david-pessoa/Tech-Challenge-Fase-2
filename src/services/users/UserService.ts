@@ -10,32 +10,6 @@ import { userRepository } from '../../repositories/UserRepository';
 import { roleRepository } from '../../repositories/RoleRepository';
 
 export class UserService {
-  private normalizeBirthDate(birthDate?: string) {
-    if (!birthDate) {
-      return null;
-    }
-
-    const birthDateRegex = /^(\d{4})-(\d{2})-(\d{2})$/;
-    const match = birthDate.match(birthDateRegex);
-
-    if (!match) {
-      throw new AppError(400, 'Data de nascimento deve estar no formato aaaa-mm-dd');
-    }
-
-    const [, year, month, day] = match;
-    const date = new Date(Number(year), Number(month) - 1, Number(day));
-    const isValidDate =
-      date.getFullYear() === Number(year) &&
-      date.getMonth() === Number(month) - 1 &&
-      date.getDate() === Number(day);
-
-    if (!isValidDate) {
-      throw new AppError(400, 'Data de nascimento inválida');
-    }
-
-    return birthDate;
-  }
-
   async list(usuarioLogado: User) {
     const where =
       usuarioLogado.role.nome === 'PROFESSOR'
@@ -168,7 +142,10 @@ export class UserService {
 
       // Professor não pode promover outro usuário
       if (usuarioLogado.role.nome === 'PROFESSOR' && roleBuscada.nome !== 'ALUNO') {
-        throw new AppError(403, 'Professor não pode alterar dados de outros professores ou administradores!');
+        throw new AppError(
+          403,
+          'Professor não pode alterar dados de outros professores ou administradores!'
+        );
       }
 
       usuario.role = roleBuscada;
