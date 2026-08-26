@@ -2,6 +2,7 @@ import 'reflect-metadata';
 import express from 'express';
 import swaggerUi from 'swagger-ui-express';
 import YAML from 'yamljs';
+import cors from 'cors';
 
 import { postRoutes } from './routes/post.routes';
 import { userRouter } from './routes/user.routes';
@@ -26,6 +27,9 @@ const swaggerOptions = {
 app.use(express.json());
 
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, swaggerOptions));
+
+app.use(cors()); // permite requisições de qualquer origem
+app.use(express.json());
 
 // Rotas da aplicação
 app.use('/api/posts', postRoutes);
