@@ -852,6 +852,60 @@ paths:
                 message: Role padrão ALUNO não encontrada
 
   /user/{id}:
+    get:
+      tags:
+        - Usuários
+      summary: Obter usuário pelo ID
+      description: Retorna os dados de um usuário específico. Administradores podem consultar qualquer usuário; professores podem consultar apenas alunos.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID do usuário
+      responses:
+        '200':
+          description: Usuário retornado com sucesso.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Usuario'
+              example:
+                id: ae853bf8-9297-4ec2-b13d-3ddbbf332f4f
+                matricula: '303030'
+                nome: João Silva
+                image: /api/user/ae853bf8-9297-4ec2-b13d-3ddbbf332f4f/image
+                role: ALUNO
+        '400':
+          description: ID de usuário inválido.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                message: ID de usuário inválido
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          description: Professor tenta consultar um usuário que não é aluno.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                message: Professor não pode acessar dados de outros professores ou administradores!
+        '404':
+          description: Usuário não encontrado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                message: Usuário não encontrado
+
     patch:
       tags:
         - Usuários
@@ -1270,6 +1324,9 @@ components:
           type: string
           nullable: true
           description: endpoint da URL da imagem do usuário.
+        role:
+          type: string
+          example: ALUNO
 
     ErrorResponse:
       type: object
