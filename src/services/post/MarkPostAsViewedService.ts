@@ -5,6 +5,17 @@ import { userRepository } from '../../repositories/UserRepository';
 
 export class MarkPostAsViewedService {
   async execute(postId: string, userId: string) {
+
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
+    if (!uuidRegex.test(postId)) {
+      throw new AppError(400, 'ID de post inválido');
+    }
+    
+    if (!uuidRegex.test(userId)) {
+      throw new AppError(400, 'ID de usuário inválido');
+    }
+
     const post = await postRepository.findOne({
       where: { id: postId },
     });
