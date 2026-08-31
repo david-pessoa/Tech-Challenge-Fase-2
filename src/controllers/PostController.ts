@@ -7,6 +7,7 @@ import { deletePostService } from '../services/post/DeletePostService';
 import { searchPostsService } from '../services/post/SearchPostsService';
 import { markPostAsViewedService } from '../services/post/MarkPostAsViewedService';
 import { getPostImageService } from '../services/post/GetPostImageService';
+import { getImageMimeType } from '../services/imageMimeType';
 
 export class PostController {
   async create(request: Request, response: Response, next: NextFunction) {
@@ -97,16 +98,15 @@ export class PostController {
         });
       }
 
-      const { fileTypeFromBuffer } = await import('file-type');
-      const tipo = await fileTypeFromBuffer(post.image);
+      const mimeType = getImageMimeType(post.image);
 
-      if (!tipo) {
+      if (!mimeType) {
         return response.status(415).json({
           message: 'Tipo de imagem não identificado',
         });
       }
 
-      response.type(tipo.mime);
+      response.type(mimeType);
       return response.send(post.image);
     } catch (error) {
       next(error);

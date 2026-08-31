@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { userService } from '../services/users/UserService';
+import { getImageMimeType } from '../services/imageMimeType';
 
 export class UserController {
   async getById(request: Request, response: Response, next: NextFunction) {
@@ -95,16 +96,15 @@ export class UserController {
         });
       }
 
-      const { fileTypeFromBuffer } = await import('file-type');
-      const tipo = await fileTypeFromBuffer(userImage);
+      const mimeType = getImageMimeType(userImage);
 
-      if (!tipo) {
+      if (!mimeType) {
         return response.status(415).json({
           message: 'Tipo de imagem não identificado',
         });
       }
 
-      response.type(tipo.mime);
+      response.type(mimeType);
       return response.send(userImage);
     } catch (error) {
       return next(error);
