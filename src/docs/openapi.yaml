@@ -310,6 +310,7 @@ paths:
                   dataCriacao: '2026-01-29T10:00:00.000Z'
                   dataModificacao: '2026-05-04T10:00:00.000Z'
                   criadoPor:
+                    id: cea50a97-f63e-4cd6-8a2c-e2a02f93c6e4
                     nome: Ana Professora
                     tipoUsuario: PROFESSOR
 
@@ -324,6 +325,7 @@ paths:
                   dataCriacao: '2026-03-10T10:00:00.000Z'
                   dataModificacao: '2026-05-04T10:00:00.000Z'
                   criadoPor:
+                    id: 9d92fefb-4610-4b41-ab7c-1841cd0275f5
                     nome: Ricardo Professor
                     tipoUsuario: PROFESSOR
         '400':
@@ -1278,6 +1280,10 @@ components:
         criadoPor:
           type: object
           properties:
+            id:
+              type: string
+              format: uuid
+              example: cea50a97-f63e-4cd6-8a2c-e2a02f93c6e4
             nome:
               type: string
               example: Ana Carolina
@@ -1387,6 +1393,7 @@ components:
           dataCriacao: '2026-07-06T10:00:00.000Z'
           dataModificacao: '2026-07-06T10:00:00.000Z'
           criadoPor:
+            id: cea50a97-f63e-4cd6-8a2c-e2a02f93c6e4
             nome: Ana Carolina
             tipoUsuario: PROFESSOR
           foiVisto: true
@@ -1405,6 +1412,7 @@ components:
           dataCriacao: '2026-07-06T11:00:00.000Z'
           dataModificacao: '2026-07-06T11:00:00.000Z'
           criadoPor:
+            id: cea50a97-f63e-4cd6-8a2c-e2a02f93c6e4
             nome: Ana Carolina
             tipoUsuario: PROFESSOR
           visualizacoes:

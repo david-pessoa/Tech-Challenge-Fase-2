@@ -40,8 +40,9 @@ export class ListPostsService {
         dataCriacao: post.dataCriacao,
         dataModificacao: post.dataModificacao,
         criadoPor: {
-            nome: post.user.nome,
-            tipoUsuario: post.user.role.nome,
+          id: post.user.id,
+          nome: post.user.nome,
+          tipoUsuario: post.user.role.nome,
         },
       };
 
