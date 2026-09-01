@@ -27,7 +27,10 @@ export class UserService {
     }
 
     if (usuarioLogado.role.nome === 'PROFESSOR' && user.role.nome !== 'ALUNO') {
-      throw new AppError(403, 'Professor não pode acessar dados de outros professores ou administradores!');
+      throw new AppError(
+        403,
+        'Professor não pode acessar dados de outros professores ou administradores!'
+      );
     }
 
     return {
@@ -36,7 +39,7 @@ export class UserService {
       nome: user.nome,
       image: user.image ? `/api/user/${user.id}/image` : null,
       role: user.role.nome,
-      birthDate: user?.birthDate
+      birthDate: user?.birthDate,
     };
   }
 
