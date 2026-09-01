@@ -153,6 +153,18 @@ export class UserService {
       usuario.birthDate = dados.birthDate;
     }
 
+    if (dados.matricula && dados.matricula !== usuario.matricula) {
+      const usuarioComMatricula = await userRepository.findOne({
+        where: { matricula: dados.matricula },
+      });
+
+      if (usuarioComMatricula && usuarioComMatricula.id !== id) {
+        throw new AppError(400, 'Já existe um usuário cadastrado com essa matrícula');
+      }
+
+      usuario.matricula = dados.matricula;
+    }
+
     if (dados.senha) {
       usuario.senha = await bcrypt.hash(dados.senha, 10);
     }
