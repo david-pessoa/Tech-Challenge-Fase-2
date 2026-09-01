@@ -27,7 +27,10 @@ export class UserService {
     }
 
     if (usuarioLogado.role.nome === 'PROFESSOR' && user.role.nome !== 'ALUNO') {
-      throw new AppError(403, 'Professor não pode acessar dados de outros professores ou administradores!');
+      throw new AppError(
+        403,
+        'Professor não pode acessar dados de outros professores ou administradores!'
+      );
     }
 
     return {
@@ -36,7 +39,7 @@ export class UserService {
       nome: user.nome,
       image: user.image ? `/api/user/${user.id}/image` : null,
       role: user.role.nome,
-      birthDate: user?.birthDate
+      birthDate: user?.birthDate,
     };
   }
 
@@ -151,6 +154,18 @@ export class UserService {
 
     if (dados.birthDate) {
       usuario.birthDate = dados.birthDate;
+    }
+
+    if (dados.matricula && dados.matricula !== usuario.matricula) {
+      const usuarioComMatricula = await userRepository.findOne({
+        where: { matricula: dados.matricula },
+      });
+
+      if (usuarioComMatricula && usuarioComMatricula.id !== id) {
+        throw new AppError(400, 'Já existe um usuário cadastrado com essa matrícula');
+      }
+
+      usuario.matricula = dados.matricula;
     }
 
     if (dados.senha) {

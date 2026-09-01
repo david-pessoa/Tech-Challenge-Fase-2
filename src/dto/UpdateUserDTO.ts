@@ -3,6 +3,7 @@
 export interface UpdateUserDTO {
   nome?: string;
   birthDate?: Date;
+  matricula?: string;
   senha?: string;
   role?: string;
   image?: Buffer | null;
