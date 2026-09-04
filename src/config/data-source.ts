@@ -38,4 +38,8 @@ export const AppDataSource = new DataSource({
     CreateCommentTable1787064394494,
     AddBirthDateToUsers1787612400000
   ],
+   ssl: {
+    rejectUnauthorized: false
+  }
+
 });
